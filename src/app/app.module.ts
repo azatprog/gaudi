@@ -9,8 +9,11 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { AuthService } from './services/auth.service';
 import { MainComponent } from './main/main.component';
-import { SidebarComponent } from './main/sidebar/sidebar.component';
-import { ContentComponent } from './main/content/content.component';
+import { BusroutesComponent } from './main/busroutes/busroutes.component';
+import { TripsComponent } from './main/trips/trips.component';
+import { DriversComponent } from './main/drivers/drivers.component';
+import { BusesComponent } from './main/buses/buses.component';
+import { ReportsComponent } from './main/reports/reports.component';
 
 
 @NgModule({
@@ -18,8 +21,11 @@ import { ContentComponent } from './main/content/content.component';
     AppComponent,
     LoginComponent,
     MainComponent,
-    SidebarComponent,
-    ContentComponent,
+    BusroutesComponent,
+    TripsComponent,
+    DriversComponent,
+    BusesComponent,
+    ReportsComponent
   ],
   imports: [
     AngularFontAwesomeModule,
