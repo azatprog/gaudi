@@ -1,4 +1,11 @@
 .logo {
     color: white !important; 
     text-transform: uppercase;
+    cursor: pointer;
+}
+
+.nav-right {
+    color: white !important;
+    margin-right: 30px;
+    cursor: pointer;
 }

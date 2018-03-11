@@ -2,7 +2,10 @@
     <div class="card card-container">
         <!-- <img id="profile-img" class="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" /> -->
         <p id="profile-name" class="profile-name-card"> Вход в систему </p>
-        <form class="form-signin">
+        <form novalidate
+              class="form-signin"
+              #f="ngForm"
+              (ngSubmit)="login()">
             <span id="reauth-email" class="reauth-email"></span>
 
             <div class="input-group">

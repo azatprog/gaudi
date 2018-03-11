@@ -1,6 +1,14 @@
-<nav class="navbar navbar-light bg-danger justify-content-between">
-  <a class="navbar-brand logo">
-     Logo 
-  </a>  
+<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-danger justify-content-between">
+    <a class="navbar-brand logo" href="#">Logo</a>
+  
+    <ul class="navbar-nav ml-auto" [hidden]="!authService.isLoggedIn">
+      <li class="nav-item">
+        <a class="nav-link nav-right">Профиль</a>
+      </li>
+      <li class="navbar-item">
+        <a class="nav-link nav-right">Выход</a>
+      </li>
+    </ul>
+  
 </nav>
 <router-outlet></router-outlet>
