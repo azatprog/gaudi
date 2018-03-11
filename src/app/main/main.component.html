@@ -9,19 +9,19 @@
                 </a>
             </li> -->
             <li>
-                <a href="#">Маршруты</a>
+                <a [routerLinkActive]="['active']" [routerLink]="['./routes']">Маршруты</a>
             </li>
             <li>
-                <a href="#">Рейсы</a>
+                <a [routerLinkActive]="['active']" [routerLink]="['./trips']">Рейсы</a>
             </li>
             <li>
-                <a href="#">Водители</a>
+                <a [routerLinkActive]="['active']" [routerLink]="['./drivers']">Водители</a>
             </li>
             <li>
-                <a href="#">Автобусы</a>
+                <a [routerLinkActive]="['active']" [routerLink]="['./buses']">Автобусы</a>
             </li>
             <li>
-                <a href="#">Отчёты</a>
+                <a [routerLinkActive]="['active']" [routerLink]="['./reports']">Отчёты</a>
             </li>        
         </ul>
     </div>
@@ -30,7 +30,7 @@
     <!-- Page Content -->
     <div id="page-content-wrapper">
         <div class="container-fluid">
-            
+            <router-outlet></router-outlet>
         </div>
     </div>
     <!-- /#page-content-wrapper -->

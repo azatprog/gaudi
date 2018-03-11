@@ -42,6 +42,10 @@
     line-height: 40px;
     border-bottom: 1px solid gray;
   }
+
+  .sidebar-nav a.active {
+    font-weight: bold;
+  } 
   
   .sidebar-nav li a {
     display: block;
@@ -51,7 +55,7 @@
   
   .sidebar-nav li a:hover {
     text-decoration: none;
-    color: rgb(233, 45, 61);
+    font-weight: bold;
     background: rgba(255, 255, 255, 0.2);
   }
   
