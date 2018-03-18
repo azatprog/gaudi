@@ -1,7 +1,6 @@
 <div class="container">
     <div class="card card-container">
-        <!-- <img id="profile-img" class="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" /> -->
-        <p id="profile-name" class="profile-name-card"> Вход в систему </p>
+        <p id="profile-name" class="profile-name-card"> Sign in </p>
         <form novalidate
               class="form-signin"
               #f="ngForm"
@@ -18,18 +17,13 @@
               <div class="input-group-prepend">
                 <div class="input-group-text"><i class="fa fa-key" aria-hidden="true"></i></div>
               </div>
-              <input type="password" class="form-control" id="inputPassword" placeholder="Пароль" required autofocus>
+              <input type="password" class="form-control" id="inputPassword" placeholder="Password" required autofocus>
             </div>
-            
-            <!-- <div id="remember" class="checkbox">
-                <label>
-                    <input type="checkbox" value="remember-me"> Remember me
-                </label>
-            </div> -->
-            <button class="btn btn-lg btn-danger btn-block btn-signin" type="submit">Войти</button>
+
+            <button class="btn btn-lg btn-danger btn-block btn-signin" type="submit">Login</button>
         </form><!-- /form -->
         <a href="#" class="forgot-password">
-            Востановить пароль
+            Forgot password?
         </a>
     </div><!-- /card-container -->
 </div>

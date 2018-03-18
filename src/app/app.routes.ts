@@ -2,11 +2,12 @@ import { Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { MainComponent } from './main/main.component';
-import { BusroutesComponent } from './main/busroutes/busroutes.component';
-import { TripsComponent } from './main/trips/trips.component';
-import { DriversComponent } from './main/drivers/drivers.component';
-import { BusesComponent } from './main/buses/buses.component';
-import { ReportsComponent } from './main/reports/reports.component';
+import { MissionComponent } from './main/mission/mission.component';
+import { VehicleComponent } from './main/vehicle/vehicle.component';
+import { MissionrouteComponent } from './main/missionroute/missionroute.component';
+import { ReportComponent } from './main/report/report.component';
+import { HelpComponent } from './main/help/help.component';
+import { AboutComponent } from './main/about/about.component';
 
 
 export const ROUTES: Routes = [
@@ -17,12 +18,13 @@ export const ROUTES: Routes = [
             { path: 'login', component: LoginComponent },
             { path: 'main', component: MainComponent,
                 children: [
-                    { path: '', redirectTo: 'routes', pathMatch: 'full'},
-                    { path: 'routes', component: BusroutesComponent },
-                    { path: 'trips', component: TripsComponent },
-                    { path: 'drivers', component: DriversComponent },
-                    { path: 'buses', component: BusesComponent },
-                    { path: 'reports', component: ReportsComponent }
+                    { path: '', redirectTo: 'mission', pathMatch: 'full'},
+                    { path: 'mission', component: MissionComponent },
+                    { path: 'vehicle', component: VehicleComponent },
+                    { path: 'route', component: MissionrouteComponent },
+                    { path: 'report', component: ReportComponent },
+                    { path: 'help', component: HelpComponent },
+                    { path: 'about', component: AboutComponent }
                 ]
         }
         ]

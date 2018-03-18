@@ -9,11 +9,12 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { AuthService } from './services/auth.service';
 import { MainComponent } from './main/main.component';
-import { BusroutesComponent } from './main/busroutes/busroutes.component';
-import { TripsComponent } from './main/trips/trips.component';
-import { DriversComponent } from './main/drivers/drivers.component';
-import { BusesComponent } from './main/buses/buses.component';
-import { ReportsComponent } from './main/reports/reports.component';
+import { MissionComponent } from './main/mission/mission.component';
+import { VehicleComponent } from './main/vehicle/vehicle.component';
+import { MissionrouteComponent } from './main/missionroute/missionroute.component';
+import { ReportComponent } from './main/report/report.component';
+import { HelpComponent } from './main/help/help.component';
+import { AboutComponent } from './main/about/about.component';
 
 
 @NgModule({
@@ -21,11 +22,12 @@ import { ReportsComponent } from './main/reports/reports.component';
     AppComponent,
     LoginComponent,
     MainComponent,
-    BusroutesComponent,
-    TripsComponent,
-    DriversComponent,
-    BusesComponent,
-    ReportsComponent
+    MissionComponent,
+    VehicleComponent,
+    MissionrouteComponent,
+    ReportComponent,
+    HelpComponent,
+    AboutComponent
   ],
   imports: [
     AngularFontAwesomeModule,
