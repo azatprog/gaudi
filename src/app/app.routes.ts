@@ -8,6 +8,7 @@ import { MissionrouteComponent } from './main/missionroute/missionroute.componen
 import { ReportComponent } from './main/report/report.component';
 import { HelpComponent } from './main/help/help.component';
 import { AboutComponent } from './main/about/about.component';
+import { MapComponent } from './map/map.component';
 
 
 export const ROUTES: Routes = [
@@ -24,9 +25,10 @@ export const ROUTES: Routes = [
                     { path: 'route', component: MissionrouteComponent },
                     { path: 'report', component: ReportComponent },
                     { path: 'help', component: HelpComponent },
-                    { path: 'about', component: AboutComponent }
+                    { path: 'about', component: AboutComponent }                    
                 ]
-        }
+            },
+            { path: 'map', component: MapComponent }
         ]
     },
     { path: '**', component: LoginComponent },

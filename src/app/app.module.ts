@@ -15,6 +15,7 @@ import { MissionrouteComponent } from './main/missionroute/missionroute.componen
 import { ReportComponent } from './main/report/report.component';
 import { HelpComponent } from './main/help/help.component';
 import { AboutComponent } from './main/about/about.component';
+import { MapComponent } from './map/map.component';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { AboutComponent } from './main/about/about.component';
     MissionrouteComponent,
     ReportComponent,
     HelpComponent,
-    AboutComponent
+    AboutComponent,
+    MapComponent
   ],
   imports: [
     AngularFontAwesomeModule,
