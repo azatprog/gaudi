@@ -1,0 +1,24 @@
+.create-mission {
+    position: fixed;
+    z-index: 998;
+    padding-top: 15px;
+    margin-bottom: 0;
+}
+
+.add-btn {
+    border-radius: 50%;
+    width: 61.1px;
+    height: 61.1px;
+    padding: 0px;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+}
+
+.plus-icon {
+    font-size: 1.625rem;
+    line-height: 61.1px;
+    text-align: center;
+    display: inline-block;
+    width: inherit;
+    color: white;
+    margin: auto;
+}

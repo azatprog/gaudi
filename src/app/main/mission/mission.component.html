@@ -1,3 +1,25 @@
-<p>
-  mission works!
-</p>
+<div class="container">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th> Name </th>
+          <th> Start date </th>
+          <th> Route start </th>
+          <th> Route finish </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let m of missions">
+          <td> {{ m.name }} </td>
+          <td> {{ m.startDate }} </td>
+          <td> {{ m.routeStart }} </td>
+          <td> {{ m.routeFinish }} </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="create-mission" style="bottom: 30px; right: 30px;">
+        <button type="button" class="btn btn-danger waves-light add-btn" (click)="createMission()">
+            <i class="fa fa-plus plus-icon"></i>
+        </button>
+    </div>
+</div>

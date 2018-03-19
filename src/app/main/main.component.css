@@ -24,6 +24,7 @@
     position: absolute;
     padding: 15px;
     left: 250px;
+    width: 80%;
   }
   
   /* Sidebar Styles */
@@ -91,6 +92,7 @@
       padding: 20px;
       position: absolute;
       left: 250px;
+      width: 80%;
     }
     
   }
