@@ -22,3 +22,10 @@
     color: white;
     margin: auto;
 }
+
+.table tr {
+    cursor: pointer;
+}
+.table tbody tr:hover {
+    background: aquamarine;
+}

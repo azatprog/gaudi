@@ -1,0 +1,75 @@
+<div class="container">            
+            <form novalidate 
+                    #f="ngForm"
+                    (ngSubmit)="save()" style="margin-top:30px">
+                <p class="h5 text-center mb-4">Mission Profile</p>
+              <div class="form-row">
+                  <div class="form-group col-md-6">
+                      <label for="missionName">Name</label>
+                      <input type="text"
+                          id="missionName"
+                          [(ngModel)]="mission.name"
+                          name="missionName" 
+                          class="form-control" 
+                          placeholder="Mission name" 
+                          [readonly]="missionService.isMissionReadOnly"
+                          #missionName
+                          required>
+                  </div>
+                  <div class="form-group col-md-6">
+                      <label for="missionName">Start Date</label>
+                      <input type="text" 
+                          id="startDate"
+                          [(ngModel)]="mission.startDate"
+                          name="missionStatus" 
+                          class="form-control" 
+                          placeholder="Start date" 
+                          [readonly]="missionService.isMissionReadOnly"
+                          required>
+                  </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="routeStart">Route Start</label>
+                    <input type="text" 
+                        id="routeStart"
+                        [(ngModel)]="mission.routeStart"
+                        name="missionStart" 
+                        class="form-control" 
+                        placeholder="Route start" 
+                        [readonly]="missionService.isMissionReadOnly"
+                        required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="routeFinish">Route Finish</label>
+                    <input type="text" 
+                        id="routeFinish"
+                        [(ngModel)]="mission.routeFinish"
+                        name="routeFinish" 
+                        class="form-control" 
+                        placeholder="Route finish" 
+                        [readonly]="missionService.isMissionReadOnly"
+                        required>
+                </div>
+              </div>
+
+                
+
+                <div class="form-row" [hidden]="missionService.isMissionReadOnly">
+                  <div class="col-md-6">
+                      <button class="btn btn-success" style="float:right" type="submit" [disabled]="f.invalid">Save</button>
+                  </div>
+                  <div class="col-md-6">
+                    <button class="btn btn-danger" type="button" (click)="cancel()">Cancel</button>
+                  </div>
+                </div>
+                <div [hidden]="!missionService.isMissionReadOnly" class="mission-btns">
+                    <button type="button" class="btn btn-default waves-light btn-mission" (click)="updateSensor()">
+                        <i class="fa fa-pencil"> Edit </i> 
+                    </button>
+                    <button type="button" class="btn btn-danger waves-light btn-mission" (click)="delSensor()">
+                        <i class="fa fa-trash"> Remove </i>
+                    </button>
+                </div>
+            </form>
+</div>

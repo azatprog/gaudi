@@ -16,6 +16,8 @@ import { ReportComponent } from './main/report/report.component';
 import { HelpComponent } from './main/help/help.component';
 import { AboutComponent } from './main/about/about.component';
 import { MapComponent } from './map/map.component';
+import { MissionProfileComponent } from './main/mission/mission-profile/mission-profile.component';
+import { UniversalService } from './services/universal.service';
 
 
 @NgModule({
@@ -29,7 +31,8 @@ import { MapComponent } from './map/map.component';
     ReportComponent,
     HelpComponent,
     AboutComponent,
-    MapComponent
+    MapComponent,
+    MissionProfileComponent
   ],
   imports: [
     AngularFontAwesomeModule,
@@ -37,7 +40,7 @@ import { MapComponent } from './map/map.component';
     FormsModule,
     RouterModule.forRoot(ROUTES, { useHash: true })
   ],
-  providers: [AuthService],
+  providers: [AuthService, UniversalService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

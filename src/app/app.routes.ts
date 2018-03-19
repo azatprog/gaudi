@@ -9,6 +9,7 @@ import { ReportComponent } from './main/report/report.component';
 import { HelpComponent } from './main/help/help.component';
 import { AboutComponent } from './main/about/about.component';
 import { MapComponent } from './map/map.component';
+import { MissionProfileComponent } from './main/mission/mission-profile/mission-profile.component';
 
 
 export const ROUTES: Routes = [
@@ -21,6 +22,7 @@ export const ROUTES: Routes = [
                 children: [
                     { path: '', redirectTo: 'mission', pathMatch: 'full'},
                     { path: 'mission', component: MissionComponent },
+                    { path: 'missionProfile', component: MissionProfileComponent },
                     { path: 'vehicle', component: VehicleComponent },
                     { path: 'route', component: MissionrouteComponent },
                     { path: 'report', component: ReportComponent },
