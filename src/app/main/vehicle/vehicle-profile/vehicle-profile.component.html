@@ -1,0 +1,90 @@
+<div class="container">            
+    <form novalidate 
+            #f="ngForm"
+            (ngSubmit)="save()" style="margin-top:30px">
+        <p class="h5 text-center mb-4">Vehicle Profile</p>
+      <div class="form-row">
+          <div class="form-group col-md-6">
+              <label for="vehicleType">Type</label>
+              <input type="text"
+                  id="vehicleType"
+                  [(ngModel)]="vehicle.type"
+                  name="vehicleType" 
+                  class="form-control" 
+                  placeholder="Vehicle type" 
+                  [readonly]="vehicleService.isVehicleReadOnly"
+                  #vehicleType
+                  required>
+          </div>
+          <div class="form-group col-md-6">
+              <label for="model">Model</label>
+              <input type="text" 
+                  id="model"
+                  [(ngModel)]="vehicle.model"
+                  name="model" 
+                  class="form-control" 
+                  placeholder="Start date" 
+                  [readonly]="vehicleService.isVehicleReadOnly"
+                  required>
+          </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="sn">S/N</label>
+            <input type="text" 
+                id="sn"
+                [(ngModel)]="vehicle.sn"
+                name="sn" 
+                class="form-control" 
+                placeholder="S/N" 
+                [readonly]="vehicleService.isVehicleReadOnly"
+                required>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="state">State %</label>
+            <input type="text" 
+                id="state"
+                [(ngModel)]="vehicle.state"
+                name="state" 
+                class="form-control" 
+                placeholder="Route finish" 
+                [readonly]="vehicleService.isVehicleReadOnly"
+                required>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="mission">Mission</label>
+            <input type="text" 
+                id="mission"
+                [(ngModel)]="vehicle.missionId"
+                name="mission" 
+                class="form-control" 
+                placeholder="Mission" 
+                [readonly]="vehicleService.isVehicleReadOnly"
+                required>
+        </div>
+      </div>
+
+        
+
+        <div class="form-row" [hidden]="vehicleService.isVehicleReadOnly">
+          <div class="col-md-6">
+              <button class="btn btn-success" style="float:right" type="submit" [disabled]="f.invalid">Save</button>
+          </div>
+          <div class="col-md-6">
+            <button class="btn btn-danger" type="button" (click)="cancel()">Cancel</button>
+          </div>
+        </div>
+        <div class="form-row" [hidden]="!vehicleService.isVehicleReadOnly">
+            <div class="col-md-6">
+              <button type="button" class="btn btn-success waves-light btn-vehicle" style="float:right" (click)="editVehicle()">
+                  <i class="fa fa-pencil"> </i> Edit
+              </button>
+            </div>
+            <div class="col-md-6">
+              <button type="button" class="btn btn-danger waves-light btn-vehicle" (click)="delVehicle()">
+                  <i class="fa fa-trash"> </i> Remove
+              </button>
+            </div>
+        </div>
+    </form>
+</div>
