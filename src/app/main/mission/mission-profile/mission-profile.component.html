@@ -63,13 +63,17 @@
                     <button class="btn btn-danger" type="button" (click)="cancel()">Cancel</button>
                   </div>
                 </div>
-                <div [hidden]="!missionService.isMissionReadOnly" class="mission-btns">
-                    <button type="button" class="btn btn-default waves-light btn-mission" (click)="updateSensor()">
-                        <i class="fa fa-pencil"> Edit </i> 
-                    </button>
-                    <button type="button" class="btn btn-danger waves-light btn-mission" (click)="delSensor()">
-                        <i class="fa fa-trash"> Remove </i>
-                    </button>
+                <div class="form-row" [hidden]="!missionService.isMissionReadOnly">
+                    <div class="col-md-6">
+                      <button type="button" class="btn btn-success waves-light btn-mission" style="float:right" (click)="editMission()">
+                          <i class="fa fa-pencil"> </i> Edit
+                      </button>
+                    </div>
+                    <div class="col-md-6">
+                      <button type="button" class="btn btn-danger waves-light btn-mission" (click)="delMission()">
+                          <i class="fa fa-trash"> </i> Remove
+                      </button>
+                    </div>
                 </div>
             </form>
 </div>

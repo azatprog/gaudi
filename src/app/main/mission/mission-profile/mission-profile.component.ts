@@ -34,7 +34,9 @@ constructor(
  }
 
 ngOnInit() {
-  this.renderer.invokeElementMethod(this.missionName.nativeElement, 'focus');
+  if (this.missionService.isMissionReadOnly == false){
+    this.renderer.invokeElementMethod(this.missionName.nativeElement, 'focus');
+  }
 }
 
 goToMissionList() {
@@ -58,52 +60,53 @@ cancel() {
   }
 }
 
-updateMission() {
+editMission() {
   this.missionService.isMissionReadOnly = false;
   this.renderer.invokeElementMethod(this.missionName.nativeElement, 'focus');
 }
 
 delMission() {
-  // this.missionService.deleteMission(this.missionService.selectedMission).then(res => {
-  //   alert('deleted');
-  //   this.goToMissionList();
-  // }).catch(err=> {
-  //     if (err.status == 0) {
-  //         alert('Not bound to server! Check your connection!');
-  //     } else {
-  //         alert(err);
-  //     }
-  // });   
+  this.missionService.deleteMission(this.missionService.selectedMission).then(res => {
+    alert('deleted');
+    this.goToMissionList();
+  }).catch(err=> {
+      if (err.status == 0) {
+          alert('Not bound to server! Check your connection!');
+      } else {
+          alert(err);
+      }
+  });   
 }  
 
 save() {
   if (this.mission.id == null) {
-    // this.missionService.add(this.mission).then(res => {
-    //   this.mission = new Mission();
-    //   this.form.reset();
-    //   this.goToMissionList();
-    // }).catch(err=> {
-    //   if (err.status == 0) {
-    //       alert('Not bound to server! Check your connection!');
-    //     } else {
-    //       alert(err);
-    //     }
-    // });
+    console.log('in save');
+    this.missionService.add(this.mission).then(res => {
+      this.mission = new Mission();
+      this.form.reset();
+      this.goToMissionList();
+    }).catch(err=> {
+      if (err.status == 0) {
+          alert('Not bound to server! Check your connection!');
+        } else {
+          alert(err);
+        }
+    });
   } else {
-      // this.missionService.updateMission(this.mission).then(updated => {
-      //     this.mission = updated;
-      //     alert('updated');
-      //     this.missionService.selectedMission = null;
-      //     this.goToMissionShow();
-      // }).catch(err=> {
-      //     this.missionService.selectedMission = null;
-      //     this.missionService.isMissionReadOnly = true;
-      //     if (err.status == 0) {
-      //         alert('Not bound to server! Check your connection!');
-      //     } else {
-      //         alert(err);
-      //     }
-      // });
+      this.missionService.updateMission(this.mission).then(updated => {
+          this.mission = updated;
+          alert('updated');
+          this.missionService.selectedMission = null;
+          this.goToMissionList();
+      }).catch(err=> {
+          this.missionService.selectedMission = null;
+          this.missionService.isMissionReadOnly = true;
+          if (err.status == 0) {
+              alert('Not bound to server! Check your connection!');
+          } else {
+              alert(err);
+          }
+      });
   }
 }
 

@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ROUTES } from './app.routes';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -38,6 +39,7 @@ import { UniversalService } from './services/universal.service';
     AngularFontAwesomeModule,
     BrowserModule,
     FormsModule,
+    HttpClientModule,
     RouterModule.forRoot(ROUTES, { useHash: true })
   ],
   providers: [AuthService, UniversalService],

@@ -24,4 +24,12 @@ export class MissionComponent implements OnInit {
     this.route.navigate(['/app/main/missionProfile']);
   }
 
+  identify = (inx, item) => inx;
+
+  edit(mission) {
+    this.missionService.selectedMission = mission;
+    this.missionService.isMissionReadOnly = true;
+    this.route.navigate(['/app/main/missionProfile']);
+  }
+
 }

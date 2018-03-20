@@ -9,7 +9,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let m of missions">
+        <tr *ngFor="let m of missions; trackBy: identify" (click)="edit(m)">
           <td> {{ m.name }} </td>
           <td> {{ m.startDate }} </td>
           <td> {{ m.routeStart }} </td>
