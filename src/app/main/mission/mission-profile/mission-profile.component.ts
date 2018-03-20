@@ -24,7 +24,6 @@ constructor(
       this.mission = Object.assign({}, this.missionService.selectedMission);
     } else {      
       this.mission = new Mission();
-      console.log(this.mission);
     }
     
     location.onPopState(() => {
@@ -51,10 +50,8 @@ goToMissionShow() {
 
 cancel() {  
   if (this.missionService.selectedMission === null) {
-    console.log('cancel');
     this.goToMissionList();
   } else {
-    console.log('cancel');
     this.mission = this.missionService.selectedMission;
     this.goToMissionShow();      
   }
@@ -80,8 +77,7 @@ delMission() {
 
 save() {
   if (this.mission.id == null) {
-    console.log('in save');
-    this.missionService.add(this.mission).then(res => {
+    this.missionService.addMission(this.mission).then(res => {
       this.mission = new Mission();
       this.form.reset();
       this.goToMissionList();

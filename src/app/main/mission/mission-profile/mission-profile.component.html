@@ -17,11 +17,11 @@
                           required>
                   </div>
                   <div class="form-group col-md-6">
-                      <label for="missionName">Start Date</label>
+                      <label for="startDate">Start Date</label>
                       <input type="text" 
                           id="startDate"
                           [(ngModel)]="mission.startDate"
-                          name="missionStatus" 
+                          name="startDate" 
                           class="form-control" 
                           placeholder="Start date" 
                           [readonly]="missionService.isMissionReadOnly"
@@ -34,7 +34,7 @@
                     <input type="text" 
                         id="routeStart"
                         [(ngModel)]="mission.routeStart"
-                        name="missionStart" 
+                        name="routeStart" 
                         class="form-control" 
                         placeholder="Route start" 
                         [readonly]="missionService.isMissionReadOnly"

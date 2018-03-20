@@ -10,6 +10,7 @@ import { HelpComponent } from './main/help/help.component';
 import { AboutComponent } from './main/about/about.component';
 import { MapComponent } from './map/map.component';
 import { MissionProfileComponent } from './main/mission/mission-profile/mission-profile.component';
+import { VehicleProfileComponent } from './main/vehicle/vehicle-profile/vehicle-profile.component';
 
 
 export const ROUTES: Routes = [
@@ -24,6 +25,7 @@ export const ROUTES: Routes = [
                     { path: 'mission', component: MissionComponent },
                     { path: 'missionProfile', component: MissionProfileComponent },
                     { path: 'vehicle', component: VehicleComponent },
+                    { path: 'vehicleProfile', component: VehicleProfileComponent },
                     { path: 'route', component: MissionrouteComponent },
                     { path: 'report', component: ReportComponent },
                     { path: 'help', component: HelpComponent },

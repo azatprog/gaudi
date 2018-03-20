@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { UniversalService } from '../../services/universal.service';
 
 @Component({
   selector: 'app-vehicle',
@@ -7,9 +9,27 @@ import { Component, OnInit } from '@angular/core';
 })
 export class VehicleComponent implements OnInit {
 
-  constructor() { }
+  vehicles: Array<Object>;
+
+  constructor(private route: Router, private vehicleService: UniversalService) { 
+    this.vehicles = this.vehicleService.vehicles;
+  }
 
   ngOnInit() {
+  }
+
+  createVehicle() {
+    this.vehicleService.selectedVehicle = null;
+    this.vehicleService.isVehicleReadOnly = false;
+    this.route.navigate(['/app/main/vehicleProfile']);
+  }
+
+  identify = (inx, item) => inx;
+
+  edit(vehicle) {
+    this.vehicleService.selectedVehicle = vehicle;
+    this.vehicleService.isVehicleReadOnly = true;
+    this.route.navigate(['/app/main/vehicleProfile']);
   }
 
 }

@@ -1,3 +1,27 @@
-<p>
-  vehicle works!
-</p>
+<div class="container">
+    <table class="table">
+      <thead>
+        <tr>
+          <th> Type </th>
+          <th> Model </th>
+          <th> S/N </th>
+          <th> State (%) </th>
+          <th> Mission </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let v of vehicles; trackBy: identify" (click)="edit(v)">
+          <td> {{ v.type }} </td>
+          <td> {{ v.model }} </td>
+          <td> {{ v.sn }} </td>
+          <td> {{ v.state }} </td>
+          <td> {{ v.missionId }} </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="create-vehicle" style="bottom: 30px; right: 30px;">
+        <button type="button" class="btn btn-danger waves-light add-btn" (click)="createVehicle()">
+            <i class="fa fa-plus plus-icon"></i>
+        </button>
+    </div>
+</div>
