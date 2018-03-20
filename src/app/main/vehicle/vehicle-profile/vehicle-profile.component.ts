@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild, ElementRef, Renderer } from '@angular/cor
 import { Vehicle } from '../../../models/vehicle.model';
 import { PlatformLocation, Location } from '@angular/common';
 import { UniversalService } from '../../../services/universal.service';
+import { Mission } from '../../../models/mission.model';
+import { SelectControlValueAccessor } from '@angular/forms';
 
 @Component({
   selector: 'app-vehicle-profile',
@@ -36,6 +38,10 @@ export class VehicleProfileComponent implements OnInit {
     if (this.vehicleService.isVehicleReadOnly == false){
       this.renderer.invokeElementMethod(this.vehicleType.nativeElement, 'focus');
     }
+  }
+
+  compareFn(c1: Mission, c2: Mission): boolean {
+    return c1 && c2 ? c1.id === c2.id : c1 === c2;
   }
 
   goToVehicleList() {

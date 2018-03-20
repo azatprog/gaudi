@@ -4,7 +4,10 @@ export interface IVehicle {
     model: String;
     sn: String;
     state: String;
-    missionId: Number;
+    mission: {
+        id: Number;
+        name: String;
+    };
 }
 
 export class Vehicle implements IVehicle {
@@ -13,7 +16,10 @@ export class Vehicle implements IVehicle {
     model: String;
     sn: String;
     state: String;
-    missionId: Number;
+    mission: {
+        id: Number;
+        name: String;
+    };
 
     constructor() { }
 }
