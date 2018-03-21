@@ -72,7 +72,7 @@ selectVehicle(vehicle: Vehicle) {
 }
 
 onSelectRootVehicle() {
-  
+
 }
 
 remVehicle(vehicle: Vehicle) {
@@ -120,6 +120,7 @@ delMission() {
 }  
 
 save() {  
+  this.mission.vehicles = this.vehicles.map(v => v.id);
   if (this.mission.id == null) {
     this.missionService.addMission(this.mission).then(res => {
       this.mission = new Mission();
