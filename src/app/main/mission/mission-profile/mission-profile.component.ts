@@ -20,9 +20,9 @@ export class MissionProfileComponent implements OnInit {
     return vehs;
   }
 
-private mission: Mission;
-private vehicles: Vehicle[];
-private isShowingVehiclePopup: Boolean;
+public mission: Mission;
+public vehicles: Vehicle[];
+public isShowingVehiclePopup: Boolean;
 
 constructor(
             private location: PlatformLocation,

@@ -15,7 +15,7 @@ export class VehicleProfileComponent implements OnInit {
   @ViewChild('f') form: any;
   @ViewChild('vehicleType') vehicleType: ElementRef;
 
-  private vehicle: Vehicle;
+  public vehicle: Vehicle;
   constructor(
               private location: PlatformLocation,
               private _location: Location,

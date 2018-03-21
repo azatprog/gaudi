@@ -10,7 +10,7 @@ import { UniversalService } from '../../../services/universal.service';
 })
 export class PopupVehiclesComponent implements OnInit {
 
-  private vehicles: Array<Vehicle>;
+  public vehicles: Array<Vehicle>;
 
 	@Input() popupName:String;
 
