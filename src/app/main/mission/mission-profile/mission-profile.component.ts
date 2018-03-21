@@ -2,8 +2,10 @@ import { Component, OnInit, ViewChild, ElementRef, Renderer } from '@angular/cor
 import { Mission } from '../../../models/mission.model';
 import { PlatformLocation, Location } from '@angular/common';
 import { UniversalService } from '../../../services/universal.service';
+import { Vehicle } from '../../../models/vehicle.model';
 
 @Component({
+  moduleId: module.id,
   selector: 'app-mission-profile',
   templateUrl: './mission-profile.component.html',
   styleUrls: ['./mission-profile.component.css']
@@ -13,7 +15,15 @@ export class MissionProfileComponent implements OnInit {
   @ViewChild('f') form: any;
   @ViewChild('missionName') missionName: ElementRef;
 
+  getVehicles = () => {
+    let vehs = this.missionService.vehicles.filter(v => this.mission.vehicles.includes(v.id));
+    return vehs;
+  }
+
 private mission: Mission;
+private vehicles: Vehicle[];
+private isShowingVehiclePopup: Boolean;
+
 constructor(
             private location: PlatformLocation,
             private _location: Location,
@@ -22,8 +32,10 @@ constructor(
 ) { 
     if (this.missionService.selectedMission) {
       this.mission = Object.assign({}, this.missionService.selectedMission);
+      this.vehicles = this.getVehicles();
     } else {      
       this.mission = new Mission();
+      this.vehicles = [];
     }
     
     location.onPopState(() => {
@@ -36,6 +48,27 @@ ngOnInit() {
   if (this.missionService.isMissionReadOnly == false){
     this.renderer.invokeElementMethod(this.missionName.nativeElement, 'focus');
   }
+}
+
+openVehicleListPopup() {
+  this.isShowingVehiclePopup = true;
+}
+
+closeVehiclePopup() {
+  this.isShowingVehiclePopup = false;
+}
+
+selectVehicle(vehicle: Vehicle) {
+  if (this.mission.vehicles.includes(vehicle.id)) {
+    alert('The vehicle already in this mission');
+  } else {
+    this.mission.vehicles.push(vehicle.id);
+    this.vehicles = this.getVehicles();
+    this.missionService.updateVehicle(vehicle).then(res => {
+      
+    });
+  }
+  this.closeVehiclePopup();
 }
 
 goToMissionList() {
@@ -75,7 +108,7 @@ delMission() {
   });   
 }  
 
-save() {
+save() {  
   if (this.mission.id == null) {
     this.missionService.addMission(this.mission).then(res => {
       this.mission = new Mission();

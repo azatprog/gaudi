@@ -20,6 +20,7 @@ import { MapComponent } from './map/map.component';
 import { MissionProfileComponent } from './main/mission/mission-profile/mission-profile.component';
 import { UniversalService } from './services/universal.service';
 import { VehicleProfileComponent } from './main/vehicle/vehicle-profile/vehicle-profile.component';
+import { PopupVehiclesComponent } from './main/mission/popup-vehicles/popup-vehicles.component';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { VehicleProfileComponent } from './main/vehicle/vehicle-profile/vehicle-
     AboutComponent,
     MapComponent,
     MissionProfileComponent,
-    VehicleProfileComponent
+    VehicleProfileComponent,
+    PopupVehiclesComponent
   ],
   imports: [
     AngularFontAwesomeModule,

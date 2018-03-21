@@ -1,0 +1,21 @@
+ul {
+    list-style: none;
+}
+
+.vehicle-each {
+    background: #68ff8c;
+    border: 1px solid gray;    
+    margin-top: 2px;
+    border-radius: 25%;
+    text-align: center;
+    padding: 5px;
+}
+
+.vehicle-each:hover {
+    background: #f6ff11;
+    cursor: pointer;
+}
+
+.no-padding {
+    padding: 0px;
+}

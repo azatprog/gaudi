@@ -28,7 +28,7 @@
                           required>
                   </div>
               </div>
-              <div class="form-row">
+              <div class="form-row" style="margin-bottom:30px">
                 <div class="form-group col-md-6">
                     <label for="routeStart">Route Start</label>
                     <input type="text" 
@@ -53,7 +53,37 @@
                 </div>
               </div>
 
+            <p class="h5 text-center mb-4">
+                Vehicles 
                 
+                <button [hidden]="missionService.isMissionReadOnly"
+                        type="button" style="float: right; margin-bottom: 10px; border-radius: 50%;" 
+                        class="btn btn-danger waves-light add-btn"
+                        data-toggle="dropdown"
+                        (click)="openVehicleListPopup()"
+                        data-toggle="modal" data-target="#vehicleListPopup">
+                    <i class="fa fa-plus plus-icon"></i>
+                </button>
+            </p>
+            <table class="table">
+                <thead>
+                    <tr>
+                    <th> Type </th>
+                    <th> Model </th>
+                    <th> S/N </th>
+                    <th> State (%) </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let v of vehicles;">
+                    <td> {{ v.type }} </td>
+                    <td> {{ v.model }} </td>
+                    <td> {{ v.sn }} </td>
+                    <td> {{ v.state }} </td>
+                    </tr>
+                </tbody>
+            </table>
+            
 
                 <div class="form-row" [hidden]="missionService.isMissionReadOnly">
                   <div class="col-md-6">
@@ -77,3 +107,9 @@
                 </div>
             </form>
 </div>
+<popup-vehicles 
+                    [popupName]="'vehicleListPopup'"
+                    (eventClosePopup)="closeVehiclePopup()"
+                    (eventOnSelectRootVehicle)="onSelectRootVehicle()"
+                    (eventGetSelectedVehicle)="selectVehicle($event)">
+</popup-vehicles>

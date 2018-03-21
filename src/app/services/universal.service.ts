@@ -19,11 +19,16 @@ export class UniversalService {
 
   constructor(private http: HttpClient) {
     this.missions = [
-      { 'id': 1, 'name': 'Humanitarian mission', 'startDate': '01.05.2018', 'routeStart': 'Baghdad', 'routeFinish': 'Kabul' },
-      { 'id': 2, 'name': 'Driniking water delivery', 'startDate': '23.05.2018', 'routeStart': 'Berlin', 'routeFinish': 'Munch' },
-      { 'id': 3, 'name': 'Zica virus recovery', 'startDate': '11.09.2018', 'routeStart': 'Kinshasa', 'routeFinish': 'Kabalo' },
-      { 'id': 4, 'name': 'Hurricane Sud disaster', 'startDate': '08.08.2018', 'routeStart': 'Port-de-Paix', 'routeFinish': 'Cap-Haïtien' },
-      { 'id': 5, 'name': 'Earthquake mission', 'startDate': '13.07.2018', 'routeStart': 'Anse-à-Veau', 'routeFinish': 'Camp Perrin' }
+      { 'id': 1, 'name': 'Humanitarian mission', 'startDate': '01.05.2018', 'routeStart': 'Baghdad', 'routeFinish': 'Kabul', 
+        'vehicles': [1,4] },
+      { 'id': 2, 'name': 'Driniking water delivery', 'startDate': '23.05.2018', 'routeStart': 'Berlin', 'routeFinish': 'Munch', 
+        'vehicles': [2] },
+      { 'id': 3, 'name': 'Zica virus recovery', 'startDate': '11.09.2018', 'routeStart': 'Kinshasa', 'routeFinish': 'Kabalo', 
+        'vehicles': [5] },
+      { 'id': 4, 'name': 'Hurricane Sud disaster', 'startDate': '08.08.2018', 'routeStart': 'Port-de-Paix', 'routeFinish': 'Cap-Haïtien', 
+        'vehicles': [] },
+      { 'id': 5, 'name': 'Earthquake mission', 'startDate': '13.07.2018', 'routeStart': 'Anse-à-Veau', 'routeFinish': 'Camp Perrin', 
+        'vehicles': [] }
     ];
 
     this.vehicles = [

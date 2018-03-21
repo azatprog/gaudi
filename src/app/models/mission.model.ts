@@ -4,6 +4,7 @@ export interface IMission {
     startDate: String;
     routeStart: String;
     routeFinish: String;
+    vehicles: Number[];
 }
 
 export class Mission implements IMission {
@@ -12,6 +13,7 @@ export class Mission implements IMission {
     startDate: String;
     routeStart: String;
     routeFinish: String;
+    vehicles: Number[];
 
     constructor() { }
 }

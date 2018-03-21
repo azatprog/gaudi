@@ -16,6 +16,8 @@ export class VehicleComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.vehicles = this.vehicleService.vehicles;
+    console.log(this.vehicles);
   }
 
   createVehicle() {
