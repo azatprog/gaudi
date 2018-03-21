@@ -71,6 +71,10 @@ selectVehicle(vehicle: Vehicle) {
   this.closeVehiclePopup();
 }
 
+onSelectRootVehicle() {
+  
+}
+
 remVehicle(vehicle: Vehicle) {
   this.missionService.filterArray(vehicle, this.vehicles).then(res => { 
     this.vehicles = res;
