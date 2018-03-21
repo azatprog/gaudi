@@ -18,7 +18,7 @@ export class PopupVehiclesComponent implements OnInit {
 	@Output() eventClosePopup = new EventEmitter();
 	@Output() eventOnSelectRootVehicle = new EventEmitter();
 
-	constructor(private vehicleService: UniversalService ) { 	    
+	constructor(public vehicleService: UniversalService ) { 	    
     this.vehicles = this.vehicleService.vehicles;
 	}
 

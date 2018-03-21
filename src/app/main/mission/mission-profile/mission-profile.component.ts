@@ -27,7 +27,7 @@ private isShowingVehiclePopup: Boolean;
 constructor(
             private location: PlatformLocation,
             private _location: Location,
-            private missionService: UniversalService,
+            public missionService: UniversalService,
             private renderer: Renderer
 ) { 
     if (this.missionService.selectedMission) {

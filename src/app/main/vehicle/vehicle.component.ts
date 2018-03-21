@@ -11,7 +11,7 @@ export class VehicleComponent implements OnInit {
 
   vehicles: Array<Object>;
 
-  constructor(private route: Router, private vehicleService: UniversalService) { 
+  constructor(private route: Router, public vehicleService: UniversalService) { 
     this.vehicles = this.vehicleService.vehicles;
   }
 

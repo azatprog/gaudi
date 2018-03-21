@@ -11,7 +11,7 @@ export class MissionComponent implements OnInit {
 
   missions: Array<Object>;
 
-  constructor(private route: Router, private missionService: UniversalService) { 
+  constructor(private route: Router, public missionService: UniversalService) { 
     this.missions = this.missionService.missions;
   }
 

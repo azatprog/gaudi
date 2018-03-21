@@ -19,7 +19,7 @@ export class VehicleProfileComponent implements OnInit {
   constructor(
               private location: PlatformLocation,
               private _location: Location,
-              private vehicleService: UniversalService,
+              public vehicleService: UniversalService,
               private renderer: Renderer
   ) { 
       if (this.vehicleService.selectedVehicle) {
