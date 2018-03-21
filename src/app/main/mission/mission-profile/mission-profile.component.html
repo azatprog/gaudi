@@ -68,18 +68,20 @@
             <table class="table">
                 <thead>
                     <tr>
-                    <th> Type </th>
-                    <th> Model </th>
-                    <th> S/N </th>
-                    <th> State (%) </th>
+                        <th [hidden]="missionService.isMissionReadOnly">  </th>
+                        <th> Type </th>
+                        <th> Model </th>
+                        <th> S/N </th>
+                        <th> State (%) </th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let v of vehicles;">
-                    <td> {{ v.type }} </td>
-                    <td> {{ v.model }} </td>
-                    <td> {{ v.sn }} </td>
-                    <td> {{ v.state }} </td>
+                        <td [hidden]="missionService.isMissionReadOnly"> <button class="btn-danger rem-btn" (click)="remVehicle(v)"> <i class="fa fa-trash-o"> </i> </button> </td>
+                        <td> {{ v.type }} </td>
+                        <td> {{ v.model }} </td>
+                        <td> {{ v.sn }} </td>
+                        <td> {{ v.state }} </td>
                     </tr>
                 </tbody>
             </table>

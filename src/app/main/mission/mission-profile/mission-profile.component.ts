@@ -71,6 +71,13 @@ selectVehicle(vehicle: Vehicle) {
   this.closeVehiclePopup();
 }
 
+remVehicle(vehicle: Vehicle) {
+  this.missionService.filterArray(vehicle, this.vehicles).then(res => { 
+    this.vehicles = res;
+    this.mission.vehicles = this.vehicles.map(v => v.id);
+  });
+}
+
 goToMissionList() {
   this._location.back();
   this.missionService.selectedMission = null;
