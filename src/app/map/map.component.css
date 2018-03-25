@@ -1,0 +1,14 @@
+.map input {
+    margin: 10px 5px 0px 5px;
+    padding: 5px;
+    width: 90%;
+}
+
+.routeDetails {
+    display: inline-grid;
+    padding: 5px;
+}
+
+.controls {
+    border-right: 1px solid black;
+}

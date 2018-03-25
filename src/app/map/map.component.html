@@ -1,6 +1,62 @@
-<div style="margin-top: 56px;">
-
-<p>
-  map works!
-</p>
+<div class="map" style="padding-top: 54px; width: 100%; display: flex">
+    <div class="controls" style="width: 400px;float: left;">
+      <input type="text" placeholder="Point A" (change)="pointAChanged($event)" />
+      <input type="text" placeholder="Point B" (change)="pointBChanged($event)"/>
+      <div class="routeDetails">
+        <div>
+            <div><b>Distance:</b></div>
+        </div>
+        <b>Duration:</b>
+      </div>
+      <input type="button" value="Search" (click)="searchRoute()" />
+    </div>
+   <aol-map style="flex-grow: 1; width: 100%; height: 100%">
+    <aol-interaction-default></aol-interaction-default>
+    <aol-view [zoom]="zoom">
+      <aol-coordinate [x]="xCenter" [y]="yCenter" [srid]="'EPSG:4326'"></aol-coordinate>
+    </aol-view>
+    <aol-layer-tile [opacity]="opacity">
+      <aol-source-osm></aol-source-osm>
+    </aol-layer-tile>
+    <aol-layer-vector [opacity]="opacity">
+      <aol-source-vector>
+        <aol-feature>
+          <aol-geometry-point>
+            <aol-coordinate [x]="xCenter" [y]="yCenter" [srid]="'EPSG:4326'"></aol-coordinate>
+          </aol-geometry-point>
+          <aol-style>
+            <aol-style-circle [radius]="10">
+              <aol-style-stroke [color]="'black'" [width]="width"></aol-style-stroke>
+              <aol-style-fill [color]="'green'"></aol-style-fill>
+            </aol-style-circle>
+          </aol-style>
+        </aol-feature>
+        <aol-feature>
+          <!-- <aol-geometry-point>
+            <aol-coordinate [x]="xCenter" [y]="yCenter" [srid]="'EPSG:4326'"></aol-coordinate>
+          </aol-geometry-point>
+          <aol-style>
+            <aol-style-icon
+              [src]="'assets/marker.png'"
+              [anchor]="[0.5, 1]"
+              [anchorXUnits]="'fraction'" [anchorYUnits]="'fraction'"
+              [scale]="0.1"
+              [anchorOrigin]="'top-left'">
+            </aol-style-icon>
+          </aol-style> -->
+        </aol-feature>
+        <aol-feature>
+            <aol-geometry-linestring>
+                <aol-collection-coordinates 
+                    [coordinates]="route" 
+                    [srid]="'EPSG:4326'" >
+                </aol-collection-coordinates>
+            </aol-geometry-linestring>
+            <aol-style>
+                <aol-style-stroke [color]="'blue'" [width]="3" ></aol-style-stroke>
+            </aol-style>
+        </aol-feature>
+      </aol-source-vector>
+    </aol-layer-vector>
+   </aol-map>
 </div>

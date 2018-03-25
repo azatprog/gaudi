@@ -19,6 +19,8 @@ import { AboutComponent } from './main/about/about.component';
 import { MapComponent } from './map/map.component';
 import { MissionProfileComponent } from './main/mission/mission-profile/mission-profile.component';
 import { UniversalService } from './services/universal.service';
+import {AngularOpenlayersModule} from 'ngx-openlayers';
+import { MapService } from './services/map.service';
 import { VehicleProfileComponent } from './main/vehicle/vehicle-profile/vehicle-profile.component';
 import { PopupVehiclesComponent } from './main/mission/popup-vehicles/popup-vehicles.component';
 
@@ -44,9 +46,10 @@ import { PopupVehiclesComponent } from './main/mission/popup-vehicles/popup-vehi
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    RouterModule.forRoot(ROUTES, { useHash: true })
+    RouterModule.forRoot(ROUTES, { useHash: true }),
+    AngularOpenlayersModule
   ],
-  providers: [AuthService, UniversalService],
+  providers: [AuthService, UniversalService, MapService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
