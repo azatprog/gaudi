@@ -16,14 +16,13 @@ export class MapComponent implements OnInit {
   public xCenter = 48.74718000000001;
   public yCenter = 55.751716;
   
-  public route: Array<[number][number]>;
+  public route: number[][] = [];
   public routeDescription: String;
 
   private pointA;
   private pointB;
 
   constructor(private mapService: MapService) { 
-    this.route = new Array<[number][number]>();
   }
 
   public pointAChanged(event) {

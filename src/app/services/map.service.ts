@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 export class RouteDetails {
-  public route: Array<[number][number]>;
+  public route: number[][];
   public distance: Number;
   public start: String;
   public end: String;
@@ -23,13 +23,13 @@ export class MapService {
   getRoute(start, end): Promise<RouteDetails>  {
     return new Promise<RouteDetails>( (resolve, reject) => {
       var directionsService = new google.maps.DirectionsService();
-      var request = {
+      let request: google.maps.DirectionsRequest = <google.maps.DirectionsRequest>{
         origin: start,
         destination: end,
-        travelMode: 'DRIVING'
+        travelMode: google.maps.TravelMode.DRIVING,
       };
       directionsService.route(request, function(result, status) {
-        if (status == 'OK') {       
+        if (status == google.maps.DirectionsStatus.OK) {       
           if (result.routes.length > 0) {
             var route = result.routes[0];
             var routeDetails: RouteDetails  = new RouteDetails();
