@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { MapService } from '../services/map.service';
 
 @Component({
@@ -25,8 +25,12 @@ export class MapComponent implements OnInit {
   yPointA: Number;
   xPointB: Number;
   yPointB: Number;
+  
+  xMove?: Number;
+  yMove?: Number;
 
-  constructor(public mapService: MapService) { 
+  constructor(public mapService: MapService, 
+              private ref: ChangeDetectorRef) { 
     this.pointA = this.mapService.pointA;
     this.pointB = this.mapService.pointB;
   }
@@ -45,6 +49,8 @@ export class MapComponent implements OnInit {
       const last = result.route.length - 1;
        this.xCenter = result.route[center][0];
        this.yCenter = result.route[center][1];
+       this.xMove = result.route[0][0];
+       this.yMove = result.route[0][1];
        this.xPointA = result.route[0][0];
        this.yPointA = result.route[0][1];
        this.xPointB = result.route[last][0];
@@ -63,11 +69,24 @@ export class MapComponent implements OnInit {
 
   increaseZoom() {
     this.zoom  = Math.min(this.zoom + 1, 18);
-    console.log('zoom: ', this.zoom);
   }
 
   decreaseZoom() {
     this.zoom  = Math.max(this.zoom - 1, 1);
-    console.log('zoom: ', this.zoom);
+  }
+
+  startConvoy() {
+    var count = 0;
+    var route = this.route;
+    var timerId = setInterval(()=> {
+      this.xMove = route[count][0];
+      this.yMove = route[count][1];
+      this.ref.detectChanges();
+
+      count++;
+      if (count >= route.length) {
+        clearInterval(timerId);
+      }
+    }, 300);
   }
 }
