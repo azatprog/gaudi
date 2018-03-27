@@ -4,6 +4,7 @@ import { PlatformLocation, Location } from '@angular/common';
 import { UniversalService } from '../../../services/universal.service';
 import { Vehicle } from '../../../models/vehicle.model';
 import { Router } from '@angular/router';
+import { MapService } from '../../../services/map.service';
 
 @Component({
   moduleId: module.id,
@@ -30,7 +31,8 @@ constructor(
             private _location: Location,
             private route: Router, 
             public missionService: UniversalService,
-            private renderer: Renderer
+            private renderer: Renderer,
+            public mapService: MapService
 ) { 
     if (this.missionService.selectedMission) {
       this.mission = Object.assign({}, this.missionService.selectedMission);
@@ -96,7 +98,9 @@ goToMissionShow() {
 
 showOnMap() {
   this.missionService.isMissionReadOnly = true;
-  this.route.navigate(['/app/main/missionOnMap']);
+  this.mapService.pointA = this.missionService.selectedMission.routeStart;
+  this.mapService.pointB = this.missionService.selectedMission.routeFinish;
+  this.route.navigate(['/app/main/map']);
 }
 
 cancel() {  

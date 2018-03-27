@@ -19,10 +19,12 @@ export class MapComponent implements OnInit {
   public route: number[][] = [];
   public routeDescription: String;
 
-  private pointA;
-  private pointB;
+  public pointA: String;
+  public pointB: String;
 
-  constructor(private mapService: MapService) { 
+  constructor(public mapService: MapService) { 
+    this.pointA = this.mapService.pointA;
+    this.pointB = this.mapService.pointB;
   }
 
   public pointAChanged(event) {
@@ -40,6 +42,10 @@ export class MapComponent implements OnInit {
        this.route = result.route;
        console.log(result);
     });
+  }
+
+  ngAfterViewInit() {
+    this.searchRoute();
   }
 
   ngOnInit() {
