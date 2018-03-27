@@ -24,6 +24,7 @@ export const ROUTES: Routes = [
                     { path: '', redirectTo: 'mission', pathMatch: 'full'},
                     { path: 'mission', component: MissionComponent },
                     { path: 'missionProfile', component: MissionProfileComponent },
+                    { path: 'missionOnMap', component: MissionrouteComponent },
                     { path: 'vehicle', component: VehicleComponent },
                     { path: 'vehicleProfile', component: VehicleProfileComponent },
                     { path: 'route', component: MissionrouteComponent },

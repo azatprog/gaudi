@@ -3,6 +3,7 @@ import { Mission } from '../../../models/mission.model';
 import { PlatformLocation, Location } from '@angular/common';
 import { UniversalService } from '../../../services/universal.service';
 import { Vehicle } from '../../../models/vehicle.model';
+import { Router } from '@angular/router';
 
 @Component({
   moduleId: module.id,
@@ -27,6 +28,7 @@ public isShowingVehiclePopup: Boolean;
 constructor(
             private location: PlatformLocation,
             private _location: Location,
+            private route: Router, 
             public missionService: UniversalService,
             private renderer: Renderer
 ) { 
@@ -90,6 +92,11 @@ goToMissionList() {
 
 goToMissionShow() {
   this.missionService.isMissionReadOnly = true;
+}
+
+showOnMap() {
+  this.missionService.isMissionReadOnly = true;
+  this.route.navigate(['/app/main/missionOnMap']);
 }
 
 cancel() {  
