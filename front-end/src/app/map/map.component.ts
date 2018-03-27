@@ -87,6 +87,6 @@ export class MapComponent implements OnInit {
       if (count >= route.length) {
         clearInterval(timerId);
       }
-    }, 300);
+    }, 600);
   }
 }

@@ -35,9 +35,10 @@ testem.log
 /typings
 
 # e2e
-/e2e/*.js
-/e2e/*.map
+/front-end/e2e/*.js
+/front-end/e2e/*.map
 
 # System Files
 .DS_Store
 Thumbs.db
+/front-end/node_modules/
