@@ -8,7 +8,7 @@ import { MapService } from '../services/map.service';
 })
 
 export class MapComponent implements OnInit {
-  public zoom = 15;
+  public zoom = 5;
   public opacity = 1.0;
   public width = 5;
 
@@ -21,6 +21,10 @@ export class MapComponent implements OnInit {
 
   public pointA: String;
   public pointB: String;
+  xPointA: Number;
+  yPointA: Number;
+  xPointB: Number;
+  yPointB: Number;
 
   constructor(public mapService: MapService) { 
     this.pointA = this.mapService.pointA;
@@ -37,8 +41,14 @@ export class MapComponent implements OnInit {
 
   searchRoute() {
     this.mapService.getRoute(this.pointA, this.pointB).then((result) => {
-       this.xCenter = result.route[0][0];
-       this.yCenter = result.route[0][1];
+      let center = Math.round(result.route.length / 2);
+      const last = result.route.length - 1;
+       this.xCenter = result.route[center][0];
+       this.yCenter = result.route[center][1];
+       this.xPointA = result.route[0][0];
+       this.yPointA = result.route[0][1];
+       this.xPointB = result.route[last][0];
+       this.yPointB = result.route[last][1];
        this.route = result.route;
        console.log(result);
     });
@@ -49,5 +59,15 @@ export class MapComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  increaseZoom() {
+    this.zoom  = Math.min(this.zoom + 1, 18);
+    console.log('zoom: ', this.zoom);
+  }
+
+  decreaseZoom() {
+    this.zoom  = Math.max(this.zoom - 1, 1);
+    console.log('zoom: ', this.zoom);
   }
 }

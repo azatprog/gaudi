@@ -20,7 +20,7 @@
     </aol-layer-tile>
     <aol-layer-vector [opacity]="opacity">
       <aol-source-vector>
-        <aol-feature>
+        <!-- <aol-feature>
           <aol-geometry-point>
             <aol-coordinate [x]="xCenter" [y]="yCenter" [srid]="'EPSG:4326'"></aol-coordinate>
           </aol-geometry-point>
@@ -30,20 +30,34 @@
               <aol-style-fill [color]="'green'"></aol-style-fill>
             </aol-style-circle>
           </aol-style>
-        </aol-feature>
+        </aol-feature> -->
         <aol-feature>
-          <!-- <aol-geometry-point>
-            <aol-coordinate [x]="xCenter" [y]="yCenter" [srid]="'EPSG:4326'"></aol-coordinate>
+          <aol-geometry-point>
+            <aol-coordinate [x]="xPointA" [y]="yPointA" [srid]="'EPSG:4326'"></aol-coordinate>
           </aol-geometry-point>
           <aol-style>
             <aol-style-icon
-              [src]="'assets/marker.png'"
+              [src]="'assets/pics/startPoint.png'"
               [anchor]="[0.5, 1]"
               [anchorXUnits]="'fraction'" [anchorYUnits]="'fraction'"
               [scale]="0.1"
               [anchorOrigin]="'top-left'">
             </aol-style-icon>
-          </aol-style> -->
+          </aol-style>
+        </aol-feature>
+        <aol-feature>
+          <aol-geometry-point>
+            <aol-coordinate [x]="xPointB" [y]="yPointB" [srid]="'EPSG:4326'"></aol-coordinate>
+          </aol-geometry-point>
+          <aol-style>
+            <aol-style-icon
+              [src]="'assets/pics/endPoint.png'"
+              [anchor]="[0.5, 1]"
+              [anchorXUnits]="'fraction'" [anchorYUnits]="'fraction'"
+              [scale]="0.1"
+              [anchorOrigin]="'top-left'">
+            </aol-style-icon>
+          </aol-style>
         </aol-feature>
         <aol-feature>
             <aol-geometry-linestring>
@@ -57,6 +71,9 @@
             </aol-style>
         </aol-feature>
       </aol-source-vector>
-    </aol-layer-vector>
-   </aol-map>
+    </aol-layer-vector>    
+   </aol-map>   
+</div>
+<div class="zoom">
+  Zoom: <button class="btn btn-success" (click)="increaseZoom()"> <i class="fa fa-search-plus"> </i> </button> <button class="btn btn-danger" (click)="decreaseZoom()" > <i class="fa fa-search-minus"> </i> </button><br>
 </div>
