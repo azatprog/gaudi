@@ -47,15 +47,16 @@ export class MapComponent implements OnInit {
     this.mapService.getRoute(this.pointA, this.pointB).then((result) => {
       let center = Math.round(result.route.length / 2);
       const last = result.route.length - 1;
-       this.xCenter = result.route[center][0];
-       this.yCenter = result.route[center][1];
-       this.xMove = result.route[0][0];
-       this.yMove = result.route[0][1];
-       this.xPointA = result.route[0][0];
-       this.yPointA = result.route[0][1];
-       this.xPointB = result.route[last][0];
-       this.yPointB = result.route[last][1];
-       this.route = result.route;
+       this.route = result.route.map(p => {return [p.lng, p.lan]});
+       this.xCenter = this.route[center][0];
+       this.yCenter = this.route[center][1];
+       this.xMove = this.route[0][0];
+       this.yMove = this.route[0][1];
+       this.xPointA = this.route[0][0];
+       this.yPointA = this.route[0][1];
+       this.xPointB = this.route[last][0];
+       this.yPointB = this.route[last][1];
+       
        console.log(result);
     });
   }
