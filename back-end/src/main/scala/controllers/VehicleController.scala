@@ -5,8 +5,13 @@ import org.json4s.DefaultFormats
 import org.scalatra._
 import org.scalatra.json.JacksonJsonSupport
 
-class VehicleController extends ScalatraServlet with JacksonJsonSupport  {
+class VehicleController extends ScalatraServlet with JacksonJsonSupport with CorsSupport  {
   implicit val jsonFormats = DefaultFormats
+
+  options("/*"){
+    response.setHeader(
+      "Access-Control-Allow-Headers", request.getHeader("Access-Control-Request-Headers"));
+  }
 
   get("/") {
     contentType = formats("json")

@@ -21,4 +21,11 @@ object MissionVehicles {
     vids.foreach(vid => listBuffer += MissionVehicles(mid, vid))
     listBuffer.toList
   }
+
+  def apply(mid: Long, vids: Array[Vehicle]
+           ): List[MissionVehicles] = {
+    var listBuffer = ListBuffer[MissionVehicles]()
+    vids.foreach(v => listBuffer += MissionVehicles(mid, v.id))
+    listBuffer.toList
+  }
 }

@@ -13,10 +13,9 @@ case class Mission private (
                              var id: Long,
                              var name: String,
                              var startDate: String,
+                             var vehicles: Set[Vehicle],
                              var routeStart: String,
                              var routeFinish: String) extends KeyedEntity[Long] {
-
-  var vehicles = Set[Vehicle]()
 
   override def hashCode(): Int = id.hashCode
 
@@ -45,7 +44,7 @@ object Mission {
              startDate: String, routeStart: String,
              routeFinish: String): Mission = {
     val mission = DbSchema.insert(
-      new Mission(0, name, startDate, routeStart, routeFinish)
+      new Mission(0, name, startDate, Set[Vehicle](), routeStart, routeFinish)
     )
     mission
   }
@@ -85,6 +84,16 @@ object Mission {
     */
   def addVehicles(mid: Long, vids: Array[Long]): Unit = {
     val list = MissionVehicles(mid, vids)
+    DbSchema.insert(list)
+  }
+
+  /**
+    * Adds the vehicles to the mission.
+    * @param mid  mission's id
+    * @param vs the array of vehicles
+    */
+  def addVehicles(mid: Long, vs: Array[Vehicle]): Unit = {
+    val list = MissionVehicles(mid, vs) // TODO: check that data is actual to id?
     DbSchema.insert(list)
   }
 

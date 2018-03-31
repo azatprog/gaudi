@@ -2,7 +2,7 @@ val ScalatraVersion = "2.6.2"
 
 organization := "cd"
 
-name := "PrognosticSystem"
+name := "back-end"
 
 version := "0.1"
 
