@@ -14,8 +14,7 @@ case class Mission private (
                              var name: String,
                              var startDate: String,
                              var vehicles: Set[Vehicle],
-                             var routeStart: String,
-                             var routeFinish: String) extends KeyedEntity[Long] {
+                             var route: RouteDetails) extends KeyedEntity[Long] {
 
   override def hashCode(): Int = id.hashCode
 
@@ -26,7 +25,7 @@ case class Mission private (
   }
 
   override def toString = {
-    "Mission("+id+","+name+","+startDate+","+routeStart+","+routeFinish+","+vehicles+")"
+    "Mission("+id+","+name+","+startDate+","+vehicles+","+route+")"
   }
 }
 
@@ -34,17 +33,11 @@ object Mission {
   /**
     * Creates and returns a new Mission,
     * id is unique and generated automatically.
-    * @param name
-    * @param startDate
-    * @param routeStart
-    * @param routeFinish
-    * @return
     */
   def create(name: String,
-             startDate: String, routeStart: String,
-             routeFinish: String): Mission = {
+             startDate: String, vehicle: Set[Vehicle], route: RouteDetails): Mission = {
     val mission = DbSchema.insert(
-      new Mission(0, name, startDate, Set[Vehicle](), routeStart, routeFinish)
+      new Mission(0, name, startDate, vehicle, route)
     )
     mission
   }

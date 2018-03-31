@@ -19,6 +19,8 @@ object DbSchema extends Schema {
       via[MissionVehicles](
         (m, v, mv) => (mv.vehicleId === v.id, m.id === mv.missionId)
       )
+  val routeDetails = table[RouteDetails]
+
 
   Class.forName("org.postgresql.Driver");
 
@@ -39,8 +41,13 @@ object DbSchema extends Schema {
   on(missions)(m => declare (
     m.name is(indexed, dbType("varchar(255)")),
     m.startDate is(indexed, dbType("varchar(255)")),
-    m.routeStart is(indexed, dbType("varchar(255)")),
-    m.routeFinish is(indexed, dbType("varchar(255)"))
+  ))
+
+  on(routeDetails)(rd => declare (
+    rd.start is(indexed, dbType("varchar(255)")),
+    rd.end is(indexed, dbType("varchar(255)")),
+    rd.points is dbType("text"),
+    rd.noneNormalSegments is dbType("text")
   ))
 
   def insert(v: Vehicle): Vehicle = {
@@ -174,8 +181,8 @@ object DbSchema extends Schema {
     print(Vehicle.create("", "", "2", 100))
     print(Vehicle.create("", "", "3", 100))
 
-    print(Mission.create("mission 1", "", "", ""))
-    print(Mission.create("mission 2", "", "", ""))
+    /*print(Mission.create("mission 1", "", Set[Vehicle], ""))
+    print(Mission.create("mission 2", "", "", ""))*/
 
     transaction {
       val vehicle = from(vehicles)(v => where(v.id === 2).select(v)).single
