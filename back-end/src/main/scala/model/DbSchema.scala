@@ -1,9 +1,11 @@
 package model
 
-import org.squeryl.PrimitiveTypeMode._
-import org.squeryl.{Schema, Session, SessionFactory}
-import org.squeryl.adapters.PostgreSqlAdapter
 import org.slf4j.LoggerFactory
+import org.squeryl.PrimitiveTypeMode._
+import org.squeryl.adapters.PostgreSqlAdapter
+import org.squeryl.{Schema, Session, SessionFactory}
+
+import scala.collection.mutable
 import scala.collection.mutable.Set
 
 object DbSchema extends Schema {
@@ -12,14 +14,19 @@ object DbSchema extends Schema {
   val dbUsername = "postgres"
   val dbPassword = "admin"
 
-  val vehicles = table[Vehicle]
   val missions = table[Mission]
+  val vehicles = table[Vehicle]
+  val routeDetails = table[RouteDetails]
+
   val missionVehicles =
     manyToManyRelation(missions, vehicles).
       via[MissionVehicles](
-        (m, v, mv) => (mv.vehicleId === v.id, m.id === mv.missionId)
-      )
-  val routeDetails = table[RouteDetails]
+      (m, v, mv) => (mv.vehicleId === v.id, m.id === mv.missionId)
+    )
+  val missionRoutes = manyToManyRelation(missions, routeDetails).
+    via[MissionRoutes](
+    (m, r, mr) => (mr.routeId === r.id, m.id === mr.missionId)
+  )
 
 
   Class.forName("org.postgresql.Driver");
@@ -27,9 +34,9 @@ object DbSchema extends Schema {
   SessionFactory.concreteFactory = Some(() =>
     Session.create(
       java.sql.DriverManager.getConnection(
-            dbConnection, dbUsername, dbPassword),
+        dbConnection, dbUsername, dbPassword),
       new PostgreSqlAdapter)
-    )
+  )
 
   on(vehicles)(v => declare(
     v.vtype is(indexed, dbType("varchar(255)")),
@@ -38,12 +45,12 @@ object DbSchema extends Schema {
     v.state is dbType("smallint")
   ))
 
-  on(missions)(m => declare (
+  on(missions)(m => declare(
     m.name is(indexed, dbType("varchar(255)")),
     m.startDate is(indexed, dbType("varchar(255)")),
   ))
 
-  on(routeDetails)(rd => declare (
+  on(routeDetails)(rd => declare(
     rd.start is(indexed, dbType("varchar(255)")),
     rd.end is(indexed, dbType("varchar(255)")),
     rd.points is dbType("text"),
@@ -64,9 +71,22 @@ object DbSchema extends Schema {
     }
   }
 
-  def insert(mvs: List[MissionVehicles]): Unit = {
+  def insert(rd: RouteDetails): RouteDetails = {
+    transaction {
+      val route = routeDetails.insert(rd)
+      route
+    }
+  }
+
+  def insertVehicles(mvs: List[MissionVehicles]): Unit = {
     transaction {
       missionVehicles.insert(mvs)
+    }
+  }
+
+  def insertRoutes(mr: List[MissionRoutes]): Unit = {
+    transaction {
+      missionRoutes.insert(mr)
     }
   }
 
@@ -112,8 +132,8 @@ object DbSchema extends Schema {
     }*/
   }
 
-  def getAllVehicles(ids: Option[Set[Long]]): Set[Vehicle] = {
-    val result = Set[Vehicle]()
+  def getAllVehicles(ids: Option[mutable.Set[Long]]): mutable.Set[Vehicle] = {
+    val result = mutable.Set[Vehicle]()
 
     if (ids.isEmpty) {
       transaction {
@@ -193,9 +213,9 @@ object DbSchema extends Schema {
       Vehicle.update(newVehicle)
     }
     println(getAllVehicles(None))
-    println(getAllVehicles(Some(Set[Long](1,2))))
+    println(getAllVehicles(Some(Set[Long](1, 2))))
 
-    Mission.addVehicles(1, Array[Long](1,2,3))
+    Mission.addVehicles(1, Array[Long](1, 2, 3))
     println(Mission.getMissions(None))
   }
 }

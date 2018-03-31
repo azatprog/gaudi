@@ -35,10 +35,11 @@ object Mission {
     * id is unique and generated automatically.
     */
   def create(name: String,
-             startDate: String, vehicle: Set[Vehicle], route: RouteDetails): Mission = {
+             startDate: String, vehicle: Set[Vehicle], routeDetails: RouteDetails): Mission = {
     val mission = DbSchema.insert(
-      new Mission(0, name, startDate, vehicle, route)
+      new Mission(0, name, startDate, vehicle, routeDetails)
     )
+    addRoute(mission.id, routeDetails)
     mission
   }
 
@@ -77,7 +78,7 @@ object Mission {
     */
   def addVehicles(mid: Long, vids: Array[Long]): Unit = {
     val list = MissionVehicles(mid, vids)
-    DbSchema.insert(list)
+    DbSchema.insertVehicles(list)
   }
 
   /**
@@ -87,11 +88,16 @@ object Mission {
     */
   def addVehicles(mid: Long, vs: Array[Vehicle]): Unit = {
     val list = MissionVehicles(mid, vs) // TODO: check that data is actual to id?
-    DbSchema.insert(list)
+    DbSchema.insertVehicles(list)
   }
 
   def removeVehicles(mid: Long, vids: Array[Long]): Unit = {
     val list = MissionVehicles(mid, vids)
     list.foreach(mv => DbSchema.deleteMissionVehicles(mv))
+  }
+
+  def addRoute(mid: Long, routes: RouteDetails): Unit = {
+    val list = MissionRoutes(mid, routes)
+    DbSchema.insertRoutes(list)
   }
 }

@@ -38,6 +38,6 @@ object RouteDetails {
              end: String, points: String,
              noneNormalSegmants: String): RouteDetails = {
 
-    new RouteDetails(0, start, end, points, noneNormalSegmants)
+    DbSchema.insert(new RouteDetails(0, start, end, points, noneNormalSegmants))
   }
 }

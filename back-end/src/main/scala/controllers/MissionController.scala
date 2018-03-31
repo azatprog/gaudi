@@ -7,18 +7,14 @@ import org.json4s.DefaultFormats
 import org.scalatra.json.JacksonJsonSupport
 import org.json4s.jackson.Serialization.write
 
+import scala.collection.mutable
+
 
 class MissionController extends ScalatraServlet with JacksonJsonSupport with CorsSupport  {
   implicit val jsonFormats = DefaultFormats
 
   before() {
     contentType = formats("json")
-  }
-
-  // TODO: remove, it's not necessary
-  options("/*"){
-    response.setHeader(
-      "Access-Control-Allow-Headers", request.getHeader("Access-Control-Request-Headers"));
   }
 
   get("/") {
@@ -28,10 +24,8 @@ class MissionController extends ScalatraServlet with JacksonJsonSupport with Cor
   post("/") {
     val name = (parsedBody \ "name").extract[String]
     val startDate = (parsedBody \ "startDate").extract[String] // TODO: yyyy-mm-dd
-    val vehicles = (parsedBody \ "vehicles").extract[Array[Vehicle]]
-    val routeDetails = (parsedBody \ "route_details")
-    /*val routeStart = (parsedBody \ "routeStart").extract[String]
-    val routeFinish = (parsedBody \ "routeFinish").extract[String]*/
+    val vehicles = (parsedBody \ "vehicles").extract[mutable.Set[Vehicle]]
+    val routeDetails = parsedBody \ "route_details"
 
     val rdStart = (routeDetails \ "start").extract[String]
     val rdEnd = (routeDetails \ "end").extract[String]
@@ -40,10 +34,9 @@ class MissionController extends ScalatraServlet with JacksonJsonSupport with Cor
 
     val route = RouteDetails.create(rdStart, rdEnd, rdPoints, rdNNS)
 
-    val m = Mission.create(name, startDate, scala.collection.mutable.Set[Vehicle](), route)
-    Mission.addVehicles(m.id, vehicles)
+    val m = Mission.create(name, startDate, vehicles, route)
 
-    route
+    m
   }
 
   put("/") {

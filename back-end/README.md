@@ -3,7 +3,7 @@
 ## Build & Run ##
 Build using sbt.
 
-The service is deployed at http://mitya.tk:8080/
+The service is deployed at http://gaudi.ga/api
 
 ## Postman script ##
 https://www.getpostman.com/collections/6954d61ce6f125c4bb39
@@ -15,7 +15,7 @@ https://www.getpostman.com/collections/6954d61ce6f125c4bb39
 ●	post(“/missions”) – pass to this method name, startDate, routeStart, routeFinish to add to the missions list.
 
 Example:
-```sh
+```json
 {
   "name": "Mission 1",
   "startDate": "20.03.2018",
@@ -26,7 +26,7 @@ Example:
 
 ●	put(“/missions”) – pass to this method id, name, startDate, routeStart, routeFinish to update the mission.
 Example:
-```sh
+```json
 {
   "id": 1,
   "name": "Mission 1",
@@ -39,7 +39,7 @@ Example:
 
 ●	post("/missions/addvehicles") - pass to this method the id of a mission and ids of vehicles to add the vehicles to the mission.
 Example:
-```sh
+```json
 {
   "mid": 1,
   "vids": [1, 2, 3]
@@ -50,7 +50,7 @@ Example:
 
 ●	post(“/vehicles”) – pass to this method vtype, model, sn, status to add to the vehicles list.  
 Example:
-```sh
+```json
 {
   "vtype": "Heavy Truck",
   "model": "Kamaz",
@@ -60,7 +60,7 @@ Example:
 ```
 ●	put(“/vehicles”) – pass to this method id, vtype, model, sn, status to update the vehicle.
 Example:
-```sh
+```json
 {
   "id": 1,
   "vtype": "Heavy Truck",
