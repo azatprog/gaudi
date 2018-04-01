@@ -11,13 +11,11 @@ export class VehicleComponent implements OnInit {
 
   vehicles: Array<Object>;
 
-  constructor(private route: Router, public vehicleService: UniversalService) { 
-    this.vehicles = this.vehicleService.vehicles;
+  constructor(private route: Router, public vehicleService: UniversalService) {
   }
 
   ngOnInit() {
-    this.vehicles = this.vehicleService.vehicles;
-    console.log(this.vehicles);
+    this.vehicleService.getVehicles().then((vs) => this.vehicles = vs);
   }
 
   createVehicle() {

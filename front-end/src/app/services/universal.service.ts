@@ -3,12 +3,12 @@ import { Mission } from '../models/mission.model';
 import { AppSettings } from '../app.settings';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Vehicle } from '../models/vehicle.model';
+import { VehiclesService } from './vehicles.service';
 
 @Injectable()
 export class UniversalService {
 
   apiRoot: String = AppSettings.API_ROOT;
-  
   isMissionReadOnly: Boolean;
   selectedMission: Mission;
   missions: Array<Mission>;
@@ -17,7 +17,7 @@ export class UniversalService {
   selectedVehicle: Vehicle;
   vehicles: Array<Vehicle>;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, public vehiclesService: VehiclesService) {
     this.missions = [
       { 'id': 1, 'name': 'Humanitarian mission', 'startDate': '01.05.2018', 'routeStart': 'Baghdad', 'routeFinish': 'Kabul', 
         'vehicles': [1,4] },
@@ -31,13 +31,13 @@ export class UniversalService {
         'vehicles': [] }
     ];
 
-    this.vehicles = [
-      { 'id': 1, 'type': '4wheeler', 'model': 'Dodge ram 3500', 'sn': 'sn123w3143', 'state': '5', 'mission': { id: 1, name: 'Humanitarian mission' } },
-      { 'id': 2, 'type': 'truck', 'model': 'Volvo FH', 'sn': 'sn99998343', 'state': '15', 'mission': { id: 2, name: 'Driniking water delivery' } },
-      { 'id': 3, 'type': 'truck', 'model': 'Volvo FH', 'sn': 'sn4432665', 'state': '25', 'mission': { id: 2, name: 'Driniking water delivery' } },
-      { 'id': 4, 'type': 'truck', 'model': 'Volvo FH ', 'sn': 'sn443634', 'state': '5', 'mission': { id: 1, name: 'Humanitarian mission' } },
-      { 'id': 5, 'type': '4wheeler', 'model': 'Dodge ram 3500', 'sn': 'sn16161897', 'state': '35', 'mission': { id: 3, name: 'Zica virus recovery' } }
-    ];
+    // this.vehicles = [
+    //   { 'id': 1, 'type': '4wheeler', 'model': 'Dodge ram 3500', 'sn': 'sn123w3143', 'state': '5', 'mission': { id: 1, name: 'Humanitarian mission' } },
+    //   { 'id': 2, 'type': 'truck', 'model': 'Volvo FH', 'sn': 'sn99998343', 'state': '15', 'mission': { id: 2, name: 'Driniking water delivery' } },
+    //   { 'id': 3, 'type': 'truck', 'model': 'Volvo FH', 'sn': 'sn4432665', 'state': '25', 'mission': { id: 2, name: 'Driniking water delivery' } },
+    //   { 'id': 4, 'type': 'truck', 'model': 'Volvo FH ', 'sn': 'sn443634', 'state': '5', 'mission': { id: 1, name: 'Humanitarian mission' } },
+    //   { 'id': 5, 'type': '4wheeler', 'model': 'Dodge ram 3500', 'sn': 'sn16161897', 'state': '35', 'mission': { id: 3, name: 'Zica virus recovery' } }
+    // ];
   }
 
   getMax = (array: Object[]): Promise<any> => {
@@ -75,15 +75,12 @@ export class UniversalService {
     return promise;
   }
 
-  addVehicle(vehicle: Vehicle): Promise<any> {
-    let promise = new Promise((resolve, reject) => {
-        this.getMax(this.vehicles).then(res => {
-          vehicle.id = Number(res) + 1;
-          this.vehicles.push(vehicle);
-          resolve(this.vehicles);
-        }, err => reject(err));
-    });
-    return promise;
+  getVehicles(): Promise<Vehicle[]> {
+    return this.vehiclesService.getAll();
+  }
+
+  addVehicle(vehicle: Vehicle): Promise<Vehicle> {
+    return this.vehiclesService.add(vehicle);
   }
 
   updateMission(mission: Mission): Promise <any> {
@@ -97,15 +94,8 @@ export class UniversalService {
     return promise;
   }
 
-  updateVehicle(vehicle: Vehicle): Promise <any> {
-    let promise = new Promise((resolve, reject) => {
-        this.getInx(vehicle.id, this.vehicles).then(res => {
-          this.vehicles[Number(res)] = vehicle;
-          resolve(this.vehicles);
-        }, err => reject(err));
-    });
-
-    return promise;
+  updateVehicle(vehicle: Vehicle): Promise <Vehicle> {
+    return this.vehiclesService.update(vehicle);
   }
 
   deleteMission(mission: Mission): Promise <any> {
@@ -119,14 +109,7 @@ export class UniversalService {
     return promise;
   }
 
-  deleteVehicle(vehicle: Vehicle): Promise <any> {
-    let promise = new Promise((resolve, reject) => {
-        this.filterArray(vehicle, this.vehicles).then(res => {
-          this.vehicles = res;
-          resolve(this.vehicles);
-        }, err => reject(err));
-    });
-
-    return promise;
+  deleteVehicle(vehicle: Vehicle): Promise <void> {
+    return this.vehiclesService.delete(vehicle.id);
   }
 }

@@ -10,8 +10,8 @@ import scala.collection.mutable.Set
 
 object DbSchema extends Schema {
   val logger = LoggerFactory.getLogger(getClass)
-  val dbConnection = "jdbc:postgresql://localhost/postgres"
-  val dbUsername = "postgres"
+  val dbConnection = "jdbc:postgresql://localhost/gaudi"
+  val dbUsername = "gaudi"
   val dbPassword = "admin"
 
   val missions = table[Mission]

@@ -1,25 +1,17 @@
 export interface IVehicle {
-    id: Number;
-    type: String;
-    model: String;
-    sn: String;
-    state: String;
-    mission: {
-        id: Number;
-        name: String;
-    };
+    id: number;
+    vtype: string;
+    model: string;
+    sn: string;
+    state: number;
 }
 
 export class Vehicle implements IVehicle {
-    id: Number;
-    type: String;
-    model: String;
-    sn: String;
-    state: String;
-    mission: {
-        id: Number;
-        name: String;
-    };
+    id: number;
+    vtype: string;
+    model: string;
+    sn: string;
+    state: number;
 
     constructor() { }
 }

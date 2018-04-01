@@ -9,8 +9,13 @@ class VehicleController extends ScalatraServlet with JacksonJsonSupport with Cor
   implicit val jsonFormats = DefaultFormats
 
   options("/*"){
-    response.setHeader(
-      "Access-Control-Allow-Headers", request.getHeader("Access-Control-Request-Headers"));
+    println("in options..")
+    println(request.getHeader("Access-Control-Request-Headers"))
+    response.setHeader("Access-Control-Allow-Headers", request.getHeader("Access-Control-Request-Headers"))
+  }
+
+  before() {
+    contentType = formats("json")
   }
 
   get("/") {

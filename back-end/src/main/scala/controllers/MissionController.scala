@@ -13,6 +13,12 @@ import scala.collection.mutable
 class MissionController extends ScalatraServlet with JacksonJsonSupport with CorsSupport  {
   implicit val jsonFormats = DefaultFormats
 
+  options("/*"){
+    println("in options..")
+    println(request.getHeader("Access-Control-Request-Headers"))
+    response.setHeader("Access-Control-Allow-Headers", request.getHeader("Access-Control-Request-Headers"))
+  }
+
   before() {
     contentType = formats("json")
   }
