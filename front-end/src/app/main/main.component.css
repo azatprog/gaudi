@@ -20,7 +20,7 @@
     border-right: 2px solid gray;
   }
   
-  #page-content-wrapper {
+  .page-content-wrapper {
     position: absolute;
     padding: 15px;
     left: 250px;
@@ -88,7 +88,7 @@
         width: 250px;
     }
     
-    #page-content-wrapper {
+    .page-content-wrapper {
       padding: 20px;
       position: absolute;
       left: 250px;

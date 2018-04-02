@@ -1,16 +1,5 @@
-<div class="map" style="width: 100%; display: flex">
-    <!-- <div class="controls" style="width: 400px;float: left;">
-      <input type="text" placeholder="Point A" (change)="pointAChanged($event)" />
-      <input type="text" placeholder="Point B" (change)="pointBChanged($event)"/>
-      <div class="routeDetails">
-        <div>
-            <div><b>Distance:</b></div>
-        </div>
-        <b>Duration:</b>
-      </div>
-      <input type="button" value="Search" (click)="searchRoute()" />
-    </div> -->
-   <aol-map style="flex-grow: 1; width: 100%; height: 100%">
+<div class="missions">
+   <aol-map class="map">
     <aol-interaction-default></aol-interaction-default>
     <aol-view [zoom]="zoom">
       <aol-coordinate [x]="xCenter" [y]="yCenter" [srid]="'EPSG:4326'"></aol-coordinate>
@@ -59,17 +48,6 @@
             </aol-style-icon>
           </aol-style>
         </aol-feature>
-        <!-- <aol-feature>
-          <aol-geometry-point>
-            <aol-coordinate [x]="xMove" [y]="yMove" [srid]="'EPSG:4326'"></aol-coordinate>
-          </aol-geometry-point>
-          <aol-style>
-            <aol-style-circle [radius]="10">
-              <aol-style-stroke [color]="'black'" [width]="'1'"></aol-style-stroke>
-              <aol-style-fill [color]="'green'"></aol-style-fill>
-            </aol-style-circle>
-          </aol-style>
-        </aol-feature> -->
         <aol-feature>
             <aol-geometry-linestring>
                 <aol-collection-coordinates 
@@ -83,9 +61,11 @@
         </aol-feature>
       </aol-source-vector>
     </aol-layer-vector>    
-   </aol-map>   
+   </aol-map>
+   <div class="vehicles">Vehicles</div>   
 </div>
-<div class="zoom">
+<div class="graphics" >Graphs</div>
+<!-- <div class="zoom">
   Zoom: <button class="btn btn-success" (click)="increaseZoom()"> <i class="fa fa-search-plus"> </i> </button> <button class="btn btn-danger" (click)="decreaseZoom()" > <i class="fa fa-search-minus"> </i> </button>
   <button class="btn btn-primary" (click)="startConvoy()"> Go! </button>
-</div>
+</div> -->

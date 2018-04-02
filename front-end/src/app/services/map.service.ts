@@ -29,8 +29,8 @@ export class RouteDetails {
 @Injectable()
 export class MapService {
   private geocoder: google.maps.Geocoder;
-  pointA: String;
-  pointB: String;
+  start: String;
+  end: String;
 
   constructor() { }
 

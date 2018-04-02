@@ -13,7 +13,7 @@ export class Mission implements IMission {
     startDate: String;
     routeStart: String;
     routeFinish: String;
-    vehicles: Number[];
+    vehicles: number[];
 
     constructor() { }
 }

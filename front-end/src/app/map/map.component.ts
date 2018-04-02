@@ -19,8 +19,8 @@ export class MapComponent implements OnInit {
   public route: number[][] = [];
   public routeDescription: String;
 
-  public pointA: String;
-  public pointB: String;
+  public start: String;
+  public end: String;
   xPointA: Number;
   yPointA: Number;
   xPointB: Number;
@@ -31,20 +31,20 @@ export class MapComponent implements OnInit {
 
   constructor(public mapService: MapService, 
               private ref: ChangeDetectorRef) { 
-    this.pointA = this.mapService.pointA;
-    this.pointB = this.mapService.pointB;
+    this.start = this.mapService.start;
+    this.end = this.mapService.end;
   }
 
   public pointAChanged(event) {
-    this.pointA = event.target.value;
+    this.start = event.target.value;
   }
 
   public pointBChanged(event) {
-    this.pointB = event.target.value;
+    this.end = event.target.value;
   }
 
   searchRoute() {
-    this.mapService.getRoute(this.pointA, this.pointB).then((result) => {
+    this.mapService.getRoute(this.start, this.end).then((result) => {
       let center = Math.round(result.route.length / 2);
       const last = result.route.length - 1;
        this.route = result.route.map(p => {return [p.lng, p.lan]});

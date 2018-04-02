@@ -98,8 +98,8 @@ goToMissionShow() {
 
 showOnMap() {
   this.missionService.isMissionReadOnly = true;
-  this.mapService.pointA = this.missionService.selectedMission.routeStart;
-  this.mapService.pointB = this.missionService.selectedMission.routeFinish;
+  this.mapService.start = this.missionService.selectedMission.routeStart;
+  this.mapService.end = this.missionService.selectedMission.routeFinish;
   this.route.navigate(['/app/main/map']);
 }
 

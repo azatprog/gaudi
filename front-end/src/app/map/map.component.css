@@ -1,7 +1,28 @@
-.map input {
-    margin: 10px 5px 0px 5px;
-    padding: 5px;
-    width: 90%;
+/* TO-DO: remove spacing */
+.page-content-wrapper{
+    padding: 0px;
+    left: 250px;
+    width: 100%;
+  }
+
+.missions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    align-content: stretch;
+}
+
+.map {
+    width: 75%;
+}
+
+.vehicles {
+    padding: 10px;
+}
+
+.graphics {
+    height: 100%;
 }
 
 .routeDetails {

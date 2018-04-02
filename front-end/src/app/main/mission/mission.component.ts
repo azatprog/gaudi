@@ -16,7 +16,8 @@ export class MissionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.missionService.getMissions().then((ms) => this.missions = ms);
+    //this.missionService.getMissions().then((ms) => this.missions = ms);
+    this.missions = this.missionService.missions;
   }
 
   createMission() {
