@@ -8,7 +8,7 @@ export interface IMission {
 }
 
 export class Mission implements IMission {
-    id: Number;
+    id: number;
     name: String;
     startDate: String;
     routeStart: String;

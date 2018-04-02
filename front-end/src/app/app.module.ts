@@ -24,6 +24,7 @@ import { MapService } from './services/map.service';
 import { VehicleProfileComponent } from './main/vehicle/vehicle-profile/vehicle-profile.component';
 import { PopupVehiclesComponent } from './main/mission/popup-vehicles/popup-vehicles.component';
 import { VehiclesService } from './services/vehicles.service';
+import { MissionsService } from './services/missions.service';
 
 
 @NgModule({
@@ -50,7 +51,7 @@ import { VehiclesService } from './services/vehicles.service';
     RouterModule.forRoot(ROUTES, { useHash: true }),
     AngularOpenlayersModule
   ],
-  providers: [AuthService, UniversalService, MapService, VehiclesService ],
+  providers: [AuthService, UniversalService, MapService, VehiclesService, MissionsService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

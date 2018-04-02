@@ -4,6 +4,7 @@ import { AppSettings } from '../app.settings';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Vehicle } from '../models/vehicle.model';
 import { VehiclesService } from './vehicles.service';
+import { MissionsService } from './missions.service';
 
 @Injectable()
 export class UniversalService {
@@ -17,19 +18,21 @@ export class UniversalService {
   selectedVehicle: Vehicle;
   vehicles: Array<Vehicle>;
 
-  constructor(private http: HttpClient, public vehiclesService: VehiclesService) {
-    this.missions = [
-      { 'id': 1, 'name': 'Humanitarian mission', 'startDate': '01.05.2018', 'routeStart': 'Baghdad', 'routeFinish': 'Kabul', 
-        'vehicles': [1,4] },
-      { 'id': 2, 'name': 'Driniking water delivery', 'startDate': '23.05.2018', 'routeStart': 'Berlin', 'routeFinish': 'München', 
-        'vehicles': [2] },
-      { 'id': 3, 'name': 'Zica virus recovery', 'startDate': '11.09.2018', 'routeStart': 'Kinshasa', 'routeFinish': 'Kabalo', 
-        'vehicles': [5] },
-      { 'id': 4, 'name': 'Hurricane Sud disaster', 'startDate': '08.08.2018', 'routeStart': 'Port-de-Paix', 'routeFinish': 'Cap-Haïtien', 
-        'vehicles': [] },
-      { 'id': 5, 'name': 'Earthquake mission', 'startDate': '13.07.2018', 'routeStart': 'Anse-à-Veau', 'routeFinish': 'Camp Perrin', 
-        'vehicles': [] }
-    ];
+  constructor(private http: HttpClient,
+     public vehiclesService: VehiclesService,
+     public missionService: MissionsService) {
+    // this.missions = [
+    //   { 'id': 1, 'name': 'Humanitarian mission', 'startDate': '01.05.2018', 'routeStart': 'Baghdad', 'routeFinish': 'Kabul', 
+    //     'vehicles': [1,4] },
+    //   { 'id': 2, 'name': 'Driniking water delivery', 'startDate': '23.05.2018', 'routeStart': 'Berlin', 'routeFinish': 'München', 
+    //     'vehicles': [2] },
+    //   { 'id': 3, 'name': 'Zica virus recovery', 'startDate': '11.09.2018', 'routeStart': 'Kinshasa', 'routeFinish': 'Kabalo', 
+    //     'vehicles': [5] },
+    //   { 'id': 4, 'name': 'Hurricane Sud disaster', 'startDate': '08.08.2018', 'routeStart': 'Port-de-Paix', 'routeFinish': 'Cap-Haïtien', 
+    //     'vehicles': [] },
+    //   { 'id': 5, 'name': 'Earthquake mission', 'startDate': '13.07.2018', 'routeStart': 'Anse-à-Veau', 'routeFinish': 'Camp Perrin', 
+    //     'vehicles': [] }
+    // ];
 
     // this.vehicles = [
     //   { 'id': 1, 'type': '4wheeler', 'model': 'Dodge ram 3500', 'sn': 'sn123w3143', 'state': '5', 'mission': { id: 1, name: 'Humanitarian mission' } },
@@ -64,15 +67,20 @@ export class UniversalService {
     return promise;
   }
 
-  addMission(mission: Mission): Promise<any> {
-    let promise = new Promise((resolve, reject) => {
-        this.getMax(this.missions).then(res => {
-          mission.id = Number(res) + 1;
-          this.missions.push(mission);
-          resolve(this.missions);
-        }, err => reject(err));
-    });
-    return promise;
+  getMissions(): Promise<Mission[]> {
+    return this.missionService.getAll();
+  }
+
+  addMission(mission: Mission): Promise<Mission> {
+    return this.missionService.add(mission);
+  }
+
+  updateMission(mission: Mission): Promise <Mission> {
+    return this.missionService.update(mission);
+  }
+
+  deleteMission(mission: Mission): Promise <void> {
+    return this.missionService.delete(mission.id);
   }
 
   getVehicles(): Promise<Vehicle[]> {
@@ -83,30 +91,8 @@ export class UniversalService {
     return this.vehiclesService.add(vehicle);
   }
 
-  updateMission(mission: Mission): Promise <any> {
-    let promise = new Promise((resolve, reject) => {
-        this.getInx(mission.id, this.missions).then(res => {
-          this.missions[Number(res)] = mission;
-          resolve(this.missions);
-        }, err => reject(err));
-    });
-
-    return promise;
-  }
-
   updateVehicle(vehicle: Vehicle): Promise <Vehicle> {
     return this.vehiclesService.update(vehicle);
-  }
-
-  deleteMission(mission: Mission): Promise <any> {
-    let promise = new Promise((resolve, reject) => {
-        this.filterArray(mission, this.missions).then(res => {
-          this.missions = res;
-          resolve(this.missions);
-        }, err => reject(err));
-    });
-
-    return promise;
   }
 
   deleteVehicle(vehicle: Vehicle): Promise <void> {

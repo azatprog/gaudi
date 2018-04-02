@@ -11,11 +11,12 @@ export class MissionComponent implements OnInit {
 
   missions: Array<Object>;
 
-  constructor(private route: Router, public missionService: UniversalService) { 
-    this.missions = this.missionService.missions;
+  constructor(private route: Router,
+     public missionService: UniversalService) { 
   }
 
   ngOnInit() {
+    this.missionService.getMissions().then((ms) => this.missions = ms);
   }
 
   createMission() {
