@@ -1,14 +1,10 @@
 package controllers
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.scalatra._
 import model.{Mission, RouteDetails, Vehicle}
 import org.json4s.DefaultFormats
 import org.scalatra.json.JacksonJsonSupport
-import org.json4s.jackson.Serialization.write
-
 import scala.collection.mutable
-
 
 class MissionController extends ScalatraServlet with JacksonJsonSupport with CorsSupport  {
   implicit val jsonFormats = DefaultFormats
@@ -42,9 +38,10 @@ class MissionController extends ScalatraServlet with JacksonJsonSupport with Cor
     // TODO: What about the reusage of the existing route?
     val route = RouteDetails.create(rdStart, rdEnd, rdPoints, rdNNS)
     val m = Mission.create(name, startDate, vehicles, route)
-    //parse(route.points)
-    Mission.getMissions(Some(mutable.Set[Long](m.id)))
+    val mis = Mission.getMissions(Some(mutable.Set[Long](m.id))).head
+    mis.toJson()
   }
+
 
   // TODO: update routedetails as well? Now it adds a new one each time!!! FIX later!
   // TODO: if the mission does not exist the new one will be created without route and vehicles

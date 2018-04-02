@@ -5,6 +5,9 @@ import org.squeryl.KeyedEntity
 import scala.collection.mutable.Set
 import org.squeryl.annotations.Column
 import org.squeryl.PrimitiveTypeMode._
+import org.json4s.JsonAST._
+import org.json4s.JsonDSL._
+import org.json4s.jackson.JsonMethods._
 
 
 /** The representation of Vehicle entity */
@@ -25,6 +28,14 @@ case class Vehicle private (
 
   override def toString = {
     "Vehicle("+id+","+vtype+","+model+","+sn+","+state+")"
+  }
+
+  def toJson() = {
+    ("id" -> id) ~
+      ("vtype" -> vtype) ~
+      ("model" -> model) ~
+      ("sn" -> sn) ~
+      ("state" -> state)
   }
 }
 

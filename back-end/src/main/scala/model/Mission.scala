@@ -1,14 +1,13 @@
 package model
 
 import java.util.{Calendar, Date}
-
 import org.squeryl.KeyedEntity
-
 import scala.collection.mutable.Set
-import org.squeryl.annotations.Column
 import org.squeryl.PrimitiveTypeMode._
-
 import scala.collection.mutable
+import org.json4s.JsonAST._
+import org.json4s.JsonDSL._
+import org.json4s.jackson.JsonMethods._
 
 /** The representation of Mission entity */
 case class Mission private (
@@ -28,6 +27,25 @@ case class Mission private (
 
   override def toString = {
     "Mission("+id+","+name+","+startDate+","+vehicles+","+route+")"
+  }
+
+  def toJson() = {
+    val rd = {
+      ("id" -> route.id) ~
+        ("start" -> route.start) ~
+        ("finish" -> route.end) ~
+        ("points" -> parse(route.points)) ~
+        ("noneNormalSegments" -> parse(route.noneNormalSegments))
+    }
+
+    var vehs = mutable.Set[JValue]()
+    vehicles.foreach(v => vehs += v.toJson())
+
+    ("id" -> id) ~
+      ("name" -> name) ~
+      ("startDate" -> startDate) ~
+      ("vehicles" -> vehs) ~
+      ("route" -> rd)
   }
 }
 
