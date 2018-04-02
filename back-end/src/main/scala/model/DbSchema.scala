@@ -23,6 +23,8 @@ object DbSchema extends Schema {
       via[MissionVehicles](
       (m, v, mv) => (mv.vehicleId === v.id, m.id === mv.missionId)
     )
+
+  // TODO: it should be one to many (a mission can have only one route)
   val missionRoutes = manyToManyRelation(missions, routeDetails).
     via[MissionRoutes](
     (m, r, mr) => (mr.routeId === r.id, m.id === mr.missionId)
@@ -122,10 +124,13 @@ object DbSchema extends Schema {
 
   def deleteMission(id: Long): Unit = {
     transaction {
-      vehicles.deleteWhere(_.id === id)
+      missionVehicles.deleteWhere(_.missionId === id)
+      missionRoutes.deleteWhere(_.missionId === id)
+      missions.deleteWhere(_.id === id)
     }
   }
 
+  // TODO: remove the vehicles from the mission
   def deleteMissionVehicles(mv: MissionVehicles): Unit = {
     /*transaction {
       missionVehicles.deleteWhere(_.missionId === mv.missionId && _.vehicleId === mv.vehicleId)
@@ -152,11 +157,40 @@ object DbSchema extends Schema {
     }
   }
 
+  def getAllRouteDetails(ids: Option[mutable.Set[Long]]): mutable.Set[RouteDetails] = {
+    val result = mutable.Set[RouteDetails]()
+
+    if (ids.isEmpty) {
+      transaction {
+        from(routeDetails)(rd => select(rd))
+          .foreach(rd => result += rd)
+        result
+      }
+    } else {
+      transaction {
+        ids.get.foreach(id => {
+          from(routeDetails)(rd => where(rd.id === id).select(rd))
+            .foreach(rd => result += rd)
+        })
+        result
+      }
+    }
+  }
+
   def getAllMissionVehicles() = {
     val result = Set[MissionVehicles]()
     transaction {
       from(missionVehicles)(mvs => select(mvs))
         .foreach(mvs => result += mvs)
+      result
+    }
+  }
+
+  def getAllMissionRoutes() = {
+    val result = Set[MissionRoutes]()
+    transaction {
+      from(missionRoutes)(mr => select(mr))
+        .foreach(mr => result += mr)
       result
     }
   }
@@ -197,6 +231,9 @@ object DbSchema extends Schema {
       DbSchema.create
     }
 
+    Vehicle.create("Heavy Truck", "Kamaz", "01110101010064984954065", 100)
+
+/*
     print(Vehicle.create("vehicle", "", "1", 100))
     print(Vehicle.create("", "", "2", 100))
     print(Vehicle.create("", "", "3", 100))
@@ -216,6 +253,6 @@ object DbSchema extends Schema {
     println(getAllVehicles(Some(Set[Long](1, 2))))
 
     Mission.addVehicles(1, Array[Long](1, 2, 3))
-    println(Mission.getMissions(None))
+    println(Mission.getMissions(None))*/
   }
 }

@@ -3,6 +3,7 @@ package model
 import org.squeryl.KeyedEntity
 import org.squeryl.dsl.CompositeKey2
 
+import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 case class MissionVehicles private (
@@ -22,7 +23,7 @@ object MissionVehicles {
     listBuffer.toList
   }
 
-  def apply(mid: Long, vids: Array[Vehicle]
+  def apply(mid: Long, vids: mutable.Set[Vehicle]
            ): List[MissionVehicles] = {
     var listBuffer = ListBuffer[MissionVehicles]()
     vids.foreach(v => listBuffer += MissionVehicles(mid, v.id))

@@ -30,25 +30,45 @@ class MissionController extends ScalatraServlet with JacksonJsonSupport with Cor
   post("/") {
     val name = (parsedBody \ "name").extract[String]
     val startDate = (parsedBody \ "startDate").extract[String] // TODO: yyyy-mm-dd
+    // TODO: change?: not only vehicles' ids are counted, other data should be correct
     val vehicles = (parsedBody \ "vehicles").extract[mutable.Set[Vehicle]]
-    val routeDetails = parsedBody \ "route_details"
+    val routeDetails = parsedBody \ "route"
 
     val rdStart = (routeDetails \ "start").extract[String]
-    val rdEnd = (routeDetails \ "end").extract[String]
+    val rdEnd = (routeDetails \ "finish").extract[String]
     val rdPoints = compact(render(routeDetails \ "points"))
     val rdNNS = compact(render(routeDetails \ "noneNormalSegments"))
 
+    // TODO: What about the reusage of the existing route?
     val route = RouteDetails.create(rdStart, rdEnd, rdPoints, rdNNS)
-
     val m = Mission.create(name, startDate, vehicles, route)
-
-    m
+    //parse(route.points)
+    Mission.getMissions(Some(mutable.Set[Long](m.id)))
   }
 
+  // TODO: update routedetails as well? Now it adds a new one each time!!! FIX later!
+  // TODO: if the mission does not exist the new one will be created without route and vehicles
   put("/") {
-    val jValue = parse(request.body)
-    val mission = jValue.extract[Mission]
+    /*val jValue = parse(request.body)
+    val mission = jValue.extract[Mission]*/
+
+    val id = (parsedBody \ "id").extract[Long]
+    val name = (parsedBody \ "name").extract[String]
+    val startDate = (parsedBody \ "startDate").extract[String] // TODO: yyyy-mm-dd
+    // TODO: Update the vehicles, they are ignored here for now
+    val vehicles = (parsedBody \ "vehicles").extract[mutable.Set[Vehicle]]
+    val routeDetails = parsedBody \ "route"
+
+    val rdStart = (routeDetails \ "start").extract[String]
+    val rdEnd = (routeDetails \ "finish").extract[String]
+    val rdPoints = compact(render(routeDetails \ "points"))
+    val rdNNS = compact(render(routeDetails \ "noneNormalSegments"))
+
+    // TODO: Update the route, it is ignored here for now
+    val route = RouteDetails.create(rdStart, rdEnd, rdPoints, rdNNS)
+    val mission = Mission.define(id, name, startDate, vehicles, route)
     Mission.update(mission)
+    Mission.getMissions(Some(mutable.Set[Long](mission.id)))
   }
 
   delete("/:id") {

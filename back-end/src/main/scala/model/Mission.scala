@@ -8,6 +8,8 @@ import scala.collection.mutable.Set
 import org.squeryl.annotations.Column
 import org.squeryl.PrimitiveTypeMode._
 
+import scala.collection.mutable
+
 /** The representation of Mission entity */
 case class Mission private (
                              var id: Long,
@@ -35,12 +37,20 @@ object Mission {
     * id is unique and generated automatically.
     */
   def create(name: String,
-             startDate: String, vehicle: Set[Vehicle], routeDetails: RouteDetails): Mission = {
+             startDate: String, vehicles: Set[Vehicle],
+             routeDetails: RouteDetails): Mission = {
     val mission = DbSchema.insert(
-      new Mission(0, name, startDate, vehicle, routeDetails)
+      new Mission(0, name, startDate, vehicles, routeDetails)
     )
+    addVehicles(mission.id, vehicles)
     addRoute(mission.id, routeDetails)
     mission
+  }
+
+  def define(id: Long, name: String,
+             startDate: String, vehicles: Set[Vehicle],
+             routeDetails: RouteDetails): Mission = {
+    new Mission(id, name, startDate, vehicles, routeDetails)
   }
 
   def update(m: Mission): Mission = {
@@ -55,18 +65,27 @@ object Mission {
     * Returns the list of the missions.
     * @return the list of the missions
     */
-  def getMissions(ids: Option[Set[Long]]): Set[Mission] = {
-    val misVehicles: Set[MissionVehicles] = DbSchema.getAllMissionVehicles()
-    var mvs = Set[MissionVehicles]()
+  def getMissions(ids: Option[mutable.Set[Long]]): mutable.Set[Mission] = {
+    // TODO: should be substituted with getAllMissionVehicles(missionId)
+    val misVehicles: mutable.Set[MissionVehicles] = DbSchema.getAllMissionVehicles()
+    // TODO: should be substituted with getAllMissionVehicles(missionId)
+    val misRoutes: mutable.Set[MissionRoutes] = DbSchema.getAllMissionRoutes()
+    var mvs = mutable.Set[MissionVehicles]()
 
     val missions = DbSchema.getAllMissions(ids)
 
     missions.foreach(
       m => {
+        // Getting the assigned vehicles
         mvs = misVehicles.filter(_.missionId == m.id)
-        var vids = Set[Long]()
+        var vids = mutable.Set[Long]()
         mvs.foreach(mv => vids += mv.vehicleId)
         m.vehicles = DbSchema.getAllVehicles(Some(vids))
+
+        // Getting the assigned route
+        val mrd = misRoutes.filter(_.missionId == m.id).head
+        m.route = DbSchema.getAllRouteDetails(
+          Some(mutable.Set[Long](mrd.routeId))).head
       })
     missions
   }
@@ -86,7 +105,7 @@ object Mission {
     * @param mid  mission's id
     * @param vs the array of vehicles
     */
-  def addVehicles(mid: Long, vs: Array[Vehicle]): Unit = {
+  def addVehicles(mid: Long, vs: Set[Vehicle]): Unit = {
     val list = MissionVehicles(mid, vs) // TODO: check that data is actual to id?
     DbSchema.insertVehicles(list)
   }
