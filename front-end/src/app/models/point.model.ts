@@ -1,10 +1,10 @@
 export class Point {
     public lng: number;
-    public lan: number;
+    public lat: number;
     public elevation: number;
     public speedLimit: number;
-    constructor(lng: number, lan: number) {
+    constructor(lng: number, lat: number) {
       this.lng = lng;
-      this.lan = lan;
+      this.lat = lat;
     }
 }
