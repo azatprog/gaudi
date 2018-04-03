@@ -17,7 +17,11 @@ class VehicleStatusController extends ScalatraServlet with JacksonJsonSupport wi
   }
 
   get("/") {
-    VehicleStatus.getVehicleStatuses()
+    val missionId = params.get("missionId").get.toLong
+    val vehicleId = params.get("vehicleId").get.toLong
+    val timeFromStart = params.getOrElse("timeFromMissionStart", "0")
+
+    VehicleStatus.getVehicleStatuses(missionId, vehicleId, timeFromStart.toLong)
   }
 
   post("/") {
