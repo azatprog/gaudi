@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Chart } from 'chart.js';
 import { MapService } from '../../services/map.service';
 import { VehicleStatus } from '../../models/vehicleStatus.model';
+import { VehiclesService } from '../../services/vehicles.service';
 
 
 export class ChartData {
@@ -45,7 +46,7 @@ export class GraphComponent implements OnInit {
   parameters: string[];
   excludedParameters = ["mass", "id", "lng", "lat"];
 
-  constructor(private mapService: MapService) {
+  constructor(private vehicleService: VehiclesService) {
     this.data = new ChartData();
     this.parameters = Object.keys(new VehicleStatus());
     this.parameters = this.parameters.filter(el => {
@@ -65,12 +66,12 @@ export class GraphComponent implements OnInit {
   }
 
   updateData() {
-      this.mapService.updateStatus().then(res => {
-      this.data.push(res.xData, res.yData);
-      this.chart.data.datasets[0].data = this.data.getXData();
-      this.chart.data.labels = this.data.getYDates();
-      this.chart.update();
-    });
+      // this.vehicleService.getVehicleStatus().then(res => {
+      // this.data.push(res.xData, res.yData);
+      // this.chart.data.datasets[0].data = this.data.getXData();
+      // this.chart.data.labels = this.data.getYDates();
+      // this.chart.update();
+    // });
   }
 
   clearChart() {
