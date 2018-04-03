@@ -1,8 +1,5 @@
 <div>
-    <!-- <select class="comboParameters" ng-model="selectedParemeter" >
-        <option ng-repeat="x in names">{{x}}</option>
-    </select> -->
-    <select class="comboParameters" [(ngModel)]="selectedParemeter">
+    <select class="comboParameters" [(ngModel)]="selectedParemeter" (change)="onParameterChanged($event)">
         <option *ngFor="let c of parameters" [ngValue]="c">{{c}}</option>
       </select>
   <canvas id="canvas">{{ chart }}</canvas>

@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Chart } from 'chart.js';
 import { MapService } from '../../services/map.service';
+import { VehicleStatus } from '../../models/vehicleStatus.model';
 
 
 export class ChartData {
@@ -41,11 +42,15 @@ export class GraphComponent implements OnInit {
   chart: Chart;
   data: ChartData;
   selectedParamter: string;
-  parameters: string[] = ["speed", "rpm", "123", "23123", "234234"];
+  parameters: string[];
+  excludedParameters = ["mass", "id", "lng", "lat"];
 
   constructor(private mapService: MapService) {
     this.data = new ChartData();
-    //this.parameters = ["speed", "rpm", "123", "23123", "234234"];
+    this.parameters = Object.keys(new VehicleStatus());
+    this.parameters = this.parameters.filter(el => {
+      return !this.excludedParameters.includes(el);
+    });
    }
 
   ngOnInit() {
@@ -53,6 +58,10 @@ export class GraphComponent implements OnInit {
     var timerId = setInterval(()=> {
       this.updateData();
     }, 1000);
+  }
+
+  onParameterChanged(event) {
+    this.clearChart();
   }
 
   updateData() {

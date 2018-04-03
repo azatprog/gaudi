@@ -1,5 +1,6 @@
-<div class="missions">
-   <aol-map class="map">
+<div class="view">
+ <div class="missions">
+    <aol-map class="map">
     <aol-interaction-default></aol-interaction-default>
     <aol-view [zoom]="zoom">
       <aol-coordinate [x]="xCenter" [y]="yCenter" [srid]="'EPSG:4326'"></aol-coordinate>
@@ -66,9 +67,5 @@
       Vehicles
       <button class="btn btn-success" (click)="getVehicleStatus()">Get Vehicles</button>
     </div>
+    <app-graph class="graphics"></app-graph>
 </div>
-<div class="graphics" >Graphs</div>
-<!-- <div class="zoom">
-  Zoom: <button class="btn btn-success" (click)="increaseZoom()"> <i class="fa fa-search-plus"> </i> </button> <button class="btn btn-danger" (click)="decreaseZoom()" > <i class="fa fa-search-minus"> </i> </button>
-  <button class="btn btn-primary" (click)="startConvoy()"> Go! </button>
-</div> -->

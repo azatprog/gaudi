@@ -5,6 +5,15 @@
     width: 100%;
   }
 
+.view {
+    display: flex;
+    flex-direction: column;
+}
+
+#canvas {
+    height:100px !important;
+}
+
 .missions {
     display: flex;
     flex-direction: row;
@@ -22,7 +31,7 @@
 }
 
 .graphics {
-    height: 100%;
+    padding: 3px;
 }
 
 .routeDetails {
