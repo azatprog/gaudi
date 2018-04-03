@@ -167,23 +167,16 @@ object DbSchema extends Schema {
     }
   }
 
-  def getAllVehiclStatuses(ids: Option[mutable.Set[Long]]): mutable.Set[VehicleStatus] = {
-    val result = mutable.Set[VehicleStatus]()
+  def getAllVehicleStatuses(missionId: Long,
+                           vehicleId: Long, timeFromStart: Long
+                           ): mutable.Set[VehicleStatus] = {
 
-    if (ids.isEmpty) {
-      transaction {
-        from(vehicleStatuses)(v => select(v))
-          .foreach(v => result += v)
-        result
-      }
-    } else {
-      transaction {
-        ids.get.foreach(id => {
-          from(vehicleStatuses)(v => where(v.id === id).select(v))
-            .foreach(v => result += v)
-        })
-        result
-      }
+    val result = mutable.Set[VehicleStatus]()
+    transaction {
+      from(vehicleStatuses)(vs => where(vs.missionId === missionId
+        and vs.vehicleId === vehicleId and vs.timeFromMissionStart.gt(timeFromStart)).select(vs))
+        .foreach(v => result += v)
+      result
     }
   }
 

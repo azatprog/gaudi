@@ -39,7 +39,8 @@ object VehicleStatus {
     DbSchema.insert(vs)
   }
 
-  def getVehicleStatuses(): mutable.Set[VehicleStatus] = {
-    DbSchema.getAllVehiclStatuses(None)
+  def getVehicleStatuses(missionId: Long, vehicleId: Long,
+                         timeFromStart: Long): mutable.Set[VehicleStatus] = {
+    DbSchema.getAllVehicleStatuses(missionId, vehicleId, timeFromStart)
   }
 }
