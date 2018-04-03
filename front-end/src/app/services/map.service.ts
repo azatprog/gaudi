@@ -3,31 +3,6 @@ import { AppSettings } from '../app.settings';
 import { RouteDetails } from '../models/routedetails.model';
 import { Point } from '../models/point.model';
 
-// export class Point {
-//   public lng: number;
-//   public lan: number;
-//   public elevation: number;
-//   public speedLimit: number;
-
-//   constructor(lng: number, lan: number) {
-//     this.lng = lng;
-//     this.lan = lan;
-//   }
-// }
-
-// export class RouteDetails {
-//   public route: Array<Point> = new Array<Point>();
-//   public distance: Number;
-//   public start: String;
-//   public end: String;
-//   public duration: Number;
-//   public distanceDescription: String;
-//   public durationDescription: String;
-
-//   constructor() {
-//   }
-// }
-
 @Injectable()
 export class MapService {
   private geocoder: google.maps.Geocoder;

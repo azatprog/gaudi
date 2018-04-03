@@ -29,7 +29,7 @@ export abstract class Repository<T> {
         return this.executeQuery<T[]>(this.path, 'get');
     }
 
-    private executeQuery<P>(path, method, data = null): Promise<P> {
+    protected executeQuery<P>(path, method, data = null): Promise<P> {
         return new Promise((resolve, reject) => {
             const apiUrl = this.apiRoot + path;
             const headers = new HttpHeaders({ 'Content-Type': 'application/json' });

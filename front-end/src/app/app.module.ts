@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule }   from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ROUTES } from './app.routes';
@@ -26,6 +26,7 @@ import { PopupVehiclesComponent } from './main/mission/popup-vehicles/popup-vehi
 import { VehiclesService } from './services/vehicles.service';
 import { MissionsService } from './services/missions.service';
 import { GraphComponent } from './map/graph/graph.component';
+import { VehicleStatusService } from './services/vehicle-status.service';
 
 
 @NgModule({
@@ -53,7 +54,7 @@ import { GraphComponent } from './map/graph/graph.component';
     RouterModule.forRoot(ROUTES, { useHash: true }),
     AngularOpenlayersModule
   ],
-  providers: [AuthService, UniversalService, MapService, VehiclesService, MissionsService ],
+  providers: [AuthService, UniversalService, MapService, VehiclesService, MissionsService, VehicleStatusService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

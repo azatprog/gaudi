@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { MapService } from '../services/map.service';
 import { RouteDetails } from '../models/routedetails.model';
+import { VehicleStatusService } from '../services/vehicle-status.service';
 
 @Component({
   selector: 'app-map',
@@ -30,8 +31,10 @@ export class MapComponent implements OnInit {
   xMove?: Number;
   yMove?: Number;
 
-  constructor(public mapService: MapService, 
-              private ref: ChangeDetectorRef) { 
+  constructor(public mapService: MapService,
+              private ref: ChangeDetectorRef,
+              public vehicleStatusService: VehicleStatusService
+            ) {
     this.start = this.mapService.start;
     this.end = this.mapService.end;
   }
@@ -67,6 +70,10 @@ export class MapComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  getVehicleStatus() {
+    this.vehicleStatusService.getVehicleStatus(1, 1);
   }
 
   increaseZoom() {

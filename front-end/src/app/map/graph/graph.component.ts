@@ -23,37 +23,12 @@ export class ChartData {
 
   public clear() {
     this.xData = new Array<number>();
-    this.yDates = new Array<Date>(); 
+    this.yDates = new Array<Date>();
   }
 
   constructor() {
     this.clear();
   }
-}
-
-export class VehicleStatus {
-
-  public id: number;
-  public mileage: number;
-  public speed: number;
-  public acceleration: number;
-  public missionMilage: number;
-  public timeFromMissionStart: number;
-  public rpm: number;
-  public engineTemperature: number;
-  public outsideTemperature: number;
-  public oilPressure: number;
-  public coolingFluidLevel: boolean;
-  public ignition: boolean;
-  public throttle: number;
-  public gear: string;
-  public pushBrakePedal: number;
-  public brakeFluidLevel: boolean;
-  public brakeTemperature: number;
-  public brakePadResidue: number;
-  public mass: string
-
-  constructor() {}
 }
 
 @Component({
