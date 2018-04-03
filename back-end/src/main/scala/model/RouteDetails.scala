@@ -13,7 +13,7 @@ case class RouteDetails private (
                            var id: Long,
                            var start: String,
                            var end: String,
-                           //@JsonSerialize(using = classOf[RouteDetailSerializer])
+                           var distance: Double,
                            var points: String,
                            var noneNormalSegments: String) extends KeyedEntity[Long] {
 
@@ -37,9 +37,9 @@ case class RouteDetails private (
 
 object RouteDetails {
   def create(start: String,
-             end: String, points: String,
+             end: String, distance: Double, points: String,
              noneNormalSegmants: String): RouteDetails = {
 
-    DbSchema.insert(new RouteDetails(0, start, end, points, noneNormalSegmants))
+    DbSchema.insert(new RouteDetails(0, start, end, distance, points, noneNormalSegmants))
   }
 }

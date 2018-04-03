@@ -2,8 +2,10 @@ package controllers
 
 import org.scalatra._
 import model.{Mission, RouteDetails, Vehicle}
-import org.json4s.DefaultFormats
+import org.json4s.{DefaultFormats}
+import org.json4s.JsonAST.JValue
 import org.scalatra.json.JacksonJsonSupport
+
 import scala.collection.mutable
 
 class MissionController extends ScalatraServlet with JacksonJsonSupport with CorsSupport  {
@@ -20,7 +22,12 @@ class MissionController extends ScalatraServlet with JacksonJsonSupport with Cor
   }
 
   get("/") {
-    Mission.getMissions(None)
+    val missions = Mission.getMissions(None)
+    var result = mutable.Set[JValue]()
+    missions.foreach(m =>
+      result += m.toJson()
+    )
+    result
   }
 
   post("/") {
@@ -32,11 +39,12 @@ class MissionController extends ScalatraServlet with JacksonJsonSupport with Cor
 
     val rdStart = (routeDetails \ "start").extract[String]
     val rdEnd = (routeDetails \ "finish").extract[String]
+    val rdDistance = (routeDetails \ "distance").extract[Double]
     val rdPoints = compact(render(routeDetails \ "points"))
     val rdNNS = compact(render(routeDetails \ "noneNormalSegments"))
 
     // TODO: What about the reusage of the existing route?
-    val route = RouteDetails.create(rdStart, rdEnd, rdPoints, rdNNS)
+    val route = RouteDetails.create(rdStart, rdEnd, rdDistance, rdPoints, rdNNS)
     val m = Mission.create(name, startDate, vehicles, route)
     val mis = Mission.getMissions(Some(mutable.Set[Long](m.id))).head
     mis.toJson()
@@ -58,11 +66,12 @@ class MissionController extends ScalatraServlet with JacksonJsonSupport with Cor
 
     val rdStart = (routeDetails \ "start").extract[String]
     val rdEnd = (routeDetails \ "finish").extract[String]
+    val rdDistance = (routeDetails \ "distance").extract[Double]
     val rdPoints = compact(render(routeDetails \ "points"))
     val rdNNS = compact(render(routeDetails \ "noneNormalSegments"))
 
     // TODO: Update the route, it is ignored here for now
-    val route = RouteDetails.create(rdStart, rdEnd, rdPoints, rdNNS)
+    val route = RouteDetails.create(rdStart, rdEnd, rdDistance, rdPoints, rdNNS)
     val mission = Mission.define(id, name, startDate, vehicles, route)
     Mission.update(mission)
     Mission.getMissions(Some(mutable.Set[Long](mission.id)))

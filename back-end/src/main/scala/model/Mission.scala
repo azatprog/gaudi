@@ -30,13 +30,14 @@ case class Mission private (
   }
 
   def toJson() = {
-    val rd = {
+    val rd = if (route != null) {
       ("id" -> route.id) ~
         ("start" -> route.start) ~
         ("finish" -> route.end) ~
+        ("distance" -> route.distance) ~
         ("points" -> parse(route.points)) ~
         ("noneNormalSegments" -> parse(route.noneNormalSegments))
-    }
+    } else null
 
     var vehs = mutable.Set[JValue]()
     vehicles.foreach(v => vehs += v.toJson())
