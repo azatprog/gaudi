@@ -17,6 +17,7 @@ object DbSchema extends Schema {
   val missions = table[Mission]
   val vehicles = table[Vehicle]
   val routeDetails = table[RouteDetails]
+  val vehicleStatuses = table[VehicleStatus] // TODO: foreign keys, indecies
 
   val missionVehicles =
     manyToManyRelation(missions, vehicles).
@@ -31,7 +32,7 @@ object DbSchema extends Schema {
   )
 
 
-  Class.forName("org.postgresql.Driver");
+  Class.forName("org.postgresql.Driver")
 
   SessionFactory.concreteFactory = Some(() =>
     Session.create(
@@ -77,6 +78,13 @@ object DbSchema extends Schema {
     transaction {
       val route = routeDetails.insert(rd)
       route
+    }
+  }
+
+  def insert(vs: VehicleStatus): VehicleStatus = {
+    transaction {
+      val vehicleStatus = vehicleStatuses.insert(vs)
+      vehicleStatus
     }
   }
 
@@ -152,6 +160,26 @@ object DbSchema extends Schema {
       transaction {
         ids.get.foreach(id => {
           from(vehicles)(v => where(v.id === id).select(v))
+            .foreach(v => result += v)
+        })
+        result
+      }
+    }
+  }
+
+  def getAllVehiclStatuses(ids: Option[mutable.Set[Long]]): mutable.Set[VehicleStatus] = {
+    val result = mutable.Set[VehicleStatus]()
+
+    if (ids.isEmpty) {
+      transaction {
+        from(vehicleStatuses)(v => select(v))
+          .foreach(v => result += v)
+        result
+      }
+    } else {
+      transaction {
+        ids.get.foreach(id => {
+          from(vehicleStatuses)(v => where(v.id === id).select(v))
             .foreach(v => result += v)
         })
         result
