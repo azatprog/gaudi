@@ -89,6 +89,7 @@ export class MapComponent implements OnInit {
     this.vehicleStatusService.setVehicleId(v.id)
     this.vehicleStatusService.getVehicleStatus().then((res) => {
       document.getElementById('vrow' + v.id).classList.add('selected');
+      this.startConvoy();
     });
   }
 
@@ -101,17 +102,19 @@ export class MapComponent implements OnInit {
   }
 
   startConvoy() {
-    var count = 0;
-    var route = this.route;
+    //var count = 0;
     var timerId = setInterval(()=> {
-      this.xMove = route[count][0];
-      this.yMove = route[count][1];
+      if (this.vehicleStatusService.vehicleCurrentStatus == null)
+         return;
+      this.xMove = this.vehicleStatusService.vehicleCurrentStatus.lng;
+      this.yMove = this.vehicleStatusService.vehicleCurrentStatus.lat;
+
       this.ref.detectChanges();
 
-      count++;
-      if (count >= route.length) {
-        clearInterval(timerId);
-      }
-    }, 600);
+      //count++;
+      // if (this.xMove == this.xPointB) {
+      //   clearInterval(timerId);
+      // }
+    }, 1000);
   }
 }

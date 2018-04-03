@@ -6,23 +6,25 @@ import { HttpClient } from '@angular/common/http';
 @Injectable()
 export class VehicleStatusService extends Repository<VehicleStatus> {
 
-  private missionId: number;
-  private vehicleId: number;
+  private static missionId: number;
+  private static vehicleId: number;
+
+  vehicleCurrentStatus: VehicleStatus;
 
   constructor(public http: HttpClient) {
     super(http, 'vehicleStatus');
   }
 
-  public setMissionId(missionId: number) {
-    this.missionId = missionId;
+  public setMissionId(id: number) {
+    VehicleStatusService.missionId = id;
   }
 
-  public setVehicleId(vehicleId: number) {
-    this.vehicleId = vehicleId;
+  public setVehicleId(id: number) {
+    VehicleStatusService.vehicleId = id;
   }
 
   public getVehicleStatus(data?: number): Promise<VehicleStatus[]> {
-    let path = this.path + '?vehicleId=' + this.vehicleId + '&missionId=' + this.missionId;
+    let path = this.path + '?vehicleId=' + VehicleStatusService.vehicleId + '&missionId=' + VehicleStatusService.missionId;
     if (data) {
       path += '&timeFromMissionStart=' + data;
     }

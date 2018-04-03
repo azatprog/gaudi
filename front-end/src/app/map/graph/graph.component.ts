@@ -18,8 +18,8 @@ export class ChartData {
     return this.xData;
   }
 
-  public getYDates(): Array<string> {
-    return this.yDates.map(d => d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds());
+  public getYDates(): Array<Date> {
+    return this.yDates;
     ;
   }
 
@@ -44,6 +44,7 @@ export class GraphComponent implements OnInit {
   data: ChartData;
   selectedParameter: string = "";
   parameters: string[];
+  startTime: Date;
   excludedParameters = ["mass", "id", "lng", "lat", "vehicleId", "timeFromMissionStart"];
 
   constructor(private vehicleService: VehicleStatusService) {
@@ -71,20 +72,52 @@ export class GraphComponent implements OnInit {
     if (this.selectedParameter.length == 0)
       return;
 
-      const lastDateString = this.data.getYDates()[this.data.getYDates().length - 1];
-      var lastDate = new Date(lastDateString);
+      if(!this.startTime) {
+        this.startTime = new Date();
+        this.data.push(1, this.startTime);
+      }
+
+      let lastDate = null;
+      if (this.data.getYDates().length > 0)
+        lastDate = this.data.getYDates()[this.data.getYDates().length - 1];
       console.log(lastDate);
-      const timeStamp = Math.floor(lastDate.getTime() / 1000);
-      console.log(timeStamp);
-      this.vehicleService.getVehicleStatus(timeStamp).then(res => {
-      this.chart.data.datasets[0].data.push(res.map(ds => {
-        return ds[this.selectedParameter]}));
-      this.chart.data.labels.push(res.map(ds => {
-        const d = new Date();
+
+      // let timeStamp = null;
+      // if (lastDate != null)
+      //  timeStamp = Math.floor(lastDate.getTime() / 1000);
+      // console.log(timeStamp);
+
+      this.vehicleService.getVehicleStatus().then(result => {
+        let res = result.sort((a, b) => this.compare(a.timeFromMissionStart, b.timeFromMissionStart));
+        console.log(res);
+        if (res.length > 0) {
+          this.vehicleService.vehicleCurrentStatus = res[res.length - 1];
+          console.log(this.vehicleService.vehicleCurrentStatus.lng, this.vehicleService.vehicleCurrentStatus.lat);
+        }
+      this.chart.data.datasets[0].data = res.map(ds => {
+        return ds[this.selectedParameter]});
+
+      this.chart.data.labels = res.map(ds => {
+        const startTimeStamp = this.startTime.getTime();
+        const d = new Date(startTimeStamp + ds.timeFromMissionStart * 1000);
+        this.data.push(1, d);
         return d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();//ds.timeFromMissionStart
-      }));
+      });
+
       this.chart.update();
     });
+  }
+
+  compare(a, b){
+    let comparison = 0;
+  
+    if (a > b) {
+      comparison = 1;
+    } else if (b > a) {
+      comparison = -1;
+    }
+  
+    return comparison;
   }
 
   clearChart() {
