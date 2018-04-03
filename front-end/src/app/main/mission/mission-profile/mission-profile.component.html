@@ -33,7 +33,7 @@
                     <label for="routeStart">Route Start</label>
                     <input type="text" 
                         id="routeStart"
-                        [(ngModel)]="mission.routeStart"
+                        [(ngModel)]="mission.route.start"
                         name="routeStart" 
                         class="form-control" 
                         placeholder="Route start" 
@@ -44,7 +44,7 @@
                     <label for="routeFinish">Route Finish</label>
                     <input type="text" 
                         id="routeFinish"
-                        [(ngModel)]="mission.routeFinish"
+                        [(ngModel)]="mission.route.end"
                         name="routeFinish" 
                         class="form-control" 
                         placeholder="Route finish" 
@@ -79,9 +79,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let v of vehicles;">
+                    <tr *ngFor="let v of mission.vehicles;">
                         <td [hidden]="missionService.isMissionReadOnly"> <button class="btn-danger rem-btn" (click)="remVehicle(v)"> <i class="fa fa-trash-o"> </i> </button> </td>
-                        <td> {{ v.type }} </td>
+                        <td> {{ v.vtype }} </td>
                         <td> {{ v.model }} </td>
                         <td> {{ v.sn }} </td>
                         <td> {{ v.state }} </td>

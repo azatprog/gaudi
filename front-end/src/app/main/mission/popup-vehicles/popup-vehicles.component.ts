@@ -12,14 +12,14 @@ export class PopupVehiclesComponent implements OnInit {
 
   public vehicles: Array<Vehicle>;
 
-	@Input() popupName:String;
+	@Input() popupName: string;
 
 	@Output() eventGetSelectedVehicle = new EventEmitter();
 	@Output() eventClosePopup = new EventEmitter();
 	@Output() eventOnSelectRootVehicle = new EventEmitter();
 
-	constructor(public vehicleService: UniversalService ) { 	    
-    this.vehicles = this.vehicleService.vehicles;
+	constructor(public vehicleService: UniversalService ) {
+    this.vehicleService.getVehicles().then((res) => this.vehicles = res);
 	}
 
 	ngOnInit(){

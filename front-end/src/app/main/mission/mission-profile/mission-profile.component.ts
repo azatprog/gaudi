@@ -1,10 +1,17 @@
-import { Component, OnInit, ViewChild, ElementRef, Renderer } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  Renderer
+} from '@angular/core';
 import { Mission } from '../../../models/mission.model';
 import { PlatformLocation, Location } from '@angular/common';
 import { UniversalService } from '../../../services/universal.service';
 import { Vehicle } from '../../../models/vehicle.model';
 import { Router } from '@angular/router';
-import { MapService } from '../../../services/map.service';
+import { MapService  } from '../../../services/map.service';
+import { RouteDetails } from '../../../models/routedetails.model';
 
 @Component({
   moduleId: module.id,
@@ -13,153 +20,157 @@ import { MapService } from '../../../services/map.service';
   styleUrls: ['./mission-profile.component.css']
 })
 export class MissionProfileComponent implements OnInit {
-
   @ViewChild('f') form: any;
   @ViewChild('missionName') missionName: ElementRef;
+  public mission: Mission;
+  public vehicles: Vehicle[];
+  public isShowingVehiclePopup: boolean;
 
-  getVehicles = () => {
-    let vehs = this.missionService.vehicles.filter(v => this.mission.vehicles.includes(v.id));
-    return vehs;
-  }
-
-public mission: Mission;
-public vehicles: Vehicle[];
-public isShowingVehiclePopup: Boolean;
-
-constructor(
-            private location: PlatformLocation,
-            private _location: Location,
-            private route: Router, 
-            public missionService: UniversalService,
-            private renderer: Renderer,
-            public mapService: MapService
-) { 
+  constructor(
+    private location: PlatformLocation,
+    private _location: Location,
+    private route: Router,
+    public missionService: UniversalService,
+    private renderer: Renderer,
+    public mapService: MapService
+  ) {
     if (this.missionService.selectedMission) {
       this.mission = Object.assign({}, this.missionService.selectedMission);
-      this.vehicles = this.getVehicles();
-    } else {      
+    } else {
       this.mission = new Mission();
-      this.vehicles = [];
     }
-    
+
     location.onPopState(() => {
       this.missionService.selectedMission = null;
       this.missionService.isMissionReadOnly = true;
     });
- }
-
-ngOnInit() {
-  if (this.missionService.isMissionReadOnly == false){
-    this.renderer.invokeElementMethod(this.missionName.nativeElement, 'focus');
   }
-}
 
-openVehicleListPopup() {
-  this.isShowingVehiclePopup = true;
-}
+  ngOnInit() {
+    if (this.missionService.isMissionReadOnly === false) {
+      this.renderer.invokeElementMethod(
+        this.missionName.nativeElement,
+        'focus'
+      );
+    }
+  }
 
-closeVehiclePopup() {
-  this.isShowingVehiclePopup = false;
-}
+  openVehicleListPopup() {
+    this.isShowingVehiclePopup = true;
+  }
 
-selectVehicle(vehicle: Vehicle) {
-  if (this.mission.vehicles.includes(vehicle.id)) {
-    alert('The vehicle already in this mission');
-  } else {
-    this.mission.vehicles.push(vehicle.id);
-    this.vehicles = this.getVehicles();
-    this.missionService.updateVehicle(vehicle).then(res => {
-      
+  closeVehiclePopup() {
+    this.isShowingVehiclePopup = false;
+  }
+
+  selectVehicle(vehicle: Vehicle) {
+    if (this.missionService.isDuplication(vehicle, this.mission.vehicles)) {
+      alert('The vehicle already in this mission');
+    } else {
+      this.mission.vehicles.push(vehicle);
+    }
+    this.closeVehiclePopup();
+  }
+
+  onSelectRootVehicle() {}
+
+  remVehicle(vehicle: Vehicle) {
+    this.missionService.filterArray(vehicle, this.vehicles).then(res => {
+      this.mission.vehicles = res;
     });
   }
-  this.closeVehiclePopup();
-}
 
-onSelectRootVehicle() {
-
-}
-
-remVehicle(vehicle: Vehicle) {
-  this.missionService.filterArray(vehicle, this.vehicles).then(res => { 
-    this.vehicles = res;
-    this.mission.vehicles = this.vehicles.map(v => v.id);
-  });
-}
-
-goToMissionList() {
-  this._location.back();
-  this.missionService.selectedMission = null;
-  this.missionService.isMissionReadOnly = true;
-}
-
-goToMissionShow() {
-  this.missionService.isMissionReadOnly = true;
-}
-
-showOnMap() {
-  this.missionService.isMissionReadOnly = true;
-  this.mapService.start = this.missionService.selectedMission.routeStart;
-  this.mapService.end = this.missionService.selectedMission.routeFinish;
-  this.route.navigate(['/app/main/map']);
-}
-
-cancel() {  
-  if (this.missionService.selectedMission === null) {
-    this.goToMissionList();
-  } else {
-    this.mission = this.missionService.selectedMission;
-    this.goToMissionShow();      
+  goToMissionList() {
+    this._location.back();
+    this.missionService.selectedMission = null;
+    this.missionService.isMissionReadOnly = true;
   }
-}
 
-editMission() {
-  this.missionService.isMissionReadOnly = false;
-  this.renderer.invokeElementMethod(this.missionName.nativeElement, 'focus');
-}
+  goToMissionShow() {
+    this.missionService.isMissionReadOnly = true;
+  }
 
-delMission() {
-  this.missionService.deleteMission(this.missionService.selectedMission).then(res => {
-    alert('deleted');
-    this.goToMissionList();
-  }).catch(err=> {
-      if (err.status == 0) {
-          alert('Not bound to server! Check your connection!');
-      } else {
-          alert(err);
-      }
-  });   
-}  
+  showOnMap() {
+    this.missionService.isMissionReadOnly = true;
+    this.mapService.start = this.missionService.selectedMission.route.start;
+    this.mapService.end = this.missionService.selectedMission.route.end;
+    this.route.navigate(['/app/main/map']);
+  }
 
-save() {  
-  this.mission.vehicles = this.vehicles.map(v => v.id);
-  if (this.mission.id == null) {
-    this.missionService.addMission(this.mission).then(res => {
-      this.mission = new Mission();
-      this.form.reset();
+  cancel() {
+    if (this.missionService.selectedMission === null) {
       this.goToMissionList();
-    }).catch(err=> {
-      if (err.status == 0) {
+    } else {
+      this.mission = this.missionService.selectedMission;
+      this.goToMissionShow();
+    }
+  }
+
+  editMission() {
+    this.missionService.isMissionReadOnly = false;
+    this.renderer.invokeElementMethod(this.missionName.nativeElement, 'focus');
+  }
+
+  delMission() {
+    this.missionService
+      .deleteMission(this.missionService.selectedMission)
+      .then(res => {
+        alert('deleted');
+        this.goToMissionList();
+      })
+      .catch(err => {
+        if (err.status === 0) {
           alert('Not bound to server! Check your connection!');
         } else {
           alert(err);
         }
-    });
-  } else {
-      this.missionService.updateMission(this.mission).then(updated => {
-          this.mission = updated;
-          alert('updated');
-          this.missionService.selectedMission = null;
-          this.goToMissionList();
-      }).catch(err=> {
-          this.missionService.selectedMission = null;
-          this.missionService.isMissionReadOnly = true;
-          if (err.status == 0) {
-              alert('Not bound to server! Check your connection!');
-          } else {
-              alert(err);
-          }
       });
   }
-}
 
+  save() {
+    console.log(this.mission);
+    console.log(this.mission.route.start, this.mission.route.end);
+    this.mapService
+      .getRoute(this.mission.route.start, this.mission.route.end)
+      .then((res: RouteDetails) => {
+        console.log(res);
+        this.mission.route = res;
+        if (this.mission.id == null) {
+          console.log(this.mission);
+          this.missionService
+            .addMission(this.mission)
+            .then(res => {
+              this.mission = new Mission();
+              this.form.reset();
+              this.goToMissionList();
+            })
+            .catch(err => {
+              if (err.status === 0) {
+                alert('Not bound to server! Check your connection!');
+              } else {
+                alert(err);
+              }
+            });
+        } else {
+          console.log(this.mission);
+          this.missionService
+            .updateMission(this.mission)
+            .then(updated => {
+              console.log(updated);
+              // this.mission = updated;
+              alert('updated');
+              this.goToMissionList();
+            })
+            .catch(err => {
+              this.missionService.selectedMission = null;
+              this.missionService.isMissionReadOnly = true;
+              if (err.status === 0) {
+                alert('Not bound to server! Check your connection!');
+              } else {
+                alert(err);
+              }
+            });
+        }
+      });
+  }
 }

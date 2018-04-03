@@ -1,19 +1,22 @@
+import { Vehicle } from './vehicle.model';
+import { RouteDetails } from './routedetails.model';
+
 export interface IMission {
-    id: Number;
-    name: String;
-    startDate: String;
-    routeStart: String;
-    routeFinish: String;
-    vehicles: Number[];
+    id: number;
+    name: string;
+    startDate: string;
+    vehicles: Vehicle[];
+    route: RouteDetails;
 }
 
 export class Mission implements IMission {
     id: number;
-    name: String;
-    startDate: String;
-    routeStart: String;
-    routeFinish: String;
-    vehicles: number[];
+    name: string;
+    startDate: string;
+    vehicles: Vehicle[] = [];
+    route: RouteDetails;
 
-    constructor() { }
+    constructor() {
+        this.route = new RouteDetails();
+    }
 }

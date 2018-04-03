@@ -21,26 +21,26 @@ export class UniversalService {
   constructor(private http: HttpClient,
      public vehiclesService: VehiclesService,
      public missionService: MissionsService) {
-    this.missions = [
-      { 'id': 1, 'name': 'Humanitarian mission', 'startDate': '01.05.2018', 'routeStart': 'Baghdad', 'routeFinish': 'Kabul', 
-        'vehicles': [1,4] },
-      { 'id': 2, 'name': 'Driniking water delivery', 'startDate': '23.05.2018', 'routeStart': 'Berlin', 'routeFinish': 'München', 
-        'vehicles': [2] },
-      { 'id': 3, 'name': 'Zica virus recovery', 'startDate': '11.09.2018', 'routeStart': 'Kinshasa', 'routeFinish': 'Kabalo', 
-        'vehicles': [5] },
-      { 'id': 4, 'name': 'Hurricane Sud disaster', 'startDate': '08.08.2018', 'routeStart': 'Port-de-Paix', 'routeFinish': 'Cap-Haïtien', 
-        'vehicles': [] },
-      { 'id': 5, 'name': 'Earthquake mission', 'startDate': '13.07.2018', 'routeStart': 'Anse-à-Veau', 'routeFinish': 'Camp Perrin', 
-        'vehicles': [] }
-    ];
+    // this.missions = [
+    //   { 'id': 1, 'name': 'Humanitarian mission', 'startDate': '01.05.2018', 'routeStart': 'Baghdad', 'routeFinish': 'Kabul', 
+    //     'vehicles': [1,4] },
+    //   { 'id': 2, 'name': 'Driniking water delivery', 'startDate': '23.05.2018', 'routeStart': 'Berlin', 'routeFinish': 'München', 
+    //     'vehicles': [2] },
+    //   { 'id': 3, 'name': 'Zica virus recovery', 'startDate': '11.09.2018', 'routeStart': 'Kinshasa', 'routeFinish': 'Kabalo', 
+    //     'vehicles': [5] },
+    //   { 'id': 4, 'name': 'Hurricane Sud disaster', 'startDate': '08.08.2018', 'routeStart': 'Port-de-Paix', 'routeFinish': 'Cap-Haïtien', 
+    //     'vehicles': [] },
+    //   { 'id': 5, 'name': 'Earthquake mission', 'startDate': '13.07.2018', 'routeStart': 'Anse-à-Veau', 'routeFinish': 'Camp Perrin', 
+    //     'vehicles': [] }
+    // ];
 
-    this.vehicles = [
-      { 'id': 1, 'type': '4wheeler', 'model': 'Dodge ram 3500', 'sn': 'sn123w3143', 'state': '5', 'mission': { id: 1, name: 'Humanitarian mission' } },
-      { 'id': 2, 'type': 'truck', 'model': 'Volvo FH', 'sn': 'sn99998343', 'state': '15', 'mission': { id: 2, name: 'Driniking water delivery' } },
-      { 'id': 3, 'type': 'truck', 'model': 'Volvo FH', 'sn': 'sn4432665', 'state': '25', 'mission': { id: 2, name: 'Driniking water delivery' } },
-      { 'id': 4, 'type': 'truck', 'model': 'Volvo FH ', 'sn': 'sn443634', 'state': '5', 'mission': { id: 1, name: 'Humanitarian mission' } },
-      { 'id': 5, 'type': '4wheeler', 'model': 'Dodge ram 3500', 'sn': 'sn16161897', 'state': '35', 'mission': { id: 3, name: 'Zica virus recovery' } }
-    ];
+    // this.vehicles = [
+    //   { 'id': 1, 'type': '4wheeler', 'model': 'Dodge ram 3500', 'sn': 'sn123w3143', 'state': '5', 'mission': { id: 1, name: 'Humanitarian mission' } },
+    //   { 'id': 2, 'type': 'truck', 'model': 'Volvo FH', 'sn': 'sn99998343', 'state': '15', 'mission': { id: 2, name: 'Driniking water delivery' } },
+    //   { 'id': 3, 'type': 'truck', 'model': 'Volvo FH', 'sn': 'sn4432665', 'state': '25', 'mission': { id: 2, name: 'Driniking water delivery' } },
+    //   { 'id': 4, 'type': 'truck', 'model': 'Volvo FH ', 'sn': 'sn443634', 'state': '5', 'mission': { id: 1, name: 'Humanitarian mission' } },
+    //   { 'id': 5, 'type': '4wheeler', 'model': 'Dodge ram 3500', 'sn': 'sn16161897', 'state': '35', 'mission': { id: 3, name: 'Zica virus recovery' } }
+    // ];
   }
 
   getMax = (array: Object[]): Promise<any> => {
@@ -65,6 +65,11 @@ export class UniversalService {
       resolve(filtered);
     });
     return promise;
+  }
+
+  isDuplication = (o: Object, array: Object[]): boolean => {
+    const res = array.findIndex(a => a['id'] === o['id']) > -1;
+    return res;
   }
 
   getMissions(): Promise<Mission[]> {

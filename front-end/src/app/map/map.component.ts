@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { MapService } from '../services/map.service';
+import { RouteDetails } from '../models/routedetails.model';
 
 @Component({
   selector: 'app-map',
@@ -44,10 +45,10 @@ export class MapComponent implements OnInit {
   }
 
   searchRoute() {
-    this.mapService.getRoute(this.start, this.end).then((result) => {
-      let center = Math.round(result.route.length / 2);
-      const last = result.route.length - 1;
-       this.route = result.route.map(p => {return [p.lng, p.lan]});
+    this.mapService.getRoute(this.start, this.end).then((result: RouteDetails) => {
+      const center = Math.round(result.points.length / 2);
+      const last = result.points.length - 1;
+       this.route = result.points.map(p => [p.lng, p.lan]);
        this.xCenter = this.route[center][0];
        this.yCenter = this.route[center][1];
        this.xMove = this.route[0][0];

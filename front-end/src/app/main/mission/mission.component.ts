@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UniversalService } from '../../services/universal.service';
+import { Mission } from '../../models/mission.model';
 
 @Component({
   selector: 'app-mission',
@@ -9,15 +10,14 @@ import { UniversalService } from '../../services/universal.service';
 })
 export class MissionComponent implements OnInit {
 
-  missions: Array<Object>;
+  missions: Array<Mission>;
 
   constructor(private route: Router,
-     public missionService: UniversalService) { 
+     public missionService: UniversalService) {
   }
 
   ngOnInit() {
-    //this.missionService.getMissions().then((ms) => this.missions = ms);
-    this.missions = this.missionService.missions;
+    this.missionService.getMissions().then((ms) => { this.missions = ms; });
   }
 
   createMission() {
