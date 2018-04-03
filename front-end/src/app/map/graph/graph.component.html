@@ -2,5 +2,5 @@
     <select class="comboParameters" [(ngModel)]="selectedParemeter" (change)="onParameterChanged($event)">
         <option *ngFor="let c of parameters" [ngValue]="c">{{c}}</option>
       </select>
-  <canvas id="canvas">{{ chart }}</canvas>
+  <canvas id="canvas" height="90">{{ chart }}</canvas>
 </div>
