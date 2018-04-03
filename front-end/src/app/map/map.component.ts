@@ -85,7 +85,9 @@ export class MapComponent implements OnInit {
     Array.from(document.getElementsByClassName('.vrow')).forEach(r => {
       r.classList.remove('.selected');
     });
-    this.vehicleStatusService.getVehicleStatus(this.mission.id, v.id).then((res) => {
+    this.vehicleStatusService.setMissionId(this.mission.id);
+    this.vehicleStatusService.setVehicleId(v.id)
+    this.vehicleStatusService.getVehicleStatus().then((res) => {
       document.getElementById('vrow' + v.id).classList.add('selected');
     });
   }

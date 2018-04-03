@@ -42,9 +42,9 @@ export class ChartData {
 export class GraphComponent implements OnInit {
   chart: Chart;
   data: ChartData;
-  selectedParamter: string;
+  selectedParameter: string = "";
   parameters: string[];
-  excludedParameters = ["mass", "id", "lng", "lat"];
+  excludedParameters = ["mass", "id", "lng", "lat", "vehicleId", "timeFromMissionStart"];
 
   constructor(private vehicleService: VehicleStatusService) {
     this.data = new ChartData();
@@ -62,13 +62,15 @@ export class GraphComponent implements OnInit {
   }
 
   onParameterChanged(event) {
+    console.log(event);
     this.clearChart();
   }
 
   updateData() {
-    if (!this.selectedParamter)
+    console.log(this.selectedParameter);
+    if (this.selectedParameter.length == 0)
       return;
-      
+
       const lastDateString = this.data.getYDates()[this.data.getYDates().length - 1];
       var lastDate = new Date(lastDateString);
       console.log(lastDate);
@@ -76,8 +78,7 @@ export class GraphComponent implements OnInit {
       console.log(timeStamp);
       this.vehicleService.getVehicleStatus(timeStamp).then(res => {
       this.chart.data.datasets[0].data.push(res.map(ds => {
-        return ds[this.selectedParamter]}));
-
+        return ds[this.selectedParameter]}));
       this.chart.data.labels.push(res.map(ds => {
         const d = new Date();
         return d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();//ds.timeFromMissionStart
