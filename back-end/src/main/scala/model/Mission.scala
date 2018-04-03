@@ -96,14 +96,18 @@ object Mission {
       m => {
         // Getting the assigned vehicles
         mvs = misVehicles.filter(_.missionId == m.id)
-        var vids = mutable.Set[Long]()
-        mvs.foreach(mv => vids += mv.vehicleId)
-        m.vehicles = DbSchema.getAllVehicles(Some(vids))
-
+        if (!mvs.isEmpty) {
+          var vids = mutable.Set[Long]()
+          mvs.foreach(mv => vids += mv.vehicleId)
+          m.vehicles = DbSchema.getAllVehicles(Some(vids))
+        } else m.vehicles = mutable.Set[Vehicle]()
         // Getting the assigned route
-        val mrd = misRoutes.filter(_.missionId == m.id).head
-        m.route = DbSchema.getAllRouteDetails(
-          Some(mutable.Set[Long](mrd.routeId))).head
+        val mrds = misRoutes.filter(_.missionId == m.id)
+        if (!mrds.isEmpty) {
+          val mrd = mrds.head
+          m.route = DbSchema.getAllRouteDetails(
+            Some(mutable.Set[Long](mrd.routeId))).head
+        }
       })
     missions
   }

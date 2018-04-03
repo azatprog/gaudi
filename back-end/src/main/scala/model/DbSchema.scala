@@ -224,35 +224,7 @@ object DbSchema extends Schema {
   }
 
   def main(args: Array[String]): Unit = {
-    transaction {
-      Session.cleanupResources
-      DbSchema.drop
-
-      DbSchema.create
-    }
-
+    initDb()
     Vehicle.create("Heavy Truck", "Kamaz", "01110101010064984954065", 100)
-
-/*
-    print(Vehicle.create("vehicle", "", "1", 100))
-    print(Vehicle.create("", "", "2", 100))
-    print(Vehicle.create("", "", "3", 100))
-
-    /*print(Mission.create("mission 1", "", Set[Vehicle], ""))
-    print(Mission.create("mission 2", "", "", ""))*/
-
-    transaction {
-      val vehicle = from(vehicles)(v => where(v.id === 2).select(v)).single
-      println(vehicle)
-      vehicle.vtype = "SUV"
-      val newVehicle = vehicle
-      println(newVehicle)
-      Vehicle.update(newVehicle)
-    }
-    println(getAllVehicles(None))
-    println(getAllVehicles(Some(Set[Long](1, 2))))
-
-    Mission.addVehicles(1, Array[Long](1, 2, 3))
-    println(Mission.getMissions(None))*/
   }
 }
