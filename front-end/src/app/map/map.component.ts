@@ -2,6 +2,9 @@ import { Component, OnInit, Output, EventEmitter, ChangeDetectorRef } from '@ang
 import { MapService } from '../services/map.service';
 import { RouteDetails } from '../models/routedetails.model';
 import { VehicleStatusService } from '../services/vehicle-status.service';
+import { UniversalService } from '../services/universal.service';
+import { Mission } from '../models/mission.model';
+import { Vehicle } from '../models/vehicle.model';
 
 @Component({
   selector: 'app-map',
@@ -31,12 +34,16 @@ export class MapComponent implements OnInit {
   xMove?: Number;
   yMove?: Number;
 
+  mission: Mission;
+
   constructor(public mapService: MapService,
               private ref: ChangeDetectorRef,
-              public vehicleStatusService: VehicleStatusService
+              public vehicleStatusService: VehicleStatusService,
+              public vehicleService: UniversalService
             ) {
     this.start = this.mapService.start;
     this.end = this.mapService.end;
+    this.mission = this.vehicleService.selectedMission;
   }
 
   public pointAChanged(event) {
@@ -46,6 +53,8 @@ export class MapComponent implements OnInit {
   public pointBChanged(event) {
     this.end = event.target.value;
   }
+
+  identify = (inx, item) => inx;
 
   searchRoute() {
     this.mapService.getRoute(this.start, this.end).then((result: RouteDetails) => {
@@ -72,8 +81,13 @@ export class MapComponent implements OnInit {
   ngOnInit() {
   }
 
-  getVehicleStatus() {
-    this.vehicleStatusService.getVehicleStatus(1, 1);
+  getVehicleStatus(v: Vehicle) {
+    Array.from(document.getElementsByClassName('.vrow')).forEach(r => {
+      r.classList.remove('.selected');
+    });
+    this.vehicleStatusService.getVehicleStatus(this.mission.id, v.id).then((res) => {
+      document.getElementById('vrow' + v.id).classList.add('selected');
+    });
   }
 
   increaseZoom() {

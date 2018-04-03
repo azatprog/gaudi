@@ -63,8 +63,16 @@
     </aol-layer-vector>    
    </aol-map>
     <div class="vehicles">
-      Vehicles
-      <button class="btn btn-success" (click)="getVehicleStatus()">Get Vehicles</button>
+      <table class="table">
+          <thead>
+              <th> Vehicles </th>
+          </thead>
+          <tbody>
+            <tr *ngFor="let v of mission.vehicles; trackBy: identify" (click)="getVehicleStatus(v)" id="vrow{{v.id}}" class="vrow"> 
+              <td> {{v.model}} </td>
+            </tr>
+          </tbody>
+        </table>
     </div>
 </div>
 <div class="graphics" >Graphs</div>

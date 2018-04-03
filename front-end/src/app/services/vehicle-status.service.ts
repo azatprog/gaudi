@@ -11,7 +11,11 @@ export class VehicleStatusService extends Repository<VehicleStatus> {
   }
 
   public getVehicleStatus(vehicleId: number, missionId: number, data?: number): Promise<VehicleStatus[]> {
-    return this.executeQuery(this.path, 'get', {vehicleId, missionId, data});
+    let path = this.path + '?vehicleId=' + vehicleId + '&missionId=' + missionId;
+    if (data) {
+      path += '&timeFromMissionStart=' + data;
+    }
+    return this.executeQuery(path, 'get');
   }
 
 }
