@@ -88,4 +88,14 @@ export class MapService {
     routeDetails.points = route.overview_path.map(p => { return new Point(p.lng(), p.lat()) });
     return routeDetails;
   }
+
+  //TODO: change to API vehicleStatus
+  updateStatus(): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      resolve({
+        xData:Math.floor(Math.random() * (120 - 40 + 1)) + 40,
+        yData: new Date()
+      });
+    });
+  }
 }

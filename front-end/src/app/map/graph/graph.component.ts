@@ -1,0 +1,127 @@
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Chart } from 'chart.js';
+import { MapService } from '../../services/map.service';
+
+
+export class ChartData {
+  private xData: Array<number>;
+  private yDates: Array<Date>;
+
+  public push(data: number,  date: Date) {
+    this.xData.push(data);
+    this.yDates.push(date);
+  }
+
+  public getXData(): Array<number> {
+    return this.xData;
+  }
+
+  public getYDates(): Array<string> {
+    return this.yDates.map(d => d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds());
+    ;
+  }
+
+  public clear() {
+    this.xData = new Array<number>();
+    this.yDates = new Array<Date>(); 
+  }
+
+  constructor() {
+    this.clear();
+  }
+}
+
+export class VehicleStatus {
+
+  public id: number;
+  public mileage: number;
+  public speed: number;
+  public acceleration: number;
+  public missionMilage: number;
+  public timeFromMissionStart: number;
+  public rpm: number;
+  public engineTemperature: number;
+  public outsideTemperature: number;
+  public oilPressure: number;
+  public coolingFluidLevel: boolean;
+  public ignition: boolean;
+  public throttle: number;
+  public gear: string;
+  public pushBrakePedal: number;
+  public brakeFluidLevel: boolean;
+  public brakeTemperature: number;
+  public brakePadResidue: number;
+  public mass: string
+
+  constructor() {}
+}
+
+@Component({
+  selector: 'app-graph',
+  templateUrl: './graph.component.html',
+  styleUrls: ['./graph.component.css']
+})
+
+export class GraphComponent implements OnInit {
+  chart: Chart;
+  data: ChartData;
+  selectedParamter: string;
+  parameters: string[] = ["speed", "rpm", "123", "23123", "234234"];
+
+  constructor(private mapService: MapService) {
+    this.data = new ChartData();
+    //this.parameters = ["speed", "rpm", "123", "23123", "234234"];
+   }
+
+  ngOnInit() {
+    this.initialiazeChart();
+    var timerId = setInterval(()=> {
+      this.updateData();
+    }, 1000);
+  }
+
+  updateData() {
+      this.mapService.updateStatus().then(res => {
+      this.data.push(res.xData, res.yData);
+      this.chart.data.datasets[0].data = this.data.getXData();
+      this.chart.data.labels = this.data.getYDates();
+      this.chart.update();
+    });
+  }
+
+  clearChart() {
+    this.data.clear();
+    this.chart.data.datasets[0].data = [];
+    this.chart.data.labels = [];
+    this.chart.update();
+  }
+
+  initialiazeChart() {
+    this.chart = new Chart('canvas', {
+      type: 'line',
+      data: {
+        labels: new Array<Date>(),
+        datasets: [
+          {
+            data: [],
+            borderColor: '#3cba9f',
+            fill: false
+          },
+        ]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        scales: {
+          xAxes: [{
+            display: true
+          }],
+          yAxes: [{
+            display: true
+          }]
+        }
+      }
+    });
+  }
+}

@@ -11,6 +11,7 @@ import { AboutComponent } from './main/about/about.component';
 import { MapComponent } from './map/map.component';
 import { MissionProfileComponent } from './main/mission/mission-profile/mission-profile.component';
 import { VehicleProfileComponent } from './main/vehicle/vehicle-profile/vehicle-profile.component';
+import { GraphComponent } from './map/graph/graph.component';
 
 
 export const ROUTES: Routes = [
@@ -23,6 +24,7 @@ export const ROUTES: Routes = [
                 children: [
                     { path: '', redirectTo: 'mission', pathMatch: 'full'},
                     { path: 'mission', component: MissionComponent },
+                    { path: 'graph', component: GraphComponent },
                     { path: 'missionProfile', component: MissionProfileComponent },
                     { path: 'map', component: MapComponent },
                     { path: 'vehicle', component: VehicleComponent },
