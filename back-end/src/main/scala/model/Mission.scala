@@ -1,21 +1,20 @@
 package model
 
-import java.util.{Calendar, Date}
-import org.squeryl.KeyedEntity
-import scala.collection.mutable.Set
-import org.squeryl.PrimitiveTypeMode._
-import scala.collection.mutable
 import org.json4s.JsonAST._
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
+import org.squeryl.KeyedEntity
+
+import scala.collection.mutable
+import scala.collection.mutable.Set
 
 /** The representation of Mission entity */
-case class Mission private (
-                             var id: Long,
-                             var name: String,
-                             var startDate: String,
-                             var vehicles: Set[Vehicle],
-                             var route: RouteDetails) extends KeyedEntity[Long] {
+case class Mission private(
+                            var id: Long,
+                            var name: String,
+                            var startDate: String,
+                            var vehicles: Set[Vehicle],
+                            var route: RouteDetails) extends KeyedEntity[Long] {
 
   override def hashCode(): Int = id.hashCode
 
@@ -23,10 +22,10 @@ case class Mission private (
     that match {
       case that: Mission => this.id == that.id
       case _ => false
-  }
+    }
 
   override def toString = {
-    "Mission("+id+","+name+","+startDate+","+vehicles+","+route+")"
+    "Mission(" + id + "," + name + "," + startDate + "," + vehicles + "," + route + ")"
   }
 
   def toJson() = {
@@ -73,7 +72,9 @@ object Mission {
   }
 
   def update(m: Mission): Mission = {
-    DbSchema.update(m)
+    val mission = DbSchema.update(m)
+    addVehicles(m.id, m.vehicles)
+    mission
   }
 
   def delete(id: Long): Unit = {
@@ -82,6 +83,7 @@ object Mission {
 
   /**
     * Returns the list of the missions.
+    *
     * @return the list of the missions
     */
   def getMissions(ids: Option[mutable.Set[Long]]): mutable.Set[Mission] = {
@@ -115,6 +117,7 @@ object Mission {
 
   /**
     * Adds the vehicles to the mission.
+    *
     * @param mid  mission's id
     * @param vids the array of vehicles' ids
     */
@@ -125,8 +128,9 @@ object Mission {
 
   /**
     * Adds the vehicles to the mission.
-    * @param mid  mission's id
-    * @param vs the array of vehicles
+    *
+    * @param mid mission's id
+    * @param vs  the array of vehicles
     */
   def addVehicles(mid: Long, vs: Set[Vehicle]): Unit = {
     val list = MissionVehicles(mid, vs) // TODO: check that data is actual to id?

@@ -111,6 +111,8 @@ object DbSchema extends Schema {
 
       if (!coll.isEmpty) {
         missions.update(m)
+        missionVehicles.deleteWhere(_.missionId === m.id)
+
         m
       } else insert(m)
     }
