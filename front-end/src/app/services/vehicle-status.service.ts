@@ -6,16 +6,26 @@ import { HttpClient } from '@angular/common/http';
 @Injectable()
 export class VehicleStatusService extends Repository<VehicleStatus> {
 
+  private missionId: number;
+  private vehicleId: number;
+
   constructor(public http: HttpClient) {
     super(http, 'vehicleStatus');
   }
 
-  public getVehicleStatus(vehicleId: number, missionId: number, data?: number): Promise<VehicleStatus[]> {
-    let path = this.path + '?vehicleId=' + vehicleId + '&missionId=' + missionId;
+  public setMissionId(missionId: number) {
+    this.missionId = missionId;
+  }
+
+  public setVehicleId(vehicleId: number) {
+    this.vehicleId = vehicleId;
+  }
+
+  public getVehicleStatus(data?: number): Promise<VehicleStatus[]> {
+    let path = this.path + '?vehicleId=' + this.vehicleId + '&missionId=' + this.missionId;
     if (data) {
       path += '&timeFromMissionStart=' + data;
     }
     return this.executeQuery(path, 'get');
   }
-
 }

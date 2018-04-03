@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Chart } from 'chart.js';
 import { MapService } from '../../services/map.service';
 import { VehicleStatus } from '../../models/vehicleStatus.model';
-import { VehiclesService } from '../../services/vehicles.service';
+import { VehicleStatusService } from '../../services/vehicle-status.service';
 
 
 export class ChartData {
@@ -46,7 +46,7 @@ export class GraphComponent implements OnInit {
   parameters: string[];
   excludedParameters = ["mass", "id", "lng", "lat"];
 
-  constructor(private vehicleService: VehiclesService) {
+  constructor(private vehicleService: VehicleStatusService) {
     this.data = new ChartData();
     this.parameters = Object.keys(new VehicleStatus());
     this.parameters = this.parameters.filter(el => {
@@ -66,12 +66,24 @@ export class GraphComponent implements OnInit {
   }
 
   updateData() {
-      // this.vehicleService.getVehicleStatus().then(res => {
-      // this.data.push(res.xData, res.yData);
-      // this.chart.data.datasets[0].data = this.data.getXData();
-      // this.chart.data.labels = this.data.getYDates();
-      // this.chart.update();
-    // });
+    if (!this.selectedParamter)
+      return;
+      
+      const lastDateString = this.data.getYDates()[this.data.getYDates().length - 1];
+      var lastDate = new Date(lastDateString);
+      console.log(lastDate);
+      const timeStamp = Math.floor(lastDate.getTime() / 1000);
+      console.log(timeStamp);
+      this.vehicleService.getVehicleStatus(timeStamp).then(res => {
+      this.chart.data.datasets[0].data.push(res.map(ds => {
+        return ds[this.selectedParamter]}));
+
+      this.chart.data.labels.push(res.map(ds => {
+        const d = new Date();
+        return d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();//ds.timeFromMissionStart
+      }));
+      this.chart.update();
+    });
   }
 
   clearChart() {
