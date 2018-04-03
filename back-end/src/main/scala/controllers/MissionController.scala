@@ -38,7 +38,7 @@ class MissionController extends ScalatraServlet with JacksonJsonSupport with Cor
     val routeDetails = parsedBody \ "route"
 
     val rdStart = (routeDetails \ "start").extract[String]
-    val rdEnd = (routeDetails \ "finish").extract[String]
+    val rdEnd = (routeDetails \ "end").extract[String]
     val rdDistance = (routeDetails \ "distance").extract[Double]
     val rdPoints = compact(render(routeDetails \ "points"))
     val rdNNS = compact(render(routeDetails \ "noneNormalSegments"))
@@ -65,7 +65,7 @@ class MissionController extends ScalatraServlet with JacksonJsonSupport with Cor
     val routeDetails = parsedBody \ "route"
 
     val rdStart = (routeDetails \ "start").extract[String]
-    val rdEnd = (routeDetails \ "finish").extract[String]
+    val rdEnd = (routeDetails \ "end").extract[String]
     val rdDistance = (routeDetails \ "distance").extract[Double]
     val rdPoints = compact(render(routeDetails \ "points"))
     val rdNNS = compact(render(routeDetails \ "noneNormalSegments"))
