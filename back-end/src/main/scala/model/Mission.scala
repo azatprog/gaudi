@@ -32,7 +32,7 @@ case class Mission private(
     val rd = if (route != null) {
       ("id" -> route.id) ~
         ("start" -> route.start) ~
-        ("finish" -> route.end) ~
+        ("end" -> route.end) ~
         ("distance" -> route.distance) ~
         ("points" -> parse(route.points)) ~
         ("noneNormalSegments" -> parse(route.noneNormalSegments))
