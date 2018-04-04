@@ -238,6 +238,12 @@ object DbSchema extends Schema {
     }
   }
 
+  def deleteAllVehicleStatuses(): Unit = {
+    transaction {
+      vehicleStatuses.deleteWhere(vs => 1 === 1)
+    }
+  }
+
   def initDb(): Unit = {
     transaction {
       Session.cleanupResources

@@ -1,6 +1,6 @@
 package controllers
 
-import model.VehicleStatus
+import model.{DbSchema, VehicleStatus}
 import org.json4s.DefaultFormats
 import org.scalatra.{CorsSupport, ScalatraServlet}
 import org.scalatra.json.JacksonJsonSupport
@@ -14,6 +14,10 @@ class VehicleStatusController extends ScalatraServlet with JacksonJsonSupport wi
 
   before() {
     contentType = formats("json")
+  }
+
+  get("/deleteAll") {
+    DbSchema.deleteAllVehicleStatuses()
   }
 
   get("/") {
