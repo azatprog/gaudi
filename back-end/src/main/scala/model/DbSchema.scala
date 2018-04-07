@@ -6,7 +6,7 @@ import org.squeryl.adapters.PostgreSqlAdapter
 import org.squeryl.{Schema, Session, SessionFactory}
 
 import scala.collection.mutable
-import scala.collection.mutable.Set
+import scala.collection.mutable.MutableList
 
 object DbSchema extends Schema {
   val logger = LoggerFactory.getLogger(getClass)
@@ -140,26 +140,19 @@ object DbSchema extends Schema {
     }
   }
 
-  // TODO: remove the vehicles from the mission
-  def deleteMissionVehicles(mv: MissionVehicles): Unit = {
-    /*transaction {
-      missionVehicles.deleteWhere(_.missionId === mv.missionId && _.vehicleId === mv.vehicleId)
-    }*/
-  }
-
-  def getAllVehicles(ids: Option[mutable.Set[Long]]): mutable.Set[Vehicle] = {
-    val result = mutable.Set[Vehicle]()
+  def getAllVehicles(ids: Option[mutable.Set[Long]]): MutableList[Vehicle] = {
+    val result = MutableList[Vehicle]()
 
     if (ids.isEmpty) {
       transaction {
-        from(vehicles)(v => select(v))
+        from(vehicles)(v => select(v).orderBy(v.id asc))
           .foreach(v => result += v)
         result
       }
     } else {
       transaction {
         ids.get.foreach(id => {
-          from(vehicles)(v => where(v.id === id).select(v))
+          from(vehicles)(v => where(v.id === id).select(v).orderBy(v.id asc))
             .foreach(v => result += v)
         })
         result
@@ -167,32 +160,40 @@ object DbSchema extends Schema {
     }
   }
 
-  def getAllVehicleStatuses(missionId: Long,
-                           vehicleId: Long, timeFromStart: Long
-                           ): mutable.Set[VehicleStatus] = {
+  def hasMissionAnyVehicleStatuses(missionId: Long) = {
+    val result = MutableList[VehicleStatus]()
+    transaction {
+      from(vehicleStatuses)(vs => where(vs.missionId === missionId).select(vs))
+        .foreach(v => result += v)
+    }
+    !result.isEmpty
+  }
 
-    val result = mutable.Set[VehicleStatus]()
+  def getAllVehicleStatuses(missionId: Long,
+                           vehicleId: Long, timeFromStart: Long) = {
+    val result = MutableList[VehicleStatus]()
     transaction {
       from(vehicleStatuses)(vs => where(vs.missionId === missionId
-        and vs.vehicleId === vehicleId and vs.timeFromMissionStart.gt(timeFromStart)).select(vs))
+        and vs.vehicleId === vehicleId and vs.timeFromMissionStart.gt(timeFromStart))
+        .select(vs).orderBy(vs.id asc))
         .foreach(v => result += v)
       result
     }
   }
 
-  def getAllRouteDetails(ids: Option[mutable.Set[Long]]): mutable.Set[RouteDetails] = {
-    val result = mutable.Set[RouteDetails]()
+  def getAllRouteDetails(ids: Option[mutable.Set[Long]]) = {
+    val result = MutableList[RouteDetails]()
 
     if (ids.isEmpty) {
       transaction {
-        from(routeDetails)(rd => select(rd))
+        from(routeDetails)(rd => select(rd).orderBy(rd.id asc))
           .foreach(rd => result += rd)
         result
       }
     } else {
       transaction {
         ids.get.foreach(id => {
-          from(routeDetails)(rd => where(rd.id === id).select(rd))
+          from(routeDetails)(rd => where(rd.id === id).select(rd).orderBy(rd.id asc))
             .foreach(rd => result += rd)
         })
         result
@@ -201,7 +202,7 @@ object DbSchema extends Schema {
   }
 
   def getAllMissionVehicles() = {
-    val result = Set[MissionVehicles]()
+    val result = MutableList[MissionVehicles]()
     transaction {
       from(missionVehicles)(mvs => select(mvs))
         .foreach(mvs => result += mvs)
@@ -210,7 +211,7 @@ object DbSchema extends Schema {
   }
 
   def getAllMissionRoutes() = {
-    val result = Set[MissionRoutes]()
+    val result = MutableList[MissionRoutes]()
     transaction {
       from(missionRoutes)(mr => select(mr))
         .foreach(mr => result += mr)
@@ -218,23 +219,28 @@ object DbSchema extends Schema {
     }
   }
 
-  def getAllMissions(ids: Option[Set[Long]]) = {
-    val result = Set[Mission]()
+  def getAllMissions(ids: Option[mutable.Set[Long]]) = {
+    val result = MutableList[Mission]()
 
     if (ids.isEmpty) {
       transaction {
-        from(missions)(m => select(m))
+        from(missions)(m => select(m).orderBy(m.id asc))
           .foreach(m => result += m)
-        result
       }
     } else {
       transaction {
         ids.get.foreach(id => {
-          from(missions)(m => where(m.id === id).select(m))
+          from(missions)(m => where(m.id === id).select(m).orderBy(m.id asc))
             .foreach(m => result += m)
         })
-        result
       }
+    }
+    result
+  }
+
+  def clearMissionVehicleStatuses(mId: Long): Unit = {
+    transaction {
+      vehicleStatuses.deleteWhere(vs => vs.missionId === mId)
     }
   }
 

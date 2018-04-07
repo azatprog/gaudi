@@ -6,14 +6,14 @@ import org.json4s.jackson.JsonMethods._
 import org.squeryl.KeyedEntity
 
 import scala.collection.mutable
-import scala.collection.mutable.Set
+import scala.collection.mutable.MutableList
 
 /** The representation of Mission entity */
 case class Mission private(
                             var id: Long,
                             var name: String,
                             var startDate: String,
-                            var vehicles: Set[Vehicle],
+                            var vehicles: MutableList[Vehicle],
                             var route: RouteDetails) extends KeyedEntity[Long] {
 
   override def hashCode(): Int = id.hashCode
@@ -30,20 +30,18 @@ case class Mission private(
 
   def toJson() = {
     val rd = if (route != null) {
-      ("id" -> route.id) ~
-        ("start" -> route.start) ~
-        ("end" -> route.end) ~
-        ("distance" -> route.distance) ~
-        ("points" -> parse(route.points)) ~
-        ("noneNormalSegments" -> parse(route.noneNormalSegments))
+      route.toJson()
     } else null
 
-    var vehs = mutable.Set[JValue]()
+    var vehs = MutableList[JValue]()
     vehicles.foreach(v => vehs += v.toJson())
+
+    val isExecuted = DbSchema.hasMissionAnyVehicleStatuses(id)
 
     ("id" -> id) ~
       ("name" -> name) ~
       ("startDate" -> startDate) ~
+      ("isExecuted" -> isExecuted) ~
       ("vehicles" -> vehs) ~
       ("route" -> rd)
   }
@@ -55,7 +53,7 @@ object Mission {
     * id is unique and generated automatically.
     */
   def create(name: String,
-             startDate: String, vehicles: Set[Vehicle],
+             startDate: String, vehicles: MutableList[Vehicle],
              routeDetails: RouteDetails): Mission = {
     val mission = DbSchema.insert(
       new Mission(0, name, startDate, vehicles, routeDetails)
@@ -66,7 +64,7 @@ object Mission {
   }
 
   def define(id: Long, name: String,
-             startDate: String, vehicles: Set[Vehicle],
+             startDate: String, vehicles: MutableList[Vehicle],
              routeDetails: RouteDetails): Mission = {
     new Mission(id, name, startDate, vehicles, routeDetails)
   }
@@ -86,12 +84,12 @@ object Mission {
     *
     * @return the list of the missions
     */
-  def getMissions(ids: Option[mutable.Set[Long]]): mutable.Set[Mission] = {
+  def getMissions(ids: Option[mutable.Set[Long]]): MutableList[Mission] = {
     // TODO: should be substituted with getAllMissionVehicles(missionId)
-    val misVehicles: mutable.Set[MissionVehicles] = DbSchema.getAllMissionVehicles()
+    val misVehicles: MutableList[MissionVehicles] = DbSchema.getAllMissionVehicles()
     // TODO: should be substituted with getAllMissionVehicles(missionId)
-    val misRoutes: mutable.Set[MissionRoutes] = DbSchema.getAllMissionRoutes()
-    var mvs = mutable.Set[MissionVehicles]()
+    val misRoutes: MutableList[MissionRoutes] = DbSchema.getAllMissionRoutes()
+    var mvs = MutableList[MissionVehicles]()
 
     val missions = DbSchema.getAllMissions(ids)
 
@@ -103,7 +101,7 @@ object Mission {
           var vids = mutable.Set[Long]()
           mvs.foreach(mv => vids += mv.vehicleId)
           m.vehicles = DbSchema.getAllVehicles(Some(vids))
-        } else m.vehicles = mutable.Set[Vehicle]()
+        } else m.vehicles = MutableList[Vehicle]()
         // Getting the assigned route
         val mrds = misRoutes.filter(_.missionId == m.id)
         if (!mrds.isEmpty) {
@@ -132,18 +130,17 @@ object Mission {
     * @param mid mission's id
     * @param vs  the array of vehicles
     */
-  def addVehicles(mid: Long, vs: Set[Vehicle]): Unit = {
+  def addVehicles(mid: Long, vs: MutableList[Vehicle]): Unit = {
     val list = MissionVehicles(mid, vs) // TODO: check that data is actual to id?
     DbSchema.insertVehicles(list)
-  }
-
-  def removeVehicles(mid: Long, vids: Array[Long]): Unit = {
-    val list = MissionVehicles(mid, vids)
-    list.foreach(mv => DbSchema.deleteMissionVehicles(mv))
   }
 
   def addRoute(mid: Long, routes: RouteDetails): Unit = {
     val list = MissionRoutes(mid, routes)
     DbSchema.insertRoutes(list)
+  }
+
+  def clearVehicleStatuses(mId: Long): Unit = {
+    DbSchema.clearMissionVehicleStatuses(mId)
   }
 }

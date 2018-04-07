@@ -1,6 +1,6 @@
 package controllers
 
-import model.{DbSchema, VehicleStatus}
+import model.{DbSchema, Mission, VehicleStatus}
 import org.json4s.DefaultFormats
 import org.scalatra.{CorsSupport, ScalatraServlet}
 import org.scalatra.json.JacksonJsonSupport
@@ -44,5 +44,10 @@ class VehicleStatusController extends ScalatraServlet with JacksonJsonSupport wi
     val vs = VehicleStatus.create(0, vehicleId, missionId, lng, lat,
       speed, missionMilage, timeFromMissionStart, rpm, throttle, gear, pushBrakePedal)
     vs
+  }
+
+  delete("/:id") {
+    val id = params("id").toLong
+    Mission.clearVehicleStatuses(id)
   }
 }

@@ -9,6 +9,8 @@ import com.fasterxml.jackson.core.{JsonGenerator, JsonParser, JsonProcessingExce
 import com.fasterxml.jackson.databind.{DeserializationContext, JsonDeserializer, JsonSerializer, SerializerProvider}
 import java.io.IOException
 
+import org.json4s.jackson.JsonMethods.parse
+
 case class RouteDetails private (
                            var id: Long,
                            var start: String,
@@ -24,6 +26,15 @@ case class RouteDetails private (
       case that: Mission => this.id == that.id
       case _ => false
     }
+
+  def toJson() = {
+    ("id" -> id) ~
+      ("start" -> start) ~
+      ("end" -> end) ~
+      ("distance" -> distance) ~
+      ("points" -> parse(points)) ~
+      ("noneNormalSegments" -> parse(noneNormalSegments))
+  }
 }
 
 

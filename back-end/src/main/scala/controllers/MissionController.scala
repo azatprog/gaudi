@@ -7,6 +7,7 @@ import org.json4s.JsonAST.JValue
 import org.scalatra.json.JacksonJsonSupport
 
 import scala.collection.mutable
+import scala.collection.mutable.MutableList
 
 class MissionController extends ScalatraServlet with JacksonJsonSupport with CorsSupport  {
   implicit val jsonFormats = DefaultFormats
@@ -23,7 +24,7 @@ class MissionController extends ScalatraServlet with JacksonJsonSupport with Cor
 
   get("/") {
     val missions = Mission.getMissions(None)
-    var result = mutable.Set[JValue]()
+    var result = MutableList[JValue]()
     missions.foreach(m =>
       result += m.toJson()
     )
@@ -34,7 +35,7 @@ class MissionController extends ScalatraServlet with JacksonJsonSupport with Cor
     val name = (parsedBody \ "name").extract[String]
     val startDate = (parsedBody \ "startDate").extract[String] // TODO: yyyy-mm-dd
     // TODO: change?: not only vehicles' ids are counted, other data should be correct
-    val vehicles = (parsedBody \ "vehicles").extract[mutable.Set[Vehicle]]
+    val vehicles = (parsedBody \ "vehicles").extract[MutableList[Vehicle]]
     val routeDetails = parsedBody \ "route"
 
     val rdStart = (routeDetails \ "start").extract[String]
@@ -61,7 +62,7 @@ class MissionController extends ScalatraServlet with JacksonJsonSupport with Cor
     val name = (parsedBody \ "name").extract[String]
     val startDate = (parsedBody \ "startDate").extract[String] // TODO: yyyy-mm-dd
     // TODO: Update the vehicles, they are ignored here for now
-    val vehicles = (parsedBody \ "vehicles").extract[mutable.Set[Vehicle]]
+    val vehicles = (parsedBody \ "vehicles").extract[MutableList[Vehicle]]
     val routeDetails = parsedBody \ "route"
 
     val rdStart = (routeDetails \ "start").extract[String]

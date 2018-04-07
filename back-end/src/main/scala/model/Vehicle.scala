@@ -67,7 +67,7 @@ object Vehicle {
     * Returns the list of the missions
     * @return the list of the missions
     */
-  def getVehicles(ids: Option[Set[Long]]): Set[Vehicle] = {
+  def getVehicles(ids: Option[Set[Long]]) = {
     DbSchema.getAllVehicles(ids)
   }
 }
