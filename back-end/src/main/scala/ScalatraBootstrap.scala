@@ -10,5 +10,6 @@ class ScalatraBootstrap extends LifeCycle {
     context.mount(new MissionController, "/api/missions/*")
     context.mount(new VehicleController, "/api/vehicles/*")
     context.mount(new VehicleStatusController, "/api/vehicleStatus/*")
+    context.mount(new VehiclePrognosisController, "/api/vehiclePrognosis/*")
   }
 }

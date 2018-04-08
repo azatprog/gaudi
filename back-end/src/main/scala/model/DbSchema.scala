@@ -17,7 +17,8 @@ object DbSchema extends Schema {
   val missions = table[Mission]
   val vehicles = table[Vehicle]
   val routeDetails = table[RouteDetails]
-  val vehicleStatuses = table[VehicleStatus] // TODO: foreign keys, indecies
+  val vehicleStatuses = table[VehicleStatus]
+  val vehiclePrognosis = table[VehiclePrognosis]
 
   val missionVehicles =
     manyToManyRelation(missions, vehicles).
@@ -25,7 +26,7 @@ object DbSchema extends Schema {
       (m, v, mv) => (mv.vehicleId === v.id, m.id === mv.missionId)
     )
 
-  // TODO: it should be one to many (a mission can have only one route)
+  // TODO: it should be one to many (a mission can have only one route)?
   val missionRoutes = manyToManyRelation(missions, routeDetails).
     via[MissionRoutes](
     (m, r, mr) => (mr.routeId === r.id, m.id === mr.missionId)
@@ -60,6 +61,16 @@ object DbSchema extends Schema {
     rd.noneNormalSegments is dbType("text")
   ))
 
+  on(vehicleStatuses)(vs => declare(
+    vs.missionId is indexed,
+    vs.vehicleId is indexed
+  ))
+
+  on(vehiclePrognosis)(vp => declare(
+    vp.missionId is indexed,
+    vp.vehicleId is indexed
+  ))
+
   def insert(v: Vehicle): Vehicle = {
     transaction {
       val vehicle = vehicles.insert(v)
@@ -85,6 +96,13 @@ object DbSchema extends Schema {
     transaction {
       val vehicleStatus = vehicleStatuses.insert(vs)
       vehicleStatus
+    }
+  }
+
+  def insert(vp: VehiclePrognosis) = {
+    transaction {
+      val vPrognosis = vehiclePrognosis.insert(vp)
+      vPrognosis
     }
   }
 
@@ -126,6 +144,12 @@ object DbSchema extends Schema {
     }
   }
 
+  def update(vp: VehiclePrognosis) = {
+    transaction {
+       vehiclePrognosis.update(vp)
+    }
+  }
+
   def deleteVehicle(id: Long): Unit = {
     transaction {
       vehicles.deleteWhere(_.id === id)
@@ -137,6 +161,12 @@ object DbSchema extends Schema {
       missionVehicles.deleteWhere(_.missionId === id)
       missionRoutes.deleteWhere(_.missionId === id)
       missions.deleteWhere(_.id === id)
+    }
+  }
+
+  def deleteVehiclePrognosis(id: Long): Unit = {
+    transaction {
+      vehiclePrognosis.deleteWhere(_.id === id)
     }
   }
 
@@ -236,6 +266,23 @@ object DbSchema extends Schema {
       }
     }
     result
+  }
+
+  def getVehiclePrognosis(id: Long) = {
+    transaction {
+      from(vehiclePrognosis)(vp => where(vp.id === id).select(vp)).head
+    }
+  }
+
+  def getAllVehiclePrognosis(missionId: Long, vehicleId: Long) = {
+    val result = MutableList[VehiclePrognosis]()
+    transaction {
+      from(vehiclePrognosis)(vp =>
+        where(vp.missionId === missionId and vp.vehicleId === vehicleId)
+          .select(vp).orderBy(vp.id asc))
+        .foreach(v => result += v)
+      result
+    }
   }
 
   def clearMissionVehicleStatuses(mId: Long): Unit = {

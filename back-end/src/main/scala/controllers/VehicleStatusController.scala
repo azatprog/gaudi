@@ -16,9 +16,9 @@ class VehicleStatusController extends ScalatraServlet with JacksonJsonSupport wi
     contentType = formats("json")
   }
 
-  get("/deleteAll") {
+/*  get("/deleteAll") {
     DbSchema.deleteAllVehicleStatuses()
-  }
+  }*/
 
   get("/") {
     val missionId = params.get("missionId").get.toLong
