@@ -14,6 +14,8 @@ import { Router } from '@angular/router';
 import { MapService  } from '../../../services/map.service';
 import { RouteDetails } from '../../../models/routedetails.model';
 import { RouteSegment } from '../../../models/routeSegment.model';
+import { VehicleStatusService } from '../../../services/vehicle-status.service';
+import { LatestVehicleStatus } from '../../../models/latestVehicleStatus.model';
 
 @Component({
   moduleId: module.id,
@@ -31,6 +33,101 @@ export class MissionProfileComponent implements OnInit {
 
   theSegmentValue: RouteSegment;
   isNewSegment: boolean;
+  coefcient =
+    {
+      'NORMAL':
+      {
+        'cumulBrakePedalPushingWeight': 196.41,
+        'cumulBrakeHighTempOperation': 0.44,
+        'cumulDescentMileage': 0.01605,
+
+        'cumulEngineOperation': 64.1,
+        'cumulEngineHighLoadOperation': 10.85,
+        'cumulEngineHighTempOperation': 0.02,
+
+        'cumulGearOperation': 57.07,
+        'cumulGearHighLoadOperation': 24.66
+      },
+      'MOUNTAINS':
+      {
+        'cumulBrakePedalPushingWeight': 687.435,
+        'cumulBrakeHighTempOperation': 1.32,
+        'cumulDescentMileage': 0.040125,
+
+        'cumulEngineOperation': 83.33,
+        'cumulEngineHighLoadOperation': 15.19,
+        'cumulEngineHighTempOperation': 0.024,
+
+        'cumulGearOperation': 85.605,
+        'cumulGearHighLoadOperation': 34.524
+      },
+      'SWAMP':
+      {
+        'cumulBrakePedalPushingWeight': 19.641,
+        'cumulBrakeHighTempOperation': 0.0022,
+        'cumulDescentMileage': 0.00001605,
+        'cumulEngineOperation': 192.3,
+        'cumulEngineHighLoadOperation': 43.4,
+        'cumulEngineHighTempOperation': 0.08,
+        'cumulGearOperation': 114.14,
+        'cumulGearHighLoadOperation': 36.99
+      },
+      'WET_FIELD':
+      {
+        'cumulBrakePedalPushingWeight': 451.743,
+        'cumulBrakeHighTempOperation': 0.836,
+        'cumulDescentMileage': 0.017655,
+        'cumulEngineOperation': 121.79,
+        'cumulEngineHighLoadOperation': 24.4125,
+        'cumulEngineHighTempOperation': 0.04,
+        'cumulGearOperation': 142.675,
+        'cumulGearHighLoadOperation': 49.32
+      },
+      'DRY_FIELD':
+      {
+        'cumulBrakePedalPushingWeight': 432.102,
+        'cumulBrakeHighTempOperation': 0.748,
+        'cumulDescentMileage': 0.017655,
+        'cumulEngineOperation': 115.38,
+        'cumulEngineHighLoadOperation': 21.7,
+        'cumulEngineHighTempOperation': 0.034,
+        'cumulGearOperation': 114.14,
+        'cumulGearHighLoadOperation': 41.922
+      },
+      'GROUND_ROAD':
+      {
+        'cumulBrakePedalPushingWeight': 530.307,
+        'cumulBrakeHighTempOperation': 1.056,
+        'cumulDescentMileage': 0.030495,
+        'cumulEngineOperation': 96.15,
+        'cumulEngineHighLoadOperation': 15.19,
+        'cumulEngineHighTempOperation': 0.038,
+        'cumulGearOperation': 85.605,
+        'cumulGearHighLoadOperation': 34.524
+      },
+      'HIGH_WAY':
+      {
+        'cumulBrakePedalPushingWeight': 0.0,
+        'cumulBrakeHighTempOperation': 0.0,
+        'cumulDescentMileage': 0.0,
+        'cumulEngineOperation': 0.0,
+        'cumulEngineHighLoadOperation': 0.0,
+        'cumulEngineHighTempOperation': 0.0,
+        'cumulGearOperation': 0.0,
+        'cumulGearHighLoadOperation': 0.0
+      },
+      'DESERT':
+      {
+        'cumulBrakePedalPushingWeight': 255.333,
+        'cumulBrakeHighTempOperation': 0.528,
+        'cumulDescentMileage': 0.017655,
+        'cumulEngineOperation': 128.2,
+        'cumulEngineHighLoadOperation': 24.955,
+        'cumulEngineHighTempOperation': 0.066,
+        'cumulGearOperation': 85.605,
+        'cumulGearHighLoadOperation': 29.592
+      }
+  };
 
   constructor(
     private location: PlatformLocation,
@@ -38,7 +135,8 @@ export class MissionProfileComponent implements OnInit {
     private route: Router,
     public missionService: UniversalService,
     private renderer: Renderer,
-    public mapService: MapService
+    public mapService: MapService,
+    public vehicleStatusService: VehicleStatusService
   ) {
     if (this.missionService.selectedMission) {
       this.mission = Object.assign({}, this.missionService.selectedMission);
@@ -74,16 +172,105 @@ export class MissionProfileComponent implements OnInit {
     this[popupName] = false;
   }
 
+  calcCumul = (len: number, key: string, coef: string) => len * this.coefcient[key][coef];
+
   selectVehicle(vehicle: Vehicle) {
     if (this.missionService.isDuplication(vehicle, this.mission.vehicles)) {
       alert('The vehicle already in this mission');
     } else {
+      this.vehicleStatusService.getLatestVehicleStatus(vehicle.id).then((latestVehicleStatus: LatestVehicleStatus) => {
+        console.log(latestVehicleStatus);
+        this.mapService
+          .getRoute(this.mission.route.start, this.mission.route.end)
+          .then((res: RouteDetails) => {
+            const routeDistance = Math.round(res.distance / 1000);
+            const lengthByType = this.getLengthByType(this.mission.route.noneNormalSegments);
+              let brakeDamage = 0,
+                  engineDamage = 0,
+                  gearDamage = 0;
+              let pedalPush = 0,
+                  highTemp = 0,
+                  decentMil = 0;
+              let engOper = 0,
+                  engTemp = 0,
+                  engLoad = 0;
+              let gearOper = 0,
+                  gearLoad = 0;
+
+              let totalSegmentDistance = 0;
+              Object.keys(lengthByType).forEach(k => {
+                pedalPush += this.calcCumul(lengthByType[k], k, 'cumulBrakePedalPushingWeight');
+                highTemp += this.calcCumul(lengthByType[k], k, 'cumulBrakeHighTempOperation');
+                decentMil += this.calcCumul(lengthByType[k], k, 'cumulDescentMileage');
+
+                engOper += this.calcCumul(lengthByType[k], k, 'cumulEngineOperation');
+                engTemp += this.calcCumul(lengthByType[k], k, 'cumulEngineHighTempOperation');
+                engLoad += this.calcCumul(lengthByType[k], k, 'cumulEngineHighLoadOperation');
+
+                gearOper += this.calcCumul(lengthByType[k], k, 'cumulGearOperation');
+                gearLoad += this.calcCumul(lengthByType[k], k, 'cumulGearHighLoadOperation');
+
+                totalSegmentDistance += lengthByType[k];
+              });
+
+              pedalPush +=  latestVehicleStatus.cumulBrakePedalPushingWeight +
+                            this.calcCumul((routeDistance - totalSegmentDistance), 'NORMAL', 'cumulBrakePedalPushingWeight');
+              highTemp += latestVehicleStatus.cumulBrakeHighTempOperation +
+                          this.calcCumul((routeDistance - totalSegmentDistance), 'NORMAL', 'cumulBrakeHighTempOperation');
+              decentMil += latestVehicleStatus.cumulDescentMileage +
+                           this.calcCumul((routeDistance - totalSegmentDistance), 'NORMAL', 'cumulDescentMileage');
+
+              engOper += latestVehicleStatus.cumulEngineOperation +
+                          this.calcCumul((routeDistance - totalSegmentDistance), 'NORMAL', 'cumulEngineOperation');
+              engTemp += latestVehicleStatus.cumulEngineHighTempOperation +
+                          this.calcCumul((routeDistance - totalSegmentDistance), 'NORMAL', 'cumulEngineHighTempOperation');
+              engLoad += latestVehicleStatus.cumulEngineHighLoadOperation +
+                          this.calcCumul((routeDistance - totalSegmentDistance), 'NORMAL', 'cumulEngineHighLoadOperation');
+
+              gearOper += latestVehicleStatus.cumulGearOperation +
+                          this.calcCumul((routeDistance - totalSegmentDistance), 'NORMAL', 'cumulGearOperation');
+              gearLoad += latestVehicleStatus.cumulGearHighLoadOperation +
+                          this.calcCumul((routeDistance - totalSegmentDistance), 'NORMAL', 'cumulGearHighLoadOperation');
+
+              brakeDamage = this.calcDamage(pedalPush, highTemp, decentMil, 400000, 144000);
+              engineDamage = this.calcDamage(engOper, engTemp, engLoad, 100, 10);
+              gearDamage = this.calcDamage(gearOper, gearLoad);
+
+              console.log(brakeDamage, engineDamage, gearDamage);
+              const probBrake = 1 / (1 + Math.exp(-0.00001 * (brakeDamage - 7200000)));
+              const probEngine = 1 / (1 + Math.exp(-0.00001 * (engineDamage - 120000)));
+              const probGear = 1 / (1 + Math.exp(-0.00001 * (gearDamage - 90000)));
+              console.log(Math.round(probBrake * 100), Math.round(probEngine * 100), Math.round(probGear * 100));
+            });
+      });
       this.mission.vehicles.push(vehicle);
     }
     this.closePopup('isShowingVehiclePopup');
   }
 
   identify = (inx, item) => inx;
+
+  calcDamage = ( cumul1: number, cumul2: number, cumul3: number = null, k1?: number, k2?: number) => {
+    const v = (cumul3 !== null) ?
+              ( cumul1 +
+                k1 * cumul2 +
+                k2 * cumul3 )
+              : ( cumul1 +
+                10 * cumul2 );
+    return v;
+  }
+
+  getLengthByType = (segments: RouteSegment[]) => {
+    const lengthByType = {};
+    segments.forEach(s => {
+      lengthByType[s.condition] = (lengthByType[s.condition] || 0) + s.distance;
+    });
+    return lengthByType;
+  }
+
+  addVehicle() {
+    this.openPopup('isShowingVehiclePopup');
+  }
 
   addSegment() {
     if (this.mission.route.noneNormalSegments.length === 0) {
@@ -94,7 +281,9 @@ export class MissionProfileComponent implements OnInit {
     } else {
       const len = this.mission.route.noneNormalSegments.length;
       this.theSegmentValue = new RouteSegment();
-      this.theSegmentValue.start = this.mission.route.noneNormalSegments[len - 1].start + this.mission.route.noneNormalSegments[len - 1].distance;
+      this.theSegmentValue.start =
+        this.mission.route.noneNormalSegments[len - 1].start +
+        this.mission.route.noneNormalSegments[len - 1].distance;
       this.theSegmentValue.distance = 0;
       this.theSegmentValue.condition = 'NORMAL';
     }

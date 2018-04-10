@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Repository } from '../models/repository.model';
 import { VehicleStatus } from '../models/vehicleStatus.model';
 import { HttpClient } from '@angular/common/http';
+import { LatestVehicleStatus } from '../models/latestVehicleStatus.model';
 
 @Injectable()
 export class VehicleStatusService extends Repository<VehicleStatus> {
@@ -26,6 +27,11 @@ export class VehicleStatusService extends Repository<VehicleStatus> {
     if (data) {
       path += '&timeFromMissionStart=' + data;
     }
+    return this.executeQuery(path, 'get');
+  }
+
+  public getLatestVehicleStatus(id: number): Promise<LatestVehicleStatus> {
+    const path = 'latestVehicleStatus/' + id.toString();
     return this.executeQuery(path, 'get');
   }
 }
