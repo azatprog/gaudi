@@ -1,13 +1,15 @@
 language: scala
 scala:
 - 2.12.2
+node:
+- 8.9.3
 
 addons:
   ssh_known_hosts: mitya.tk
 
 script:
-- cd back-end
-- sbt package
+- cd $TRAVIS_BUILD_DIR/back-end && sbt package
+- cd $TRAVIS_BUILD_DIR/front-end && npm i && npm run ng build --prod
 
 before_deploy:
 - openssl aes-256-cbc -K $encrypted_d407ba42497a_key -iv $encrypted_d407ba42497a_iv -in $TRAVIS_BUILD_DIR/deploy_rsa.enc -out /tmp/deploy_rsa -d
@@ -18,6 +20,6 @@ before_deploy:
 deploy:
   provider: script
   skip_cleanup: true
-  script: scp $TRAVIS_BUILD_DIR/back-end/target/scala-2.12/back-end_2.12-0.1.war root@mitya.tk:/opt/tomcat/webapps/ROOT.war
+  script: scp $TRAVIS_BUILD_DIR/back-end/target/scala-2.12/back-end_2.12-0.1.war root@mitya.tk:/opt/tomcat/webapps/ROOT.war && rsync -avz --delete $TRAVIS_BUILD_DIR/front-end/dist/ root@mitya.tk:/var/www/gaudi/
   on:
     branch: master
