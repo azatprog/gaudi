@@ -31,7 +31,7 @@ case class RouteDetails private (
     ("id" -> id) ~
       ("start" -> start) ~
       ("end" -> end) ~
-      ("distance" -> distance) ~
+      ("distance" -> distance.toInt) ~
       ("points" -> parse(points)) ~
       ("noneNormalSegments" -> parse(noneNormalSegments))
   }

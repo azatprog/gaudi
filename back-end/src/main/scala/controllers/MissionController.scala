@@ -1,8 +1,9 @@
 package controllers
 
+import model.Mission.addRoute
 import org.scalatra._
 import model.{Mission, RouteDetails, Vehicle}
-import org.json4s.{DefaultFormats}
+import org.json4s.DefaultFormats
 import org.json4s.JsonAST.JValue
 import org.scalatra.json.JacksonJsonSupport
 
@@ -74,8 +75,14 @@ class MissionController extends ScalatraServlet with JacksonJsonSupport with Cor
     // TODO: Update the route, it is ignored here for now
     val route = RouteDetails.create(rdStart, rdEnd, rdDistance, rdPoints, rdNNS)
     val mission = Mission.define(id, name, startDate, vehicles, route)
+    val oldMission = Mission.getMissions(Some(mutable.Set[Long](id))).headOption
+    if (!oldMission.isEmpty) {
+      Mission.deleteRoute(oldMission.get)
+    }
+    Mission.addRoute(mission.id, route)
     Mission.update(mission)
-    Mission.getMissions(Some(mutable.Set[Long](mission.id)))
+
+    Mission.getMissions(Some(mutable.Set[Long](mission.id))).head.toJson()
   }
 
   delete("/:id") {

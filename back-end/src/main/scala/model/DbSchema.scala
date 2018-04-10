@@ -165,6 +165,15 @@ object DbSchema extends Schema {
     }
   }
 
+  def deleteMissionRoutes(mrs: List[MissionRoutes]) = {
+    transaction {
+      mrs.foreach(mr =>
+        missionRoutes.deleteWhere(misRoute =>
+          misRoute.missionId === mr.missionId and
+          misRoute.routeId === mr.routeId))
+    }
+  }
+
   def deleteVehiclePrognosis(id: Long): Unit = {
     transaction {
       vehiclePrognosis.deleteWhere(_.id === id)

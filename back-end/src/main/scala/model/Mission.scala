@@ -140,6 +140,11 @@ object Mission {
     DbSchema.insertRoutes(list)
   }
 
+  def deleteRoute(mission: Mission) = {
+    val mrs = MissionRoutes(mission.id, mission.route)
+    DbSchema.deleteMissionRoutes(mrs)
+  }
+
   def clearVehicleStatuses(mId: Long): Unit = {
     DbSchema.clearMissionVehicleStatuses(mId)
   }
