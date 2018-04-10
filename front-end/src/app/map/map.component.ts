@@ -7,6 +7,47 @@ import { Mission } from '../models/mission.model';
 import { Vehicle } from '../models/vehicle.model';
 import { Point } from '../models/point.model';
 import { VehicleStatus } from '../models/vehicleStatus.model';
+import { color } from 'openlayers';
+import { 
+  setInterval,
+  clearInterval
+} from 'timers';
+
+export class VehicleAggregation {
+  pos: Point;
+  name: string;
+  color: string;
+  message: string;
+
+  update(status: VehicleStatus) {
+    this.color = 'green';
+    this.message = '';
+
+    const date = new Date().toTimeString().split(" ")[0];
+
+    if (status.engineFault) {
+      this.color = 'red';
+      this.message = date+ ': Engine fault';
+    }
+
+    if (status.gearFault) {
+      this.color = 'red';
+      this.message = date + ': Gear fault';
+    }
+
+    if (status.brakeFault) {
+      this.color = 'red';
+      this.message = date + ': Brake fault';
+    }
+  }
+
+  constructor(status: VehicleStatus, name: string) {
+    this.color = 'green';
+    this.name = name;
+    this.pos = new Point(status.lng, status.lat);
+    this.update(status);
+  }
+}
 
 @Component({
   selector: 'app-map',
@@ -16,14 +57,13 @@ import { VehicleStatus } from '../models/vehicleStatus.model';
 
 export class MapComponent implements OnInit {
   currentVehicleId: number;
-  timerId: any;
+  timerId: NodeJS.Timer;
   public zoom = 9;
   public opacity = 1.0;
-  public width = 5;
+  public width = 2;
 
-  // Innopolis coordinates
-  public xCenter = 48.74718000000001;
-  public yCenter = 55.751716;
+  public xCenter;
+  public yCenter;
   
   public route: number[][] = [];
   public routeDescription: String;
@@ -35,8 +75,8 @@ export class MapComponent implements OnInit {
   xPointB: Number;
   yPointB: Number;
   
-  vehiclePositionsMap: Map<number, Point>;
-  vehiclePositions: Array<Point> = [];
+  vehiclePositionsMap: Map<number, VehicleAggregation>;
+  vehiclePositions: Array<VehicleAggregation> = [];
   currentVehicleStatus: VehicleStatus[] = [];
   startfromMission: Map<number, number>;
 
@@ -50,7 +90,7 @@ export class MapComponent implements OnInit {
     this.start = this.mapService.start;
     this.end = this.mapService.end;
     this.mission = this.vehicleService.selectedMission;
-    this.vehiclePositionsMap = new Map<number, Point>();
+    this.vehiclePositionsMap = new Map<number, VehicleAggregation>();
     this.startfromMission = new Map<number, number>();
     this.vehicleStatusService.setMissionId(this.mission.id);
   }
@@ -88,16 +128,22 @@ export class MapComponent implements OnInit {
 
   ngOnDestroy() {
     if (this.timerId)
-      clearInterval(this.timerId);
+       clearInterval(this.timerId);
   }
 
   getVehicleStatus(v: Vehicle) {
-    //TODO: fix class
-    Array.from(document.getElementsByClassName('.vrow')).forEach(r => {
-      r.classList.remove('.selected');
+    Array.from(document.querySelectorAll('.vrow')).forEach(r => {
+      r.classList.remove('selected');
     });
     document.getElementById('vrow' + v.id).classList.add('selected');
     this.currentVehicleId = v.id;
+    if (this.currentVehicleStatus.length > 0) {
+        const pos = this.currentVehicleStatus[this.currentVehicleStatus.length - 1];
+        this.xCenter = pos.lng;
+        this.yCenter = pos.lat;
+        if (this.ref)
+          this.ref.detectChanges();
+    }
     this.startConvoy();
   }
 
@@ -120,9 +166,10 @@ export class MapComponent implements OnInit {
         }
 
         this.startfromMission.set(vehicle.id, res[l - 1].timeFromMissionStart);
-        this.vehiclePositionsMap.set(vehicle.id, new Point(res[l - 1].lng, res[l - 1].lat));
+        this.vehiclePositionsMap.set(vehicle.id, new VehicleAggregation(res[l - 1], vehicle.model));
         this.vehiclePositions = Array.from(this.vehiclePositionsMap.values());
-        this.ref.detectChanges();
+        if (this.ref)
+           this.ref.detectChanges();
       });
     }
   }
@@ -136,6 +183,9 @@ export class MapComponent implements OnInit {
   }
 
   startConvoy() {
+    if (this.timerId)
+        return;
+
      this.timerId = setInterval(()=> {
       this.getGetPositions();
     }, 1000);

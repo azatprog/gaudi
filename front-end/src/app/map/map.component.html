@@ -10,16 +10,23 @@
     </aol-layer-tile>
     <aol-layer-vector [opacity]="opacity">
       <aol-source-vector>
-        <aol-feature *ngFor="let vehiclePosition of vehiclePositions">
+        <aol-feature *ngFor="let vehicle of vehiclePositions">
           <aol-geometry-point>
-            <aol-coordinate [x]="vehiclePosition.lng" [y]="vehiclePosition.lat" [srid]="'EPSG:4326'"></aol-coordinate>
-          </aol-geometry-point>
+            <aol-coordinate [x]="vehicle.pos.lng" [y]="vehicle.pos.lat" [srid]="'EPSG:4326'"></aol-coordinate>
+          </aol-geometry-point>        
           <aol-style>
-            <aol-style-circle [radius]="8">
+            <aol-style-text [text]="vehicle.name" [offsetY]="-20" [font]="'bold 14px arial'"></aol-style-text>
+            <aol-style-circle [radius]="8" >
               <aol-style-stroke [color]="'black'" [width]="width"></aol-style-stroke>
-              <aol-style-fill [color]="'green'"></aol-style-fill>
+              <aol-style-fill [color]="vehicle.color"></aol-style-fill>
             </aol-style-circle>
           </aol-style>
+          <aol-overlay [hidden]="vehicle.message.length == 0">
+              <aol-coordinate [x]="vehicle.pos.lng" [y]="vehicle.pos.lat" [srid]="'EPSG:4326'"></aol-coordinate>
+              <aol-content>
+                  <div class="notification">{{vehicle.message}}</div>
+              </aol-content>
+          </aol-overlay>
         </aol-feature>
         <aol-feature>
           <aol-geometry-point>

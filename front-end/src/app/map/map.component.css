@@ -22,6 +22,22 @@
     align-content: stretch;
 }
 
+.notification {
+    background-color: white;
+    overflow: hidden;
+    font-family: Arial;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 10px;
+    border-style: solid;
+    border-width: 1px;
+    padding: 5px;
+}
+
+.notification:empty {
+    display: none;
+}
+
 .map {
     width: 75%;
 }
