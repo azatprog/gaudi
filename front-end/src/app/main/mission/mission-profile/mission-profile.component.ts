@@ -54,23 +54,25 @@ export class MissionProfileComponent implements OnInit {
         'cumulBrakeHighTempOperation': 1.32,
         'cumulDescentMileage': 0.040125,
 
-        'cumulEngineOperation': 83.33,
-        'cumulEngineHighLoadOperation': 15.19,
-        'cumulEngineHighTempOperation': 0.024,
+        'cumulEngineOperation': 0.0,
+        'cumulEngineHighLoadOperation': 0.0,
+        'cumulEngineHighTempOperation': 0.0,
 
-        'cumulGearOperation': 85.605,
-        'cumulGearHighLoadOperation': 34.524
+        'cumulGearOperation': 57.07,
+        'cumulGearHighLoadOperation': 24.66
       },
       'SWAMP':
       {
-        'cumulBrakePedalPushingWeight': 19.641,
-        'cumulBrakeHighTempOperation': 0.0022,
-        'cumulDescentMileage': 0.00001605,
+        'cumulBrakePedalPushingWeight': 0.0,
+        'cumulBrakeHighTempOperation': 0.0,
+        'cumulDescentMileage': 0.0,
+
         'cumulEngineOperation': 192.3,
         'cumulEngineHighLoadOperation': 43.4,
         'cumulEngineHighTempOperation': 0.08,
-        'cumulGearOperation': 114.14,
-        'cumulGearHighLoadOperation': 36.99
+
+        'cumulGearOperation': 57.07,
+        'cumulGearHighLoadOperation': 24.66
       },
       'WET_FIELD':
       {
@@ -233,7 +235,7 @@ export class MissionProfileComponent implements OnInit {
               gearDamage = this.calcDamage(gearOper, gearLoad);
 
               console.log(brakeDamage, engineDamage, gearDamage);
-              const probBrake = Math.round((1 / (1 + Math.exp(-0.0000004 * (brakeDamage - 7200000)))) * 100);
+              const probBrake = Math.round((1 / (1 + Math.exp(-0.0000007 * (brakeDamage - 7200000)))) * 100);
               const probEngine = Math.round((1 / (1 + Math.exp(-0.00003 * (engineDamage - 120000)))) * 100);
               const probGear = Math.round((1 / (1 + Math.exp(-0.00005 * (gearDamage - 90000)))) * 100);
               console.log(probBrake, probEngine, probGear);
@@ -243,7 +245,6 @@ export class MissionProfileComponent implements OnInit {
               vehicle['probGear'] = probGear;
             this.mission.vehicles.push(vehicle);
       });
-      
     }
     this.closePopup('isShowingVehiclePopup');
   }
