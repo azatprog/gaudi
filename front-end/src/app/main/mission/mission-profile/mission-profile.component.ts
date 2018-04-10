@@ -179,10 +179,6 @@ export class MissionProfileComponent implements OnInit {
       alert('The vehicle already in this mission');
     } else {
       this.vehicleStatusService.getLatestVehicleStatus(vehicle.id).then((latestVehicleStatus: LatestVehicleStatus) => {
-        console.log(latestVehicleStatus);
-        // this.mapService
-        //   .getRoute(this.mission.route.start, this.mission.route.end)
-        //   .then((res: RouteDetails) => {
             const routeDistance = Math.round(this.mission.route.distance / 1000);
             const lengthByType = this.getLengthByType(this.mission.route.noneNormalSegments);
               let brakeDamage = 0,
@@ -237,13 +233,17 @@ export class MissionProfileComponent implements OnInit {
               gearDamage = this.calcDamage(gearOper, gearLoad);
 
               console.log(brakeDamage, engineDamage, gearDamage);
-              const probBrake = 1 / (1 + Math.exp(-0.0000004 * (brakeDamage - 7200000)));
-              const probEngine = 1 / (1 + Math.exp(-0.00003 * (engineDamage - 120000)));
-              const probGear = 1 / (1 + Math.exp(-0.00005 * (gearDamage - 90000)));
-              console.log(Math.round(probBrake * 100), Math.round(probEngine * 100), Math.round(probGear * 100));
-            // });
+              const probBrake = Math.round((1 / (1 + Math.exp(-0.0000004 * (brakeDamage - 7200000)))) * 100);
+              const probEngine = Math.round((1 / (1 + Math.exp(-0.00003 * (engineDamage - 120000)))) * 100);
+              const probGear = Math.round((1 / (1 + Math.exp(-0.00005 * (gearDamage - 90000)))) * 100);
+              console.log(probBrake, probEngine, probGear);
+
+              vehicle['probBrake'] = probBrake;
+              vehicle['probEngine'] = probEngine;
+              vehicle['probGear'] = probGear;
+            this.mission.vehicles.push(vehicle);
       });
-      this.mission.vehicles.push(vehicle);
+      
     }
     this.closePopup('isShowingVehiclePopup');
   }
@@ -309,10 +309,8 @@ export class MissionProfileComponent implements OnInit {
 
   onSelectRootVehicle() {}
 
-  remVehicle(vehicle: Vehicle) {
-    this.missionService.filterArray(vehicle, this.vehicles).then(res => {
-      this.mission.vehicles = res;
-    });
+  remVehicle(inx: number) {
+    this.mission.vehicles.splice(inx, 1);
   }
 
   goToMissionList() {
@@ -401,9 +399,10 @@ export class MissionProfileComponent implements OnInit {
   }
 
   onStartRouteChange(event) {
-    if (this.mission.route.end == null)
+    if (this.mission.route.end === null) {
       return;
-      
+    }
+
     this.mapService
     .getRoute(this.mission.route.start, this.mission.route.end)
     .then((res: RouteDetails) => {
@@ -412,8 +411,9 @@ export class MissionProfileComponent implements OnInit {
   }
 
   onFinishRouteChange(event) {
-    if (this.mission.route.start == null)
+    if (this.mission.route.start === null) {
       return;
+    }
 
     this.mapService
     .getRoute(this.mission.route.start, this.mission.route.end)

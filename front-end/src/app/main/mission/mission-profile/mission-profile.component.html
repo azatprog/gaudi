@@ -137,20 +137,24 @@
                             <th> Type </th>
                             <th> Model </th>
                             <th> S/N </th>
-                            <th> State (%) </th>
+                            <th> Brake damage (%) </th>
+                            <th> Engine damage (%) </th>
+                            <th> Gear damage (%) </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let v of mission.vehicles;">
+                        <tr *ngFor="let v of mission.vehicles; let i = index">
                             <td [hidden]="missionService.isMissionReadOnly"> 
-                                <button class="btn-danger rem-btn" (click)="remVehicle(v)"> 
+                                <button class="btn-danger rem-btn" (click)="remVehicle(i)"> 
                                     <i class="fa fa-trash-o"> </i> 
                                 </button>                                 
                             </td>
                             <td> {{ v.vtype }} </td>
                             <td> {{ v.model }} </td>
                             <td> {{ v.sn }} </td>
-                            <td> {{ v.state }} </td>
+                            <td> {{ v.probBrake }} </td>
+                            <td> {{ v.probEngine }} </td>
+                            <td> {{ v.probGear }} </td>
                         </tr>
                     </tbody>
                 </table>
