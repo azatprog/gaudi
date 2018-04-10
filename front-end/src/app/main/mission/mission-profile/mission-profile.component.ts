@@ -50,9 +50,9 @@ export class MissionProfileComponent implements OnInit {
       },
       'MOUNTAINS':
       {
-        'cumulBrakePedalPushingWeight': 687.435,
-        'cumulBrakeHighTempOperation': 1.32,
-        'cumulDescentMileage': 0.040125,
+        'cumulBrakePedalPushingWeight': 300.435,
+        'cumulBrakeHighTempOperation': 0.2,
+        'cumulDescentMileage': 0.0,
 
         'cumulEngineOperation': 0.0,
         'cumulEngineHighLoadOperation': 0.0,
@@ -211,24 +211,26 @@ export class MissionProfileComponent implements OnInit {
                 totalSegmentDistance += lengthByType[k];
               });
 
+              const delta = (routeDistance - totalSegmentDistance) < 0 ? 0 : (routeDistance - totalSegmentDistance);
+
               pedalPush +=  latestVehicleStatus.cumulBrakePedalPushingWeight +
-                            this.calcCumul((routeDistance - totalSegmentDistance), 'NORMAL', 'cumulBrakePedalPushingWeight');
+                            this.calcCumul(delta, 'NORMAL', 'cumulBrakePedalPushingWeight');
               highTemp += latestVehicleStatus.cumulBrakeHighTempOperation +
-                          this.calcCumul((routeDistance - totalSegmentDistance), 'NORMAL', 'cumulBrakeHighTempOperation');
+                          this.calcCumul(delta, 'NORMAL', 'cumulBrakeHighTempOperation');
               decentMil += latestVehicleStatus.cumulDescentMileage +
-                           this.calcCumul((routeDistance - totalSegmentDistance), 'NORMAL', 'cumulDescentMileage');
+                           this.calcCumul(delta, 'NORMAL', 'cumulDescentMileage');
 
               engOper += latestVehicleStatus.cumulEngineOperation +
-                          this.calcCumul((routeDistance - totalSegmentDistance), 'NORMAL', 'cumulEngineOperation');
+                          this.calcCumul(delta, 'NORMAL', 'cumulEngineOperation');
               engTemp += latestVehicleStatus.cumulEngineHighTempOperation +
-                          this.calcCumul((routeDistance - totalSegmentDistance), 'NORMAL', 'cumulEngineHighTempOperation');
+                          this.calcCumul(delta, 'NORMAL', 'cumulEngineHighTempOperation');
               engLoad += latestVehicleStatus.cumulEngineHighLoadOperation +
-                          this.calcCumul((routeDistance - totalSegmentDistance), 'NORMAL', 'cumulEngineHighLoadOperation');
+                          this.calcCumul(delta, 'NORMAL', 'cumulEngineHighLoadOperation');
 
               gearOper += latestVehicleStatus.cumulGearOperation +
-                          this.calcCumul((routeDistance - totalSegmentDistance), 'NORMAL', 'cumulGearOperation');
+                          this.calcCumul(delta, 'NORMAL', 'cumulGearOperation');
               gearLoad += latestVehicleStatus.cumulGearHighLoadOperation +
-                          this.calcCumul((routeDistance - totalSegmentDistance), 'NORMAL', 'cumulGearHighLoadOperation');
+                          this.calcCumul(delta, 'NORMAL', 'cumulGearHighLoadOperation');
 
               brakeDamage = this.calcDamage(pedalPush, highTemp, decentMil, 400000, 144000);
               engineDamage = this.calcDamage(engOper, engTemp, engLoad, 100, 10);
