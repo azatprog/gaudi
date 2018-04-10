@@ -30,6 +30,7 @@ export class MissionProfileComponent implements OnInit {
   public isShowingSegmentPopup: boolean;
 
   theSegmentValue: RouteSegment;
+  isNewSegment: boolean;
 
   constructor(
     private location: PlatformLocation,
@@ -97,13 +98,24 @@ export class MissionProfileComponent implements OnInit {
       this.theSegmentValue.distance = 0;
       this.theSegmentValue.condition = 'NORMAL';
     }
-    
+    this.isNewSegment = true;
+    this.openPopup('isShowingSegmentPopup');
+  }
+
+  remSegment(inx) {
+    this.mission.route.noneNormalSegments.splice(inx, 1);
+  }
+
+  editSegment(s: RouteSegment) {
+    this.isNewSegment = false;
+    this.theSegmentValue = s;
     this.openPopup('isShowingSegmentPopup');
   }
 
   saveSegment(s) {
-    this.mission.route.noneNormalSegments.push(s);
-    console.log(this.mission.route.noneNormalSegments);
+    if (this.isNewSegment) {
+      this.mission.route.noneNormalSegments.push(s);
+    }
   }
 
   onSelectRootVehicle() {}

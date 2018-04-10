@@ -85,12 +85,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let s of mission.route.noneNormalSegments; trackBy: identify">
+                        <tr *ngFor="let s of mission.route.noneNormalSegments; let i = index; trackBy: identify">
                             <td [hidden]="missionService.isMissionReadOnly"> 
-                                <button class="btn-danger rem-btn" (click)="remSegment(s)"> 
+                                <button class="btn-danger rem-btn" (click)="remSegment(i)"> 
                                     <i class="fa fa-trash-o"> </i> 
                                 </button> 
-                                <button class="btn-info rem-btn" (click)="editSegment(s)"> 
+                                <button class="btn-info rem-btn" (click)="editSegment(s)" data-toggle="modal" data-target="#segmentAddPopup"> 
                                     <i class="fa fa-pencil"> </i> 
                                 </button> 
                             </td>
