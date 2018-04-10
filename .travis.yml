@@ -1,0 +1,11 @@
+language: scala
+scala:
+   - 2.12.2
+script:
+  - sbt package
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: scp $TRAVIS_BUILD_DIR/back-end/target/scala-2.12/back-end_2.12-0.1.war root@mitya.tk:/opt/tomcat/webapps/ROOT.war
+  on:
+    branch: master
