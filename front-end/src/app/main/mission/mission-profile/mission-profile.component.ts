@@ -174,14 +174,13 @@ export class MissionProfileComponent implements OnInit {
   }
 
   save() {
-    console.log(this.mission.route.noneNormalSegments);
+    const segments = this.mission.route.noneNormalSegments;
     this.mapService
       .getRoute(this.mission.route.start, this.mission.route.end)
       .then((res: RouteDetails) => {
-        console.log(res);
         this.mission.route = res;
+        this.mission.route.noneNormalSegments = segments;
         if (this.mission.id == null) {
-          console.log(this.mission);
           this.missionService
             .addMission(this.mission)
             .then(res => {
