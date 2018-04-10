@@ -9,8 +9,6 @@ export class VehicleStatusService extends Repository<VehicleStatus> {
   private static missionId: number;
   private static vehicleId: number;
 
-  vehicleCurrentStatus: VehicleStatus;
-
   constructor(public http: HttpClient) {
     super(http, 'vehicleStatus');
   }

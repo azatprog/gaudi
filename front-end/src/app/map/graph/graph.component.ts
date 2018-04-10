@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input } from '@angular/core';
 import { Chart } from 'chart.js';
 import { MapService } from '../../services/map.service';
 import { VehicleStatus } from '../../models/vehicleStatus.model';
@@ -40,12 +40,19 @@ export class ChartData {
 })
 
 export class GraphComponent implements OnInit {
+
+  @Input() set vehicleStatus(status: VehicleStatus[]) {
+    // console.log("set:" + status);
+    this.updateData(status);
+  }
+
+  timerId: any;
   chart: Chart;
   data: ChartData;
   selectedParameter: string = "";
   parameters: string[];
   startTime: Date;
-  excludedParameters = ["mass", "id", "lng", "lat", "vehicleId", "timeFromMissionStart"];
+  excludedParameters = ["mass", "id", "lng", "lat", "vehicleId", "timeFromMissionStart", "missionId"];
 
   constructor(private vehicleService: VehicleStatusService) {
     this.data = new ChartData();
@@ -53,25 +60,28 @@ export class GraphComponent implements OnInit {
     this.parameters = this.parameters.filter(el => {
       return !this.excludedParameters.includes(el);
     });
+
+    this.selectedParameter = "speed";
    }
 
   ngOnInit() {
-    this.initialiazeChart();
-    var timerId = setInterval(()=> {
-      this.updateData();
-    }, 1000);
+     this.initialiazeChart();
+     
+  }
+
+  ngOnDestroy() {
+    if (this.timerId)
+      clearInterval(this.timerId);
   }
 
   onParameterChanged(event) {
-    console.log(event);
     this.clearChart();
   }
 
-  updateData() {
-    console.log(this.selectedParameter);
-    if (this.selectedParameter.length == 0)
-      return;
-
+  updateData(status: VehicleStatus[]) {
+      if (!this.chart)
+        return;
+        
       if(!this.startTime) {
         this.startTime = new Date();
         this.data.push(1, this.startTime);
@@ -80,20 +90,8 @@ export class GraphComponent implements OnInit {
       let lastDate = null;
       if (this.data.getYDates().length > 0)
         lastDate = this.data.getYDates()[this.data.getYDates().length - 1];
-      console.log(lastDate);
 
-      // let timeStamp = null;
-      // if (lastDate != null)
-      //  timeStamp = Math.floor(lastDate.getTime() / 1000);
-      // console.log(timeStamp);
-
-      this.vehicleService.getVehicleStatus().then(result => {
-        let res = result.sort((a, b) => this.compare(a.timeFromMissionStart, b.timeFromMissionStart));
-        console.log(res);
-        if (res.length > 0) {
-          this.vehicleService.vehicleCurrentStatus = res[res.length - 1];
-          console.log(this.vehicleService.vehicleCurrentStatus.lng, this.vehicleService.vehicleCurrentStatus.lat);
-        }
+      let res = status.sort((a, b) => this.compare(a.timeFromMissionStart, b.timeFromMissionStart));
       this.chart.data.datasets[0].data = res.map(ds => {
         return ds[this.selectedParameter]});
 
@@ -101,11 +99,10 @@ export class GraphComponent implements OnInit {
         const startTimeStamp = this.startTime.getTime();
         const d = new Date(startTimeStamp + ds.timeFromMissionStart * 1000);
         this.data.push(1, d);
-        return d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();//ds.timeFromMissionStart
+        return d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
       });
 
       this.chart.update();
-    });
   }
 
   compare(a, b){
