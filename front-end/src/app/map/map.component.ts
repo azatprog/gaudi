@@ -8,10 +8,10 @@ import { Vehicle } from '../models/vehicle.model';
 import { Point } from '../models/point.model';
 import { VehicleStatus } from '../models/vehicleStatus.model';
 import { color } from 'openlayers';
-import { 
-  setInterval,
-  clearInterval
-} from 'timers';
+// import { 
+//   setInterval,
+//   clearInterval
+// } from 'timers';
 
 export class VehicleAggregation {
   pos: Point;
@@ -57,7 +57,7 @@ export class VehicleAggregation {
 
 export class MapComponent implements OnInit {
   currentVehicleId: number;
-  timerId: NodeJS.Timer;
+  timerId: any;
   public zoom = 9;
   public opacity = 1.0;
   public width = 2;
@@ -136,7 +136,7 @@ export class MapComponent implements OnInit {
       r.classList.remove('selected');
     });
     document.getElementById('vrow' + v.id).classList.add('selected');
-    this.currentVehicleId = v.id;
+
     if (this.currentVehicleStatus.length > 0) {
         const pos = this.currentVehicleStatus[this.currentVehicleStatus.length - 1];
         this.xCenter = pos.lng;
@@ -144,6 +144,11 @@ export class MapComponent implements OnInit {
         if (this.ref)
           this.ref.detectChanges();
     }
+    if (this.currentVehicleId != v.id) {
+       this.currentVehicleStatus = new Array();
+       this.startfromMission = new Map();
+    }
+    this.currentVehicleId = v.id;
     this.startConvoy();
   }
 
@@ -165,8 +170,18 @@ export class MapComponent implements OnInit {
           this.currentVehicleStatus = this.currentVehicleStatus.concat(res);
         }
 
-        this.startfromMission.set(vehicle.id, res[l - 1].timeFromMissionStart);
-        this.vehiclePositionsMap.set(vehicle.id, new VehicleAggregation(res[l - 1], vehicle.model));
+        let currentStatus = res[l - 1];
+        let va =  new VehicleAggregation(currentStatus, vehicle.model);
+        this.startfromMission.set(vehicle.id, currentStatus.timeFromMissionStart);
+
+        if (this.vehiclePositionsMap.has(vehicle.id)) {
+          const lastStatus = this.vehiclePositionsMap.get(vehicle.id);
+          if (lastStatus.message.length > 0) {
+            lastStatus.pos = va.pos;
+            va = lastStatus;
+          }
+        }
+        this.vehiclePositionsMap.set(vehicle.id, va);
         this.vehiclePositions = Array.from(this.vehiclePositionsMap.values());
         if (this.ref)
            this.ref.detectChanges();
