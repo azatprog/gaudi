@@ -35,6 +35,9 @@ case class VehicleStatus private (
                            var gearFault: Boolean,
                            var brakeFault: Boolean) extends KeyedEntity[Long] {
 
+  def this() {
+    this(0,0,0,0,0,0,0,0,0,0,0,0,true,0,"",0,0,0,0,0,0,0,0,0,0,0,false,false,false)
+  }
 }
 
 object VehicleStatus {
@@ -82,6 +85,11 @@ object VehicleStatus {
   }
 
   def getLatestVehicleStatus(vehicleId: Long) = {
-    DbSchema.getLatestVehicleStatus(vehicleId: Long)
+    val vs = DbSchema.getLatestVehicleStatus(vehicleId: Long)
+      if (vs.isEmpty) {
+        val vehicleStatus = new VehicleStatus()
+        vehicleStatus.vehicleId = vehicleId
+        vehicleStatus
+      } else vs
   }
 }

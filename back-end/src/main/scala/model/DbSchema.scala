@@ -286,11 +286,12 @@ object DbSchema extends Schema {
     }
   }
 
-  def getLatestVehicleStatus(vehicleId: Long): VehicleStatus = {
+  def getLatestVehicleStatus(vehicleId: Long): Option[VehicleStatus] = {
     transaction {
       val lastId: Long = from(vehicleStatuses)(vs =>
       where(vs.vehicleId === vehicleId).compute(nvl(max(vs.id), 0)))
-      from(vehicleStatuses)(vs => where(vs.id === lastId).select(vs)).head
+      from(vehicleStatuses)(vs => where(vs.id === lastId).select(vs))
+        .headOption
     }
   }
 
