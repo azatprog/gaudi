@@ -38,6 +38,7 @@ export class MapComponent implements OnInit {
   vehiclePositionsMap: Map<number, Point>;
   vehiclePositions: Array<Point> = [];
   currentVehicleStatus: VehicleStatus[] = [];
+  startfromMission: Map<number, number>;
 
   mission: Mission;
 
@@ -50,6 +51,7 @@ export class MapComponent implements OnInit {
     this.end = this.mapService.end;
     this.mission = this.vehicleService.selectedMission;
     this.vehiclePositionsMap = new Map<number, Point>();
+    this.startfromMission = new Map<number, number>();
     this.vehicleStatusService.setMissionId(this.mission.id);
   }
 
@@ -102,15 +104,22 @@ export class MapComponent implements OnInit {
   getGetPositions() {
     for(let i = 0; i < this.mission.vehicles.length; i++) {
       const vehicle = this.mission.vehicles[i];
-      
+
+      let lastTime = null;
+      if (this.startfromMission.has(vehicle.id))
+         lastTime = this.startfromMission.get(vehicle.id);
+
       this.vehicleStatusService.setVehicleId(vehicle.id)
-      this.vehicleStatusService.getVehicleStatus().then((res) => {
+      this.vehicleStatusService.getVehicleStatus(lastTime).then((res) => {
         const l = res.length;
+       
         if (l == 0)
            return;
         if (this.currentVehicleId == vehicle.id) {
-          this.currentVehicleStatus = res;
+          this.currentVehicleStatus = this.currentVehicleStatus.concat(res);
         }
+
+        this.startfromMission.set(vehicle.id, res[l - 1].timeFromMissionStart);
         this.vehiclePositionsMap.set(vehicle.id, new Point(res[l - 1].lng, res[l - 1].lat));
         this.vehiclePositions = Array.from(this.vehiclePositionsMap.values());
         this.ref.detectChanges();
