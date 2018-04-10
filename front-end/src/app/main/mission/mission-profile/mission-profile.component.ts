@@ -180,10 +180,10 @@ export class MissionProfileComponent implements OnInit {
     } else {
       this.vehicleStatusService.getLatestVehicleStatus(vehicle.id).then((latestVehicleStatus: LatestVehicleStatus) => {
         console.log(latestVehicleStatus);
-        this.mapService
-          .getRoute(this.mission.route.start, this.mission.route.end)
-          .then((res: RouteDetails) => {
-            const routeDistance = Math.round(res.distance / 1000);
+        // this.mapService
+        //   .getRoute(this.mission.route.start, this.mission.route.end)
+        //   .then((res: RouteDetails) => {
+            const routeDistance = Math.round(this.mission.route.distance / 1000);
             const lengthByType = this.getLengthByType(this.mission.route.noneNormalSegments);
               let brakeDamage = 0,
                   engineDamage = 0,
@@ -237,11 +237,11 @@ export class MissionProfileComponent implements OnInit {
               gearDamage = this.calcDamage(gearOper, gearLoad);
 
               console.log(brakeDamage, engineDamage, gearDamage);
-              const probBrake = 1 / (1 + Math.exp(-0.00001 * (brakeDamage - 7200000)));
-              const probEngine = 1 / (1 + Math.exp(-0.00001 * (engineDamage - 120000)));
-              const probGear = 1 / (1 + Math.exp(-0.00001 * (gearDamage - 90000)));
+              const probBrake = 1 / (1 + Math.exp(-0.0000004 * (brakeDamage - 7200000)));
+              const probEngine = 1 / (1 + Math.exp(-0.00003 * (engineDamage - 120000)));
+              const probGear = 1 / (1 + Math.exp(-0.00005 * (gearDamage - 90000)));
               console.log(Math.round(probBrake * 100), Math.round(probEngine * 100), Math.round(probGear * 100));
-            });
+            // });
       });
       this.mission.vehicles.push(vehicle);
     }
