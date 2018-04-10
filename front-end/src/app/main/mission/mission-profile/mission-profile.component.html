@@ -39,6 +39,7 @@
                     <input type="text" 
                         id="routeStart"
                         [(ngModel)]="mission.route.start"
+                        (change)="onStartRouteChange($event)" 
                         name="routeStart" 
                         class="form-control" 
                         placeholder="Route start" 
@@ -52,9 +53,20 @@
                         [(ngModel)]="mission.route.end"
                         name="routeFinish" 
                         class="form-control" 
-                        placeholder="Route finish" 
+                        placeholder="Route finish"
+                        (change)="onFinishRouteChange($event)" 
                         [readonly]="missionService.isMissionReadOnly"
                         required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="distance">Distance(m)</label>
+                    <input type="text" 
+                        id="distance"
+                        [(ngModel)]="mission.route.distance"
+                        name="distance" 
+                        class="form-control" 
+                        placeholder="Distance" 
+                        [readonly]="true">
                 </div>
               </div>              
 

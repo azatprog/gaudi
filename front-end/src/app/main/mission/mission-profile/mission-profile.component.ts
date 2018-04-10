@@ -175,44 +175,61 @@ export class MissionProfileComponent implements OnInit {
 
   save() {
     const segments = this.mission.route.noneNormalSegments;
+    this.mission.route.noneNormalSegments = segments;
+    if (this.mission.id == null) {
+      this.missionService
+        .addMission(this.mission)
+        .then(res => {
+          this.mission = new Mission();
+          this.form.reset();
+          this.goToMissionList();
+        })
+        .catch(err => {
+          if (err.status === 0) {
+            alert('Not bound to server! Check your connection!');
+          } else {
+            alert(err);
+          }
+        });
+    } else {
+      console.log(this.mission);
+      this.missionService
+        .updateMission(this.mission)
+        .then(updated => {
+          alert('updated');
+          this.goToMissionList();
+        })
+        .catch(err => {
+          this.missionService.selectedMission = null;
+          this.missionService.isMissionReadOnly = true;
+          if (err.status === 0) {
+            alert('Not bound to server! Check your connection!');
+          } else {
+            alert(err);
+          }
+        });
+    }
+  }
+
+  onStartRouteChange(event) {
+    if (this.mission.route.end == null)
+      return;
+      
     this.mapService
-      .getRoute(this.mission.route.start, this.mission.route.end)
-      .then((res: RouteDetails) => {
-        this.mission.route = res;
-        this.mission.route.noneNormalSegments = segments;
-        if (this.mission.id == null) {
-          this.missionService
-            .addMission(this.mission)
-            .then(res => {
-              this.mission = new Mission();
-              this.form.reset();
-              this.goToMissionList();
-            })
-            .catch(err => {
-              if (err.status === 0) {
-                alert('Not bound to server! Check your connection!');
-              } else {
-                alert(err);
-              }
-            });
-        } else {
-          console.log(this.mission);
-          this.missionService
-            .updateMission(this.mission)
-            .then(updated => {
-              alert('updated');
-              this.goToMissionList();
-            })
-            .catch(err => {
-              this.missionService.selectedMission = null;
-              this.missionService.isMissionReadOnly = true;
-              if (err.status === 0) {
-                alert('Not bound to server! Check your connection!');
-              } else {
-                alert(err);
-              }
-            });
-        }
-      });
+    .getRoute(this.mission.route.start, this.mission.route.end)
+    .then((res: RouteDetails) => {
+      this.mission.route = res;
+    });
+  }
+
+  onFinishRouteChange(event) {
+    if (this.mission.route.start == null)
+      return;
+
+    this.mapService
+    .getRoute(this.mission.route.start, this.mission.route.end)
+    .then((res: RouteDetails) => {
+      this.mission.route = res;
+    });
   }
 }
