@@ -5,6 +5,7 @@ import {
   ElementRef,
   Renderer
 } from '@angular/core';
+import {ReactiveFormsModule, FormArray, FormBuilder} from '@angular/forms';
 import { Mission } from '../../../models/mission.model';
 import { PlatformLocation, Location } from '@angular/common';
 import { UniversalService } from '../../../services/universal.service';
@@ -12,6 +13,7 @@ import { Vehicle } from '../../../models/vehicle.model';
 import { Router } from '@angular/router';
 import { MapService  } from '../../../services/map.service';
 import { RouteDetails } from '../../../models/routedetails.model';
+import { RouteSegment } from '../../../models/routeSegment.model';
 
 @Component({
   moduleId: module.id,
@@ -25,6 +27,9 @@ export class MissionProfileComponent implements OnInit {
   public mission: Mission;
   public vehicles: Vehicle[];
   public isShowingVehiclePopup: boolean;
+  public isShowingSegmentPopup: boolean;
+
+  theSegmentValue: RouteSegment;
 
   constructor(
     private location: PlatformLocation,
@@ -36,6 +41,7 @@ export class MissionProfileComponent implements OnInit {
   ) {
     if (this.missionService.selectedMission) {
       this.mission = Object.assign({}, this.missionService.selectedMission);
+      console.log(this.mission);
     } else {
       this.mission = new Mission();
     }
@@ -55,12 +61,16 @@ export class MissionProfileComponent implements OnInit {
     }
   }
 
-  openVehicleListPopup() {
-    this.isShowingVehiclePopup = true;
+  onSegment() {
+    console.log(this.mission);
   }
 
-  closeVehiclePopup() {
-    this.isShowingVehiclePopup = false;
+  openPopup(popupName: string) {
+    this[popupName] = true;
+  }
+
+  closePopup(popupName: string) {
+    this[popupName] = false;
   }
 
   selectVehicle(vehicle: Vehicle) {
@@ -69,7 +79,31 @@ export class MissionProfileComponent implements OnInit {
     } else {
       this.mission.vehicles.push(vehicle);
     }
-    this.closeVehiclePopup();
+    this.closePopup('isShowingVehiclePopup');
+  }
+
+  identify = (inx, item) => inx;
+
+  addSegment() {
+    if (this.mission.route.noneNormalSegments.length === 0) {
+      this.theSegmentValue = new RouteSegment();
+      this.theSegmentValue.start = 0;
+      this.theSegmentValue.distance = 0;
+      this.theSegmentValue.condition = 'NORMAL';
+    } else {
+      const len = this.mission.route.noneNormalSegments.length;
+      this.theSegmentValue = new RouteSegment();
+      this.theSegmentValue.start = this.mission.route.noneNormalSegments[len - 1].start + this.mission.route.noneNormalSegments[len - 1].distance;
+      this.theSegmentValue.distance = 0;
+      this.theSegmentValue.condition = 'NORMAL';
+    }
+    
+    this.openPopup('isShowingSegmentPopup');
+  }
+
+  saveSegment(s) {
+    this.mission.route.noneNormalSegments.push(s);
+    console.log(this.mission.route.noneNormalSegments);
   }
 
   onSelectRootVehicle() {}
@@ -128,8 +162,7 @@ export class MissionProfileComponent implements OnInit {
   }
 
   save() {
-    console.log(this.mission);
-    console.log(this.mission.route.start, this.mission.route.end);
+    console.log(this.mission.route.noneNormalSegments);
     this.mapService
       .getRoute(this.mission.route.start, this.mission.route.end)
       .then((res: RouteDetails) => {
@@ -156,8 +189,6 @@ export class MissionProfileComponent implements OnInit {
           this.missionService
             .updateMission(this.mission)
             .then(updated => {
-              console.log(updated);
-              // this.mission = updated;
               alert('updated');
               this.goToMissionList();
             })

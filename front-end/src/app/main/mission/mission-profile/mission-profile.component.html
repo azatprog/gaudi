@@ -2,7 +2,12 @@
             <form novalidate 
                     #f="ngForm"
                     (ngSubmit)="save()" style="margin-top:30px">
-                <p class="h5 text-center mb-4">Mission Profile</p>
+                <p class="h5 text-center mb-4">
+                    Mission Profile
+                    <button type="button" class="btn btn-success waves-light align-right" (click)="showOnMap()">
+                        <i class="fa fa-map-marker"> </i> Show on map
+                    </button>
+                </p>
               <div class="form-row">
                   <div class="form-group col-md-6">
                       <label for="missionName">Name</label>
@@ -51,44 +56,93 @@
                         [readonly]="missionService.isMissionReadOnly"
                         required>
                 </div>
-              </div>
-              <button type="button" class="btn btn-success waves-light btn-mission" (click)="showOnMap()">
-                <i class="fa fa-map"> </i> Show on map
-             </button>
+              </div>              
 
-            <p class="h5 text-center mb-4">
-                Vehicles 
-                
-                <button [hidden]="missionService.isMissionReadOnly"
-                        type="button" style="float: right; margin-bottom: 10px; border-radius: 50%;" 
-                        class="btn btn-danger waves-light add-btn"
-                        data-toggle="dropdown"
-                        (click)="openVehicleListPopup()"
-                        data-toggle="modal" data-target="#vehicleListPopup">
-                    <i class="fa fa-plus plus-icon"></i>
-                </button>
-            </p>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th [hidden]="missionService.isMissionReadOnly">  </th>
-                        <th> Type </th>
-                        <th> Model </th>
-                        <th> S/N </th>
-                        <th> State (%) </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let v of mission.vehicles;">
-                        <td [hidden]="missionService.isMissionReadOnly"> <button class="btn-danger rem-btn" (click)="remVehicle(v)"> <i class="fa fa-trash-o"> </i> </button> </td>
-                        <td> {{ v.vtype }} </td>
-                        <td> {{ v.model }} </td>
-                        <td> {{ v.sn }} </td>
-                        <td> {{ v.state }} </td>
-                    </tr>
-                </tbody>
-            </table>
-            
+            <section>
+                <p class="h5 text-center mb-4">
+                    None Normal Segments 
+                    
+                    <button [hidden]="missionService.isMissionReadOnly"
+                            type="button" style="float: right; margin-bottom: 10px; border-radius: 50%;" 
+                            class="btn btn-success waves-light add-btn"                                                        
+                            data-toggle="dropdown"
+                            (click)="addSegment()"
+                            data-toggle="modal" data-target="#segmentAddPopup">
+                        <i class="fa fa-plus plus-icon"></i>
+                        <!--data-toggle="dropdown" 
+                            (click)="addSegment()"
+                            data-toggle="modal" 
+                            data-target="#vehicleListPopup"> -->
+                    </button>
+                </p>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th [hidden]="missionService.isMissionReadOnly">  </th>
+                            <th> Start </th>
+                            <th> Distance </th>
+                            <th> Type </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let s of mission.route.noneNormalSegments; trackBy: identify">
+                            <td [hidden]="missionService.isMissionReadOnly"> 
+                                <button class="btn-danger rem-btn" (click)="remSegment(s)"> 
+                                    <i class="fa fa-trash-o"> </i> 
+                                </button> 
+                                <button class="btn-info rem-btn" (click)="editSegment(s)"> 
+                                    <i class="fa fa-pencil"> </i> 
+                                </button> 
+                            </td>
+                            <td> 
+                                {{ s.start }}
+                            <td> 
+                                {{ s.distance }}
+                            <td>
+                                {{ s.condition }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            <section>
+                <p class="h5 text-center mb-4">
+                    Vehicles 
+                    
+                    <button [hidden]="missionService.isMissionReadOnly"
+                            type="button" style="float: right; margin-bottom: 10px; border-radius: 50%;" 
+                            class="btn btn-success waves-light add-btn"
+                            data-toggle="dropdown"
+                            (click)="openPopup('isShowingVehiclePopup')"
+                            data-toggle="modal" data-target="#vehicleListPopup">
+                        <i class="fa fa-plus plus-icon"></i>
+                    </button>
+                </p>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th [hidden]="missionService.isMissionReadOnly">  </th>
+                            <th> Type </th>
+                            <th> Model </th>
+                            <th> S/N </th>
+                            <th> State (%) </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let v of mission.vehicles;">
+                            <td [hidden]="missionService.isMissionReadOnly"> 
+                                <button class="btn-danger rem-btn" (click)="remVehicle(v)"> 
+                                    <i class="fa fa-trash-o"> </i> 
+                                </button>                                 
+                            </td>
+                            <td> {{ v.vtype }} </td>
+                            <td> {{ v.model }} </td>
+                            <td> {{ v.sn }} </td>
+                            <td> {{ v.state }} </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
 
                 <div class="form-row" [hidden]="missionService.isMissionReadOnly">
                   <div class="col-md-6">
@@ -114,7 +168,14 @@
 </div>
 <popup-vehicles 
                     [popupName]="'vehicleListPopup'"
-                    (eventClosePopup)="closeVehiclePopup()"
+                    (eventClosePopup)="closePopup('isShowingVehiclePopup')"
                     (eventOnSelectRootVehicle)="onSelectRootVehicle()"
                     (eventGetSelectedVehicle)="selectVehicle($event)">
 </popup-vehicles>
+
+<popup-segments 
+                    [popupName]="'segmentAddPopup'"
+                    [theSegment]="theSegmentValue"
+                    (eventSaveSegment)="saveSegment($event)"
+                    (eventClosePopup)="closePopup('isShowingSegmentPopup')">
+</popup-segments>

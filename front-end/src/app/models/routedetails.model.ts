@@ -1,4 +1,5 @@
 import { Point } from './point.model';
+import { RouteSegment } from './routeSegment.model';
 
 export interface IRouteDetails {
     id: number;
@@ -6,7 +7,7 @@ export interface IRouteDetails {
     end: string;
     distance: number;
     points: Point[];
-    noneNormalSegments: string[];
+    noneNormalSegments: RouteSegment[];
     duration: number;
     distanceDescription: string;
     durationDescription: string;
@@ -18,7 +19,7 @@ export class RouteDetails implements IRouteDetails {
     end: string;
     distance: number;
     points: Point[] = [];
-    noneNormalSegments: string[] = [];
+    noneNormalSegments: RouteSegment[] = [];
     duration: number;
     distanceDescription: string;
     durationDescription: string;

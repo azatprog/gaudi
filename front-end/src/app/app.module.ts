@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ROUTES } from './app.routes';
@@ -27,6 +27,7 @@ import { VehiclesService } from './services/vehicles.service';
 import { MissionsService } from './services/missions.service';
 import { GraphComponent } from './map/graph/graph.component';
 import { VehicleStatusService } from './services/vehicle-status.service';
+import { PopupSegmentComponent } from './main/mission/popup-segment/popup-segment.component';
 
 
 @NgModule({
@@ -44,11 +45,13 @@ import { VehicleStatusService } from './services/vehicle-status.service';
     MissionProfileComponent,
     VehicleProfileComponent,
     PopupVehiclesComponent,
-    GraphComponent
+    GraphComponent,
+    PopupSegmentComponent
   ],
   imports: [
     AngularFontAwesomeModule,
     BrowserModule,
+    ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
     RouterModule.forRoot(ROUTES, { useHash: true }),

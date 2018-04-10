@@ -32,6 +32,7 @@
     "font-awesome": "^4.7.0",
     "jquery": "^3.3.1",
     "ngx-openlayers": "^0.8.17",
+    "popper.js": "^1.14.3",
     "rxjs": "^5.5.6",
     "typescript": "~2.5.3",
     "zone.js": "^0.8.19"

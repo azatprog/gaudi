@@ -1,0 +1,39 @@
+<div  #elem [attr.id]= "popupName"  class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false" >
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Segment</h4>
+                <button type="button" class="close" (click)="closeVehiclePopup()" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <table>
+                    <thead>
+                        <tr>
+                            <th> Start </th>
+                            <th> Distance </th>
+                            <th> Type </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td> <input type="number" style="width: 150px" [(ngModel)]="theSegment.start" name="segmentStart"> </td>
+                        <td> <input type="number" style="width: 150px" [(ngModel)]="theSegment.distance" name="segmentDistance"> </td>
+                        <td>
+                            <select class="" [(ngModel)]="theSegment.condition" name="condition">
+                                <option *ngFor="let c of segmentConditions; trackBy: identify" [ngValue]="c">{{c}}</option>
+                            </select>
+                        </td>
+                      </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" (click)="saveSegment()" data-dismiss="modal">Save</button>
+                <button type="button" class="btn btn-danger" (click)="closeVehiclePopup()" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</div>
