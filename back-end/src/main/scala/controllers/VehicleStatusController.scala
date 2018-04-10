@@ -16,11 +16,11 @@ class VehicleStatusController extends ScalatraServlet with JacksonJsonSupport wi
     contentType = formats("json")
   }
 
-/*  get("/deleteAll") {
+  get("/vehicleStatus/deleteAll") {
     DbSchema.deleteAllVehicleStatuses()
-  }*/
+  }
 
-  get("/") {
+  get("/vehicleStatus") {
     val missionId = params.get("missionId").get.toLong
     val vehicleId = params.get("vehicleId").get.toLong
     val timeFromStart = params.getOrElse("timeFromMissionStart", "0")
@@ -28,7 +28,12 @@ class VehicleStatusController extends ScalatraServlet with JacksonJsonSupport wi
     VehicleStatus.getVehicleStatuses(missionId, vehicleId, timeFromStart.toLong)
   }
 
-  post("/") {
+  get("/latestVehicleStatus/:id") {
+    val id = params("id").toLong
+    VehicleStatus.getLatestVehicleStatus(id)
+  }
+
+  post("/vehicleStatus") {
     val vehicleId = (parsedBody \ "vehicleId").extract[Long]
     val missionId = (parsedBody \ "missionId").extract[Long]
     val lng = (parsedBody \ "lng").extract[BigDecimal]
@@ -71,7 +76,7 @@ class VehicleStatusController extends ScalatraServlet with JacksonJsonSupport wi
     vs
   }
 
-  get("/:id/clear") {
+  get("/vehicleStatus/:id/clear") {
     val id = params("id").toLong
     Mission.clearVehicleStatuses(id)
   }

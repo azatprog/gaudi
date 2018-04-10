@@ -80,4 +80,8 @@ object VehicleStatus {
   def getVehicleStatuses(missionId: Long, vehicleId: Long, timeFromStart: Long) = {
     DbSchema.getAllVehicleStatuses(missionId, vehicleId, timeFromStart)
   }
+
+  def getLatestVehicleStatus(vehicleId: Long) = {
+    DbSchema.getLatestVehicleStatus(vehicleId: Long)
+  }
 }

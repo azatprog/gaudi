@@ -3,7 +3,8 @@ package model
 import org.slf4j.LoggerFactory
 import org.squeryl.PrimitiveTypeMode._
 import org.squeryl.adapters.PostgreSqlAdapter
-import org.squeryl.{Schema, Session, SessionFactory}
+import org.squeryl.dsl.Measures
+import org.squeryl.{Query, Schema, Session, SessionFactory}
 
 import scala.collection.mutable
 import scala.collection.mutable.MutableList
@@ -282,6 +283,14 @@ object DbSchema extends Schema {
           .select(vp).orderBy(vp.id asc))
         .foreach(v => result += v)
       result
+    }
+  }
+
+  def getLatestVehicleStatus(vehicleId: Long): VehicleStatus = {
+    transaction {
+      val lastId: Long = from(vehicleStatuses)(vs =>
+      where(vs.vehicleId === vehicleId).compute(nvl(max(vs.id), 0)))
+      from(vehicleStatuses)(vs => where(vs.id === lastId).select(vs)).head
     }
   }
 
