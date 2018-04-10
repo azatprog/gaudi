@@ -52,7 +52,9 @@ export class GraphComponent implements OnInit {
   selectedParameter: string = "";
   parameters: string[];
   startTime: Date;
-  excludedParameters = ["mass", "id", "lng", "lat", "vehicleId", "timeFromMissionStart", "missionId"];
+  excludedParameters = ["mass", "id", "lng", "lat", "vehicleId", "timeFromMissionStart",
+   "missionId", " engineFault", "gearFault", "brakeFault",
+   "coolingFluidLevel", "ignition", "brakeFluidLevel"];
 
   constructor(private vehicleService: VehicleStatusService) {
     this.data = new ChartData();

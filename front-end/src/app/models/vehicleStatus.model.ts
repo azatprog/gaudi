@@ -47,5 +47,18 @@ export class VehicleStatus implements IVehicleStatus {
     brakeTemperature: number = 0;
     brakePadResidue: number = 0;
     mass: string = "";
+    missionMileage: number = 0;
+    cumulBrakePedalPushingWeight: number = 0;
+    cumulBrakeHighTempOperation: number = 0;
+    cumulDescentMileage: number = 0;
+    cumulEngineOperation: number = 0;
+    cumulEngineHighLoadOperation: number = 0;
+    cumulEngineHighTempOperation: number = 0;
+    cumulGearOperation: number = 0;
+    cumulGearHighLoadOperation: number = 0;
+    engineFault: boolean = false;
+    gearFault: boolean = false;
+    brakeFault: boolean = false;
+
     constructor() {}
 }
