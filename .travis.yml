@@ -5,7 +5,7 @@ node:
 - 8.9.3
 
 addons:
-  ssh_known_hosts: mitya.tk
+  ssh_known_hosts: gaudi.ga
 
 script:
 - cd $TRAVIS_BUILD_DIR/back-end && sbt package
@@ -20,6 +20,6 @@ before_deploy:
 deploy:
   provider: script
   skip_cleanup: true
-  script: scp $TRAVIS_BUILD_DIR/back-end/target/scala-2.12/back-end_2.12-0.1.war root@mitya.tk:/opt/tomcat/webapps/ROOT.war && rsync -avz --delete $TRAVIS_BUILD_DIR/front-end/dist/ root@mitya.tk:/var/www/gaudi/
+  script: scp $TRAVIS_BUILD_DIR/back-end/target/scala-2.12/back-end_2.12-0.1.war root@gaudi.ga:/opt/tomcat/webapps/ROOT.war && rsync -avz --delete $TRAVIS_BUILD_DIR/front-end/dist/ root@gaudi.ga:/var/www/gaudi/
   on:
     branch: master
