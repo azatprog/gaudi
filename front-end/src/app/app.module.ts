@@ -28,6 +28,7 @@ import { MissionsService } from './services/missions.service';
 import { GraphComponent } from './map/graph/graph.component';
 import { VehicleStatusService } from './services/vehicle-status.service';
 import { PopupSegmentComponent } from './main/mission/popup-segment/popup-segment.component';
+import { PrognosisService } from './services/prognosis.service';
 
 
 @NgModule({
@@ -57,7 +58,7 @@ import { PopupSegmentComponent } from './main/mission/popup-segment/popup-segmen
     RouterModule.forRoot(ROUTES, { useHash: true }),
     AngularOpenlayersModule
   ],
-  providers: [AuthService, UniversalService, MapService, VehiclesService, MissionsService, VehicleStatusService ],
+  providers: [AuthService, UniversalService, MapService, VehiclesService, MissionsService, VehicleStatusService, PrognosisService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
