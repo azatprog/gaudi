@@ -16,7 +16,7 @@ import { RouteDetails } from '../../../models/routedetails.model';
 import { RouteSegment } from '../../../models/routeSegment.model';
 import { VehicleStatusService } from '../../../services/vehicle-status.service';
 import { LatestVehicleStatus } from '../../../models/latestVehicleStatus.model';
-import { PrognosisService } from '../../../services/prognosis.service';
+import { PrognosisService, VehicleFailureProbability } from '../../../services/prognosis.service';
 
 @Component({
   moduleId: module.id,
@@ -42,7 +42,8 @@ export class MissionProfileComponent implements OnInit {
     public missionService: UniversalService,
     private renderer: Renderer,
     public mapService: MapService,
-    public prognosisService: PrognosisService
+    public prognosisService: PrognosisService,
+    public mainService: UniversalService
   ) {
     if (this.missionService.selectedMission) {
       this.mission = Object.assign({}, this.missionService.selectedMission);
@@ -67,7 +68,7 @@ export class MissionProfileComponent implements OnInit {
   }
 
   onSegment() {
-    console.log(this.mission);
+    
   }
 
   openPopup(popupName: string) {
@@ -84,16 +85,74 @@ export class MissionProfileComponent implements OnInit {
     } else {
         this.prognosisService.getFailureProbabilities(vehicle, this.mission.route)
         .then((result) => {
-          vehicle['probBrake'] = result.probBrake;
-          vehicle['probEngine'] = result.probEngine;
-          vehicle['probGear'] = result.probGear;
+          this.fillVehicleProbabilities(vehicle, result);
           this.mission.vehicles.push(vehicle);
+          this.setVehicleStyles();
       });
     }
     this.closePopup('isShowingVehiclePopup');
   }
 
+  decisionSupport() {
+    if (this.mission.vehicles.length > 0)
+       return;
+
+    this.mainService.getVehicles().then((vehicles) => {
+      for( let i = 0; i < vehicles.length; i++) {
+        const vehicle = vehicles[i];
+        this.prognosisService.getFailureProbabilities(vehicle, this.mission.route)
+          .then((result) => {
+            this.fillVehicleProbabilities(vehicle, result);
+            this.mission.vehicles.push(vehicle);
+            this.orderVehicles();
+        });
+      }
+    });
+  }
+
+  orderVehicles() {
+    this.mission.vehicles = this.mission.vehicles.sort(this.compareVehicles);
+    this.setVehicleStyles();
+  }
+
+  setVehicleStyles() {
+    const FAILURE = 1;
+    const SUCCESS = 2;
+    const vehicles = this.mission.vehicles;
+    for( let i = 0; i < vehicles.length; i++) {
+      const vehicle = vehicles[i];
+      if (vehicle['probEngine'] > 50 || 
+          vehicle['probBrake'] > 50 || 
+          vehicle['probGear'] > 50) {
+            vehicle['state'] = FAILURE; 
+      }
+      else {
+        vehicle['state'] = SUCCESS;
+      }
+    }
+  }
+
+  compareVehicles(a: Vehicle, b: Vehicle): number {
+    let comparison = 0;
+    const aTotalFailure = (a['probEngine'] * a['probGear'] * a['probBrake']) / 100;
+    const bTotalFailure = (b['probEngine'] * b['probGear'] * b['probBrake']) / 100;
+
+    if (aTotalFailure > bTotalFailure) {
+      comparison = 1;
+    } else if (bTotalFailure > aTotalFailure) {
+      comparison = -1;
+    }
+  
+    return comparison;
+  }
+
   identify = (inx, item) => inx;
+
+  private fillVehicleProbabilities(vehicle: Vehicle, result: VehicleFailureProbability) {
+    vehicle['probBrake'] = result.probBrake;
+    vehicle['probEngine'] = result.probEngine;
+    vehicle['probGear'] = result.probGear;
+  }
 
   addVehicle() {
     this.openPopup('isShowingVehiclePopup');

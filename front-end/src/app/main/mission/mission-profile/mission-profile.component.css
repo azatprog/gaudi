@@ -10,3 +10,11 @@
 section {
     margin-bottom: 30px;
 }
+
+.failure {
+    background-color: #FFA8A8;
+}
+
+.success {
+    background-color: #B2FF95;
+}
