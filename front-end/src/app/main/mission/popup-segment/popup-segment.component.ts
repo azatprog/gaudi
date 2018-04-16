@@ -18,7 +18,7 @@ export class PopupSegmentComponent implements OnInit {
 
   @Output() eventSaveSegment = new EventEmitter();
 	@Output() eventClosePopup = new EventEmitter();
-  segmentConditions = ['NORMAL', 'MOUNTAINS', 'SWAMP', 'WET_FIELD', 'DRY_FIELD', 'GROUND_ROAD',  'HIGH_WAY', 'DESERT'];
+  segmentConditions = ['NORMAL', 'MOUNTAINS', 'SWAMP', 'HIGH_WAY'];
 
 	constructor() {
 	}
