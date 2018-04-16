@@ -29,6 +29,7 @@ import { GraphComponent } from './map/graph/graph.component';
 import { VehicleStatusService } from './services/vehicle-status.service';
 import { PopupSegmentComponent } from './main/mission/popup-segment/popup-segment.component';
 import { PrognosisService } from './services/prognosis.service';
+import { MissionReportComponent } from './main/mission/mission-report/mission-report.component';
 
 
 @NgModule({
@@ -47,7 +48,8 @@ import { PrognosisService } from './services/prognosis.service';
     VehicleProfileComponent,
     PopupVehiclesComponent,
     GraphComponent,
-    PopupSegmentComponent
+    PopupSegmentComponent,
+    MissionReportComponent
   ],
   imports: [
     AngularFontAwesomeModule,

@@ -224,6 +224,10 @@ export class MissionProfileComponent implements OnInit {
     this.route.navigate(['/app/main/map']);
   }
 
+  generateReport() {
+    this.route.navigate(['/app/report']);
+  }
+
   cancel() {
     if (this.missionService.selectedMission === null) {
       this.goToMissionList();

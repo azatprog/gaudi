@@ -1,115 +1,79 @@
-<div class="container">            
-            <form novalidate 
-                    #f="ngForm"
-                    (ngSubmit)="save()" style="margin-top:30px">
-                <p class="h5 text-center mb-4">
-                    Mission Profile
-                    <button type="button" class="btn btn-success waves-light align-right" (click)="showOnMap()">
-                        <i class="fa fa-map-marker"> </i> Show on map
-                    </button>
-                </p>
-              <div class="form-row">
-                  <div class="form-group col-md-6">
-                      <label for="missionName">Name</label>
-                      <input type="text"
-                          id="missionName"
-                          [(ngModel)]="mission.name"
-                          name="missionName" 
-                          class="form-control" 
-                          placeholder="Mission name" 
-                          [readonly]="missionService.isMissionReadOnly"
-                          #missionName
-                          required>
-                  </div>
-                  <div class="form-group col-md-6">
-                      <label for="startDate">Start Date</label>
-                      <input type="text" 
-                          id="startDate"
-                          [(ngModel)]="mission.startDate"
-                          name="startDate" 
-                          class="form-control" 
-                          placeholder="Start date" 
-                          [readonly]="missionService.isMissionReadOnly"
-                          required>
-                  </div>
-              </div>
-              <div class="form-row" style="margin-bottom:30px">
-                <div class="form-group col-md-6">
-                    <label for="routeStart">Route Start</label>
-                    <input type="text" 
-                        id="routeStart"
-                        [(ngModel)]="mission.route.start"
-                        (change)="onStartRouteChange($event)" 
-                        name="routeStart" 
-                        class="form-control" 
-                        placeholder="Route start" 
-                        [readonly]="missionService.isMissionReadOnly"
-                        required>
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="routeFinish">Route Finish</label>
-                    <input type="text" 
-                        id="routeFinish"
-                        [(ngModel)]="mission.route.end"
-                        name="routeFinish" 
-                        class="form-control" 
-                        placeholder="Route finish"
-                        (change)="onFinishRouteChange($event)" 
-                        [readonly]="missionService.isMissionReadOnly"
-                        required>
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="distance">Distance</label>
-                    <input type="text" 
-                        id="distance"
-                        [(ngModel)]="mission.route.distanceDescription"
-                        name="distance" 
-                        class="form-control" 
-                        placeholder="Distance" 
-                        [readonly]="true">
-                </div>
-              </div>              
+<div class="container">
+    <form novalidate #f="ngForm" (ngSubmit)="save()" style="margin-top:30px">
+        <p class="h5 text-center mb-4">
+            Mission Profile
+            <button type="button" class="btn btn-success waves-light align-right" (click)="showOnMap()">
+                <i class="fa fa-map-marker"> </i> Show on map
+            </button>
+            <button style="margin-right: 8px" type="button" class="btn btn-info waves-light align-right" (click)="generateReport()">
+                <i class="fa fa-pencil"> </i> Report
+            </button>
+        </p>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="missionName">Name</label>
+                <input type="text" id="missionName" [(ngModel)]="mission.name" name="missionName" class="form-control" placeholder="Mission name"
+                    [readonly]="missionService.isMissionReadOnly" #missionName required>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="startDate">Start Date</label>
+                <input type="text" id="startDate" [(ngModel)]="mission.startDate" name="startDate" class="form-control" placeholder="Start date"
+                    [readonly]="missionService.isMissionReadOnly" required>
+            </div>
+        </div>
+        <div class="form-row" style="margin-bottom:30px">
+            <div class="form-group col-md-6">
+                <label for="routeStart">Route Start</label>
+                <input type="text" id="routeStart" [(ngModel)]="mission.route.start" (change)="onStartRouteChange($event)" name="routeStart"
+                    class="form-control" placeholder="Route start" [readonly]="missionService.isMissionReadOnly" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="routeFinish">Route Finish</label>
+                <input type="text" id="routeFinish" [(ngModel)]="mission.route.end" name="routeFinish" class="form-control" placeholder="Route finish"
+                    (change)="onFinishRouteChange($event)" [readonly]="missionService.isMissionReadOnly" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="distance">Distance</label>
+                <input type="text" id="distance" [(ngModel)]="mission.route.distanceDescription" name="distance" class="form-control" placeholder="Distance"
+                    [readonly]="true">
+            </div>
+        </div>
 
-            <section>
-                <p class="h5 text-center mb-4">
-                    None Normal Segments 
-                    
-                    <button [hidden]="missionService.isMissionReadOnly"
-                            type="button" style="float: right; margin-bottom: 10px; border-radius: 50%;" 
-                            class="btn btn-success waves-light add-btn"                                                        
-                            data-toggle="dropdown"
-                            (click)="addSegment()"
-                            data-toggle="modal" data-target="#segmentAddPopup">
-                        <i class="fa fa-plus plus-icon"></i>
-                        <!--data-toggle="dropdown" 
+        <section>
+            <p class="h5 text-center mb-4">
+                None Normal Segments
+
+                <button [hidden]="missionService.isMissionReadOnly" type="button" style="float: right; margin-bottom: 10px; border-radius: 50%;"
+                    class="btn btn-success waves-light add-btn" data-toggle="dropdown" (click)="addSegment()" data-toggle="modal"
+                    data-target="#segmentAddPopup">
+                    <i class="fa fa-plus plus-icon"></i>
+                    <!--data-toggle="dropdown" 
                             (click)="addSegment()"
                             data-toggle="modal" 
                             data-target="#vehicleListPopup"> -->
-                    </button>
-                </p>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th [hidden]="missionService.isMissionReadOnly">  </th>
-                            <th> Start </th>
-                            <th> Distance </th>
-                            <th> Type </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let s of mission.route.noneNormalSegments; let i = index; trackBy: identify">
-                            <td [hidden]="missionService.isMissionReadOnly"> 
-                                <button class="btn-danger rem-btn" (click)="remSegment(i)"> 
-                                    <i class="fa fa-trash-o"> </i> 
-                                </button> 
-                                <button class="btn-info rem-btn" (click)="editSegment(s)" data-toggle="modal" data-target="#segmentAddPopup"> 
-                                    <i class="fa fa-pencil"> </i> 
-                                </button> 
-                            </td>
-                            <td> 
-                                {{ s.start }}
-                            <td> 
-                                {{ s.distance }}
+                </button>
+            </p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th [hidden]="missionService.isMissionReadOnly"> </th>
+                        <th> Start </th>
+                        <th> Distance </th>
+                        <th> Type </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let s of mission.route.noneNormalSegments; let i = index; trackBy: identify">
+                        <td [hidden]="missionService.isMissionReadOnly">
+                            <button class="btn-danger rem-btn" (click)="remSegment(i)">
+                                <i class="fa fa-trash-o"> </i>
+                            </button>
+                            <button class="btn-info rem-btn" (click)="editSegment(s)" data-toggle="modal" data-target="#segmentAddPopup">
+                                <i class="fa fa-pencil"> </i>
+                            </button>
+                        </td>
+                        <td>
+                            {{ s.start }}
                             <td>
                                 {{ s.condition }}
                             </td>
@@ -169,38 +133,31 @@
                 </table>
             </section>
 
-                <div class="form-row" [hidden]="missionService.isMissionReadOnly">
-                  <div class="col-md-6">
-                      <button class="btn btn-success" style="float:right" type="submit" [disabled]="f.invalid">Save</button>
-                  </div>
-                  <div class="col-md-6">
-                    <button class="btn btn-danger" type="button" (click)="cancel()">Cancel</button>
-                  </div>
-                </div>
-                <div class="form-row" [hidden]="!missionService.isMissionReadOnly">
-                    <div class="col-md-6">
-                      <button type="button" class="btn btn-success waves-light btn-mission" style="float:right" (click)="editMission()">
-                          <i class="fa fa-pencil"> </i> Edit
-                      </button>
-                    </div>
-                    <div class="col-md-6">
-                      <button type="button" class="btn btn-danger waves-light btn-mission" (click)="delMission()">
-                          <i class="fa fa-trash"> </i> Remove
-                      </button>
-                    </div>
-                </div>
-            </form>
+        <div class="form-row" [hidden]="missionService.isMissionReadOnly">
+            <div class="col-md-6">
+                <button class="btn btn-success" style="float:right" type="submit" [disabled]="f.invalid">Save</button>
+            </div>
+            <div class="col-md-6">
+                <button class="btn btn-danger" type="button" (click)="cancel()">Cancel</button>
+            </div>
+        </div>
+        <div class="form-row" [hidden]="!missionService.isMissionReadOnly">
+            <div class="col-md-6">
+                <button type="button" class="btn btn-success waves-light btn-mission" style="float:right" (click)="editMission()">
+                    <i class="fa fa-pencil"> </i> Edit
+                </button>
+            </div>
+            <div class="col-md-6">
+                <button type="button" class="btn btn-danger waves-light btn-mission" (click)="delMission()">
+                    <i class="fa fa-trash"> </i> Remove
+                </button>
+            </div>
+        </div>
+    </form>
 </div>
-<popup-vehicles 
-                    [popupName]="'vehicleListPopup'"
-                    (eventClosePopup)="closePopup('isShowingVehiclePopup')"
-                    (eventOnSelectRootVehicle)="onSelectRootVehicle()"
-                    (eventGetSelectedVehicle)="selectVehicle($event)">
+<popup-vehicles [popupName]="'vehicleListPopup'" (eventClosePopup)="closePopup('isShowingVehiclePopup')" (eventOnSelectRootVehicle)="onSelectRootVehicle()"
+    (eventGetSelectedVehicle)="selectVehicle($event)">
 </popup-vehicles>
 
-<popup-segments 
-                    [popupName]="'segmentAddPopup'"
-                    [theSegment]="theSegmentValue"
-                    (eventSaveSegment)="saveSegment($event)"
-                    (eventClosePopup)="closePopup('isShowingSegmentPopup')">
+<popup-segments [popupName]="'segmentAddPopup'" [theSegment]="theSegmentValue" (eventSaveSegment)="saveSegment($event)" (eventClosePopup)="closePopup('isShowingSegmentPopup')">
 </popup-segments>

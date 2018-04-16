@@ -1,0 +1,33 @@
+<div id="report">
+  <h1>{{ mission.name }} mission report</h1>
+  <h2>List of vehicles</h2>
+  <div *ngFor="let v of mission.vehicles; trackBy: identify">
+    {{ v.type }} {{ v.model }} {{ v.sn }} {{ v.state }}
+    <table class="table">
+      <thead>
+        <tr>
+          <th> Subassy </th>
+          <th> Status </th>
+          <th> Fault probability </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Engine</td>
+          <td>OK</td>
+          <td>{{v.prob['probEngine']}}</td>
+        </tr>
+        <tr>
+          <td>Brake</td>
+          <td>OK</td>
+          <td>{{v.prob['probBrake']}}</td>
+        </tr>
+        <tr>
+          <td>Gear</td>
+          <td>OK</td>
+          <td>{{v.prob['probGear']}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
