@@ -118,13 +118,17 @@ export class MissionProfileComponent implements OnInit {
   setVehicleStyles() {
     const FAILURE = 1;
     const SUCCESS = 2;
+    const WARNING = 3;
     const vehicles = this.mission.vehicles;
     for( let i = 0; i < vehicles.length; i++) {
       const vehicle = vehicles[i];
-      if (vehicle['probEngine'] > 50 || 
-          vehicle['probBrake'] > 50 || 
-          vehicle['probGear'] > 50) {
-            vehicle['state'] = FAILURE; 
+      const prob = MissionProfileComponent.calcTotalProb(vehicle['probEngine'], vehicle['probGear'], vehicle['probBrake']);
+      console.log(prob);
+      if (prob > 0.5 && prob < 0.9) {
+            vehicle['state'] = WARNING; 
+      }
+      else if(prob >= 0.9) {
+        vehicle['state'] = FAILURE;
       }
       else {
         vehicle['state'] = SUCCESS;
@@ -134,8 +138,8 @@ export class MissionProfileComponent implements OnInit {
 
   compareVehicles(a: Vehicle, b: Vehicle): number {
     let comparison = 0;
-    const aTotalFailure = (a['probEngine'] * a['probGear'] * a['probBrake']) / 100;
-    const bTotalFailure = (b['probEngine'] * b['probGear'] * b['probBrake']) / 100;
+    const aTotalFailure = MissionProfileComponent.calcTotalProb(a['probEngine'], a['probGear'], a['probBrake']);// / 100;
+    const bTotalFailure = MissionProfileComponent.calcTotalProb(b['probEngine'], b['probGear'], b['probBrake']);// / 100;
 
     if (aTotalFailure > bTotalFailure) {
       comparison = 1;
@@ -145,6 +149,10 @@ export class MissionProfileComponent implements OnInit {
   
     return comparison;
   }
+
+  // probability that vehicle will be failed
+  static calcTotalProb = (a: number, b: number, c: number): number  =>
+    1 - ( 1- a / 100) * (1 - b / 100) * (1 - c / 100);
 
   identify = (inx, item) => inx;
 

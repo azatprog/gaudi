@@ -18,3 +18,7 @@ section {
 .success {
     background-color: #B2FF95;
 }
+
+.warning {
+    background-color: #FFF881;
+}

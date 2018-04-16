@@ -151,6 +151,7 @@
                         <tr *ngFor="let v of mission.vehicles; let i = index" 
                            [class.success]="v.state === 2"
                            [class.failure]="v.state === 1"
+                           [class.warning]="v.state === 3"
                            >
                             <td [hidden]="missionService.isMissionReadOnly"> 
                                 <button class="btn-danger rem-btn" (click)="remVehicle(i)"> 
