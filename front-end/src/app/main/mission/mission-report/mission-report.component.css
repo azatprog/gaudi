@@ -22,3 +22,9 @@ h2 {
 table {
     margin-top: 20px;
 }
+
+@media print {
+  button {
+    display: none;
+  }
+}

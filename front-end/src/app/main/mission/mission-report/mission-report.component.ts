@@ -8,6 +8,7 @@ import {
 import { render } from "openlayers";
 import { RouteSegment } from "../../../models/routeSegment.model";
 import { Router } from "@angular/router";
+import { Title } from "@angular/platform-browser";
 
 @Component({
   selector: "app-mission-report",
@@ -21,9 +22,11 @@ export class MissionReportComponent implements OnInit {
     private uniService: UniversalService,
     private prognosService: PrognosisService,
     private ref: ChangeDetectorRef,
-    private route: Router
+    private route: Router,
+    private titleService: Title,
   ) {
     this.mission = uniService.selectedMission;
+    titleService.setTitle(this.mission.name);
     this.mission.route.distance = Math.round(
       this.mission.route.distance / 1000
     );
@@ -102,11 +105,12 @@ export class MissionReportComponent implements OnInit {
                 100
             ) / 100;
           ref.detectChanges();
-          if (inx == this.mission.vehicles.length - 1) {
-            window.print();
-          }
         });
     });
+  }
+
+  printReport() {
+    window.print();
   }
 
   ngOnInit() {
