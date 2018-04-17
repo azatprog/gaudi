@@ -1,8 +1,37 @@
 <div id="report">
-  <h1>{{ mission.name }} mission report</h1>
+  <h1>{{ mission.name }} overview mission report</h1>
+  <div class="fontsize">
+    <b>Start date:</b> {{ mission.startDate }}
+    <br>
+    <!-- Duration: {{ mission.route.duration }}ч <br> -->
+    <b>From:</b> {{ mission.route.start }}
+    <br> <b>To: </b>{{ mission.route.end }}
+    <br> <b>Distance:</b> {{ mission.route.distance }}km
+    <br>
+  </div>
+  <table style="margin-top: 40px;" class="table">
+    <thead>
+      <tr>
+        <th> From </th>
+        <th> Till </th>
+        <th> Condition </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let nns of mission.route.noneNormalSegments; trackBy: identify">
+        <td>{{ nns.start }}km</td>
+        <td>{{ nns.start + nns.distance }}km</td>
+        <td>{{ nns.condition }}</td>
+      </tr>
+    </tbody>
+  </table>
   <h2>List of vehicles</h2>
-  <div *ngFor="let v of mission.vehicles; trackBy: identify">
-    {{ v.type }} {{ v.model }} {{ v.sn }} {{ v.state }}
+  <div class="vehicle fontsize" *ngFor="let v of mission.vehicles; trackBy: identify">
+    <b>Type:</b> {{ v.vtype }} <br>
+    <b>Model:</b> {{ v.model }} <br>
+    <b>Serial number:</b> {{ v.sn }} <br>
+    <b>Current state:</b> {{ v.state }}%<br>
+    <b>Probability of success:</b> <b>{{ v.prob }}%</b><br>
     <table class="table">
       <thead>
         <tr>
@@ -15,17 +44,17 @@
         <tr>
           <td>Engine</td>
           <td>OK</td>
-          <td>{{v.prob['probEngine']}}</td>
+          <td>{{v.subassy['probEngine']}}</td>
         </tr>
         <tr>
           <td>Brake</td>
           <td>OK</td>
-          <td>{{v.prob['probBrake']}}</td>
+          <td>{{v.subassy['probBrake']}}</td>
         </tr>
         <tr>
           <td>Gear</td>
           <td>OK</td>
-          <td>{{v.prob['probGear']}}</td>
+          <td>{{v.subassy['probGear']}}</td>
         </tr>
       </tbody>
     </table>

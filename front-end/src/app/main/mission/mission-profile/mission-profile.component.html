@@ -74,64 +74,59 @@
                         </td>
                         <td>
                             {{ s.start }}
-                            <td>
-                                {{ s.condition }}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-            <section>
-                <p class="h5 text-center mb-4">
-                    Vehicles 
-                    <button [hidden]="missionService.isMissionReadOnly || mission.vehicles.length > 0"
-                            type="button" class="btn btn-success waves-light"
-                            style="float: right; margin-bottom: 10px; margin-left: 4px; border-radius: 50%;" 
-                            (click)="decisionSupport()">
-                        <i class="fa fa-crosshairs"> </i>
-                    </button>
-                    <button [hidden]="missionService.isMissionReadOnly"
-                            type="button" style="float: right; margin-bottom: 10px; border-radius: 50%;" 
-                            class="btn btn-success waves-light add-btn"
-                            data-toggle="dropdown"
-                            (click)="addVehicle()"
-                            data-toggle="modal" data-target="#vehicleListPopup">
-                        <i class="fa fa-plus plus-icon"></i>
-                    </button>
-                </p>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th [hidden]="missionService.isMissionReadOnly">  </th>
-                            <th> Type </th>
-                            <th> Model </th>
-                            <th> S/N </th>
-                            <th> Brake failure (%) </th>
-                            <th> Engine failure (%) </th>
-                            <th> Gear failure (%) </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let v of mission.vehicles; let i = index" 
-                           [class.success]="v.state === 2"
-                           [class.failure]="v.state === 1"
-                           [class.warning]="v.state === 3"
-                           >
-                            <td [hidden]="missionService.isMissionReadOnly"> 
-                                <button class="btn-danger rem-btn" (click)="remVehicle(i)"> 
-                                    <i class="fa fa-trash-o"> </i> 
-                                </button>                                 
-                            </td>
-                            <td> {{ v.vtype }} </td>
-                            <td> {{ v.model }} </td>
-                            <td> {{ v.sn }} </td>
-                            <td> {{ v.probBrake }} </td>
-                            <td> {{ v.probEngine }} </td>
-                            <td> {{ v.probGear }} </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
+                        </td>
+                        <td>
+                            {{ s.distance }}
+                        </td>
+                        <td>
+                            {{ s.condition }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <section>
+            <p class="h5 text-center mb-4">
+                Vehicles
+                <button [hidden]="missionService.isMissionReadOnly || mission.vehicles.length > 0" type="button" class="btn btn-success waves-light"
+                    style="float: right; margin-bottom: 10px; margin-left: 4px; border-radius: 50%;" (click)="decisionSupport()">
+                    <i class="fa fa-crosshairs"> </i>
+                </button>
+                <button [hidden]="missionService.isMissionReadOnly" type="button" style="float: right; margin-bottom: 10px; border-radius: 50%;"
+                    class="btn btn-success waves-light add-btn" data-toggle="dropdown" (click)="addVehicle()" data-toggle="modal"
+                    data-target="#vehicleListPopup">
+                    <i class="fa fa-plus plus-icon"></i>
+                </button>
+            </p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th [hidden]="missionService.isMissionReadOnly"> </th>
+                        <th> Type </th>
+                        <th> Model </th>
+                        <th> S/N </th>
+                        <th> Brake failure (%) </th>
+                        <th> Engine failure (%) </th>
+                        <th> Gear failure (%) </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let v of mission.vehicles; let i = index" [class.success]="v.state === 2" [class.failure]="v.state === 1" [class.warning]="v.state === 3">
+                        <td [hidden]="missionService.isMissionReadOnly">
+                            <button class="btn-danger rem-btn" (click)="remVehicle(i)">
+                                <i class="fa fa-trash-o"> </i>
+                            </button>
+                        </td>
+                        <td> {{ v.vtype }} </td>
+                        <td> {{ v.model }} </td>
+                        <td> {{ v.sn }} </td>
+                        <td> {{ v.probBrake }} </td>
+                        <td> {{ v.probEngine }} </td>
+                        <td> {{ v.probGear }} </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
 
         <div class="form-row" [hidden]="missionService.isMissionReadOnly">
             <div class="col-md-6">

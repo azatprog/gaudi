@@ -1,7 +1,24 @@
 #report {
-    margin-top: 50px;
-    padding: 40px;
+  margin-top: 50px;
+  padding: 60px;
 }
 h1 {
-    text-align: center;
+  text-align: center;
+}
+h2 {
+  margin: 40px 0;
+  page-break-before: always;
+}
+.vehicle {
+  margin: 40px 0;
+  page-break-inside: avoid;
+}
+.vehicle:nth-child(2n) {
+  page-break-after: always;
+}
+.fontsize {
+    font-size: 18px;
+}
+table {
+    margin-top: 20px;
 }
